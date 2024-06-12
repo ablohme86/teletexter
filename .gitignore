@@ -1,7 +1,8 @@
 # Prerequisites
 *.d
-
+teletexter
 # Object files
+*.save*
 *.o
 *.ko
 *.obj
