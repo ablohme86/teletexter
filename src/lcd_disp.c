@@ -31,11 +31,22 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
-#include "../include/lcd.h"
+#include "../include/lcd_disp.h"
  
 
 int i2c_bus;
 
+uint8_t bglight_bit;
+uint8_t no_bglight_bit;
+uint8_t cleardisp_bit;
+uint8_t line1_addr;
+uint8_t line2_addr;
+uint8_t line3_addr;
+uint8_t line4_addr;
+uint8_t enable_bit;
+
+ int lcd_width;
+ int lcd_height;
 void delay(int milliseconds) 
 {
     usleep(milliseconds * 1000);
@@ -43,6 +54,11 @@ void delay(int milliseconds)
 
 void i2c_init(const char *device,uint8_t i2caddr) 
 {
+    if (enable_bit == 0)
+    {
+        perror("enable_bit is not set!\n");
+        exit(1);
+    }
     i2c_bus = open(device, O_RDWR);
     if (i2c_bus < 0) 
     {
@@ -108,38 +124,42 @@ void lcd_text(const char *text, uint8_t line, uint8_t align)
      switch(line) 
      {
          case 1:
-             lcd_line = line1_bit;
+             lcd_line = LINE_1;
              break;
          case 2:
-             lcd_line = line2_bit;
+             lcd_line = LINE_2;
              break;
          case 3:
-             lcd_line = line3_bit;
+             lcd_line = LINE_3;
              break;
          case 4:
-             lcd_line = line4_bit;
+             lcd_line = LINE_4;
              break;
          default:
-             lcd_line = line5_bit;
+             lcd_line = LINE_1;
              break;
      }
      
      lcd_write(lcd_line, 0);
      
      // Oppdater tekstlinjen på LCD-skjermen
-     static char lcd_lines[lcd_height][lcd_with + 1] = {0}; // Lagrer teksten på hver linje
+    char **lcd_lines = malloc(lcd_height * sizeof(char *));
+    for (int i = 0; i < lcd_height; ++i)
+    {
+        lcd_lines[i] = malloc((lcd_width + 1) * sizeof(char));
+    }
      if (align == LEFT) 
      {
-         snprintf(lcd_lines[line - 1], lcd_with + 1, "%-.*s", lcd_with, text);
+         snprintf(lcd_lines[line - 1], lcd_width + 1, "%-.*s", lcd_width, text);
      } 
      else if (align == RIGHT) 
      {
-         snprintf(lcd_lines[line - 1], LCD_WIDTH + 1, "%*.*s", lcd_with, lcd_with, text);
+         snprintf(lcd_lines[line - 1], LCD_WIDTH + 1, "%*.*s", lcd_width, lcd_width, text);
      } 
      else if (align == CENTER) 
      {
          int padding = (LCD_WIDTH - strlen(text)) / 2;
-         snprintf(lcd_lines[line - 1], lcd_width + 1, "%*.*s%s%*.*s", padding, padding, "", text, lcd_width - padding - strlen(text), lcd_with - padding - strlen(text), "");
+         snprintf(lcd_lines[line - 1], lcd_width + 1, "%*.*s%s%*.*s", padding, padding, "", text, lcd_width - padding - strlen(text), lcd_width - padding - strlen(text), "");
      }
      
      // Fyll resten av linjen med mellomrom

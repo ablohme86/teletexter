@@ -39,7 +39,17 @@ const char *valid_keywords[] = {
     "LCDColumns",
     "LCDRows",
     "LCDAddress",
-    "LCDDeviceFile"
+    "LCDDeviceFile",
+    "LCDNoBacklight",
+    "LCDBacklight",
+    "LCDLine1",
+    "LCDLine2",
+    "LCDLine3",
+    "LCDLine4",
+    "LCDClrDisp",
+    "LCDEnableBit"
+    
+    
 };
 
 
@@ -143,17 +153,49 @@ void loadConfig(const char *filename)
         }
         else if (strcmp(key, "LCDRows") == 0)
         {
+     
             config.lcdConfig.lcdRows = atoi(value);
         } 
         else if (strcmp(key, "LCDAddress") == 0)
         {
-            config.lcdConfig.lcdAddress = (uint8_t)strtol(value, NULL, 16);
-            
+        
+            config.lcdConfig.lcdAddress = (uint8_t)strtol(value, NULL, 16);  
+        printf("Setter lcdaddr %u fra config!\n", config.lcdConfig.lcdAddress);
         }
         else if (strcmp(key, "LCDDeviceFile") == 0)
         {
             strncpy(config.lcdConfig.lcdDeviceFile, value, MAX_PATH_LENGTH);
+        }  
+        else if (strcmp(key, "LCDLine1") == 0)
+        {
+            config.lcdConfig.lcdLine1Addr = (uint8_t)strtol(value, NULL, 16);  
         }        
+        else if (strcmp(key, "LCDLine2") == 0)
+        {
+            config.lcdConfig.lcdLine2Addr = (uint8_t)strtol(value, NULL, 16);  
+        }  
+        else if (strcmp(key, "LCDLine3") == 0)
+        {
+            config.lcdConfig.lcdLine3Addr = (uint8_t)strtol(value, NULL, 16);  
+        }  
+        else if (strcmp(key, "LCDLine4") == 0)
+        {
+            config.lcdConfig.lcdLine4Addr = (uint8_t)strtol(value, NULL, 16);  
+        }
+        
+        else if (strcmp(key, "LCDNoBacklight") == 0)
+        {
+            config.lcdConfig.lcdNoBacklight = (uint8_t)strtol(value, NULL, 16);  
+        }  
+        else if (strcmp(key, "LCDBacklight") == 0)
+        {
+            config.lcdConfig.lcdBacklight = (uint8_t)strtol(value, NULL, 16);  
+        }                       
+        else if (strcmp(key, "LCDEnableBit") == 0)
+        {
+            printf("Setter lcdeneablebit fra config!\n");
+            config.lcdConfig.lcdEnableBit = (uint8_t)strtol(value, NULL, 16);  
+        }                     
     }
 
     fclose(file);

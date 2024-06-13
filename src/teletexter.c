@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "../include/lcd.h"
+#include "../include/lcd_disp.h"
 #include "../include/client.h"
 #include "../include/commands.h"
 #include "../include/messages.h"
@@ -17,18 +17,35 @@ int main()
         
     loadConfig("./configs/teletexter.cfg");
 
+    
+    setuplcd();  // must be ran first!
+    
     i2c_init(config.lcdConfig.lcdDeviceFile,config.lcdConfig.lcdAddress); // Initialize our i2c lib
     
-
     // sett app-info på skjermen & for litt error-sjekking samtidig..
     char welcomeTxt_line1[config.lcdConfig.lcdRows];
     snprintf(welcomeTxt_line1,sizeof(welcomeTxt_line1),"TeleTexter v%d.%d", MAJOR,MINOR);
     lcd_text(welcomeTxt_line1,1,LEFT);
-    lcd_text("By A. Blohme",2,CENTER);
+    lcd_text("By A. Blohme",2,LEFT);
 
     // last inn konfigurasjonsfila    
 
 
  
     return start_server();
+}
+
+void setuplcd()
+{
+    bglight_bit = config.lcdConfig.lcdBacklight;
+    lcd_width = config.lcdConfig.lcdWidth;
+    lcd_height = config.lcdConfig.lcdHeight;
+    no_bglight_bit = config.lcdConfig.lcdNoBacklight;
+    line1_addr = config.lcdConfig.lcdLine1Addr;
+    line2_addr = config.lcdConfig.lcdLine2Addr;
+    line3_addr = config.lcdConfig.lcdLine3Addr;
+    line4_addr = config.lcdConfig.lcdLine4Addr;
+    enable_bit = config.lcdConfig.lcdEnableBit;
+    
+                    
 }

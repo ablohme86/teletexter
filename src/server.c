@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <pthread.h>
-#include "../include/lcd.h"
+#include "../include/lcd_disp.h"
 #include "../include/config.h"
 char *get_ip(client_t *cli)
 {

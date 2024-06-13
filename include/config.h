@@ -34,6 +34,17 @@ struct LCDConfig {
     int lcdRows;
     uint8_t lcdAddress; // Assuming address can be a string
     char lcdDeviceFile[MAX_FILENAME_LENGTH];
+    uint8_t lcdClrDisp;
+    uint8_t lcdEnableBit;
+    uint8_t lcdWidth;
+    uint8_t lcdHeight;
+    uint8_t lcdLine1Addr;
+    uint8_t lcdLine2Addr;
+    uint8_t lcdLine3Addr;
+    uint8_t lcdLine4Addr;      
+    uint8_t lcdBacklight;
+    uint8_t lcdNoBacklight;
+      
 };
 
 struct Config {

@@ -6,5 +6,6 @@
 
 int start_server();
 char *get_ip(client_t *cli);
+void setuplcd();
 
 #endif /* SERVER_H */

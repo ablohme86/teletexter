@@ -31,17 +31,17 @@ void lcd_text(const char *text, uint8_t line, uint8_t align);
 void lcd_backlight(uint8_t turn_on);
 void lcd_clear();
 
-extern uint8_t bglight_bit;
-extern uint8_t no_bglight_bit;
-extern uint8_t cleardisp_bit;
-extern uint8_t line1_bit;
-extern uint8_t line2_bit;
-extern uint8_t line3_bit;
-extern uint8_t line4_bit;
-extern uint8_t enable_bit;
+extern  uint8_t bglight_bit;
+extern  uint8_t no_bglight_bit;
+extern  uint8_t cleardisp_bit;
+extern  uint8_t line1_addr;
+extern  uint8_t line2_addr;
+extern  uint8_t line3_addr;
+extern  uint8_t line4_addr;
+extern  uint8_t enable_bit;
 
-extern int lcd_width;
-extern int lcd_height;
+extern  int lcd_width;
+extern  int lcd_height;
 
 /*
 char *bglight_bit = 0x08;

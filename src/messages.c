@@ -3,7 +3,7 @@
 #include <sys/socket.h>
 #include <time.h>
 #include <netinet/in.h>
-#include "../include/lcd.h"
+#include "../include/lcd_disp.h"
 #include "../include/ident.h"
 #include "../include/messages.h"
 #include "../include/log.h"
