@@ -14,12 +14,11 @@ struct ServerConfig {
 
 struct MessageConfig {
     int maxMessageLength;
-    char displayTextLayout[MAX_FILENAME_LENGTH];
+    char layoutFile[MAX_FILENAME_LENGTH];
 };
 
 struct UserConfig {
     int maxNicknameLength;
-    int mustIdentify;
     int enablePassword;
     char userFilePath[MAX_PATH_LENGTH];
 };
@@ -30,14 +29,12 @@ struct LoggingConfig {
 };
 
 struct LCDConfig {
-    int lcdColumns;
-    int lcdRows;
     uint8_t lcdAddress; // Assuming address can be a string
     char lcdDeviceFile[MAX_FILENAME_LENGTH];
     uint8_t lcdClrDisp;
     uint8_t lcdEnableBit;
-    uint8_t lcdWidth;
-    uint8_t lcdHeight;
+    int lcdWidth;
+    int lcdHeight;
     uint8_t lcdLine1Addr;
     uint8_t lcdLine2Addr;
     uint8_t lcdLine3Addr;

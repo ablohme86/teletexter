@@ -15,18 +15,16 @@ int main()
 {
     printf("        TeleTexter v%d.%d\nCopyright (c) 2024 Alexander Blohme\n===================================\n",MAJOR,MINOR);
         
-    loadConfig("./configs/teletexter.cfg");
-
+    loadConfig("./configs/teletexter.cfg"); // last konfigen
+    setuplcd();  // sleng inn nødvendige variabler fra konfig til lcd'en
     
-    setuplcd();  // must be ran first!
+    i2c_init(config.lcdConfig.lcdDeviceFile,config.lcdConfig.lcdAddress); // aktiver / start opp lcd biblioteket med dev fil og addr fra config
     
-    i2c_init(config.lcdConfig.lcdDeviceFile,config.lcdConfig.lcdAddress); // Initialize our i2c lib
-    
-    // sett app-info på skjermen & for litt error-sjekking samtidig..
-    char welcomeTxt_line1[config.lcdConfig.lcdRows];
+    // sett velkomstmelding på skjermen
+    char welcomeTxt_line1[config.lcdConfig.lcdWidth];
     snprintf(welcomeTxt_line1,sizeof(welcomeTxt_line1),"TeleTexter v%d.%d", MAJOR,MINOR);
     lcd_text(welcomeTxt_line1,1,LEFT);
-    lcd_text("By A. Blohme",2,LEFT);
+    lcd_text("By A. Blohme",2,CENTER);
 
     // last inn konfigurasjonsfila    
 
@@ -34,9 +32,10 @@ int main()
  
     return start_server();
 }
-
+// Put in all nessescary parameters for the lcd
 void setuplcd()
 {
+    lcd_msg_maxlen = config.messageConfig.maxMessageLength;
     bglight_bit = config.lcdConfig.lcdBacklight;
     lcd_width = config.lcdConfig.lcdWidth;
     lcd_height = config.lcdConfig.lcdHeight;

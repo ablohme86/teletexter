@@ -1,12 +1,12 @@
 #include <stdint.h>
 
 #define LCD_ADDRESS 0x27
-#define LCD_WIDTH 16
+#define LCD_COLS 16
 #define LCD_ROWS 2
 
 
 #define LCD_BACKLIGHT 0x08
-#define LCD_NOBACKLIGHT 0x00
+#define LCD_NOBACKLIGHT	 0x00
 
 #define CLEAR_DISPLAY 0x01
 #define ENABLE_BIT 0b00000100
@@ -42,6 +42,7 @@ extern  uint8_t enable_bit;
 
 extern  int lcd_width;
 extern  int lcd_height;
+extern int lcd_msg_maxlen;
 
 /*
 char *bglight_bit = 0x08;

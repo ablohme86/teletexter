@@ -9,6 +9,8 @@
 teletexter
 # Linker output
 *.ilk
+bin/teletexter
+bin/logs
 *.map
 *.exp
 

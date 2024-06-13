@@ -27,16 +27,16 @@ int is_comment_or_empty(const char *line)
 
 // Add the config variables
 const char *valid_keywords[] = {
-    "Port",
+    "ServerPort",
     "MaxClients",
     "MaxMessageLength",
-    "DisplayTextLayout", 
+    "LayoutFile", 
     "MaxNicknameLength",
-    "MustIdentify", "EnablePassword",
-    "UserFilePath",
+    "EnablePassword",
+    "UserFile",
     "MessageLogPath",
     "SystemLogPath",
-    "LCDColumns",
+    "LCDCols",
     "LCDRows",
     "LCDAddress",
     "LCDDeviceFile",
@@ -108,7 +108,7 @@ void loadConfig(const char *filename)
         }
         
         // Parse each configuration parameter based on da keyz, more to come..
-        if (strcmp(key, "Port") == 0) {
+        if (strcmp(key, "ServerPort") == 0) {
             config.serverConfig.port = atoi(value);
         }
         else if (strcmp(key, "MaxClients") == 0)
@@ -119,23 +119,19 @@ void loadConfig(const char *filename)
         {
             config.messageConfig.maxMessageLength = atoi(value);
         }
-        else if (strcmp(key, "DisplayTextLayout") == 0)
+        else if (strcmp(key, "LayoutFile") == 0)
         {
-            strncpy(config.messageConfig.displayTextLayout, value, MAX_FILENAME_LENGTH);
+            strncpy(config.messageConfig.layoutFile, value, MAX_FILENAME_LENGTH);
         }
         else if (strcmp(key, "MaxNicknameLength") == 0)
         {
             config.userConfig.maxNicknameLength = atoi(value);
         }
-        else if (strcmp(key, "MustIdentify") == 0)
-        {
-            config.userConfig.mustIdentify = atoi(value);
-        }
         else if (strcmp(key, "EnablePassword") == 0)
         {
             config.userConfig.enablePassword = atoi(value);
         }
-        else if (strcmp(key, "UserFilePath") == 0)
+        else if (strcmp(key, "UserFile") == 0)
         {
             strncpy(config.userConfig.userFilePath, value, MAX_PATH_LENGTH);
         }
@@ -147,20 +143,19 @@ void loadConfig(const char *filename)
         {
             strncpy(config.loggingConfig.systemLogPath, value, MAX_PATH_LENGTH);
         }
-        else if (strcmp(key, "LCDColumns") == 0)
+        // Ikke rart vi ikke fikk noe???
+        else if (strcmp(key, "LCDCols") == 0)   // Antall linjer i høyden
         {
-            config.lcdConfig.lcdColumns = atoi(value);
+            config.lcdConfig.lcdHeight = atoi(value);
         }
-        else if (strcmp(key, "LCDRows") == 0)
+        else if (strcmp(key, "LCDRows") == 0)   // Antall linjer bortover på linja
         {
      
-            config.lcdConfig.lcdRows = atoi(value);
+            config.lcdConfig.lcdWidth = atoi(value);
         } 
         else if (strcmp(key, "LCDAddress") == 0)
         {
-        
             config.lcdConfig.lcdAddress = (uint8_t)strtol(value, NULL, 16);  
-        printf("Setter lcdaddr %u fra config!\n", config.lcdConfig.lcdAddress);
         }
         else if (strcmp(key, "LCDDeviceFile") == 0)
         {
@@ -193,7 +188,6 @@ void loadConfig(const char *filename)
         }                       
         else if (strcmp(key, "LCDEnableBit") == 0)
         {
-            printf("Setter lcdeneablebit fra config!\n");
             config.lcdConfig.lcdEnableBit = (uint8_t)strtol(value, NULL, 16);  
         }                     
     }
