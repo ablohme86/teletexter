@@ -1,0 +1,9 @@
+TELETEXTER V1.0
+===============
+
+
+What is Teletexter?
+-------------------
+ Teletexter is a program that can send text messages to your I2C LCD Display
+ from a TCP/IP connection, it is highly customizable where you can set the layout
+ for your messages the way you want. It supports most I2C displays out there.

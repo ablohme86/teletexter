@@ -5,14 +5,15 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <pthread.h>
-#include "../include/lcdlib.h"
-
-void get_ip(client_t *cli)
+#include "../include/lcd.h"
+#include "../include/config.h"
+char *get_ip(client_t *cli)
 {
 	struct sockaddr_in addr;
 	socklen_t addr_len = sizeof(addr);
 	getpeername(cli->socket, (struct sockaddr *)&addr, &addr_len);
-	printf("Client IP: %s\n", inet_ntoa(addr.sin_addr));
+	return inet_ntoa(addr.sin_addr);
+	
 }
 
 int start_server()
@@ -30,7 +31,7 @@ int start_server()
 
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = INADDR_ANY;
-	server_addr.sin_port = htons(PORT);
+	server_addr.sin_port = htons(config.serverConfig.port);
 	
 	if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) 
 	{
@@ -47,7 +48,7 @@ int start_server()
 		return EXIT_FAILURE;
 	}
 
-	printf("Server listening on port %d\n", PORT);
+	printf("Server listening on port %d\n", config.serverConfig.port);
 
 	while (1) 
 	{

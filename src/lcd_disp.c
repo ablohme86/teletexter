@@ -31,7 +31,8 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
-#include "../include/lcdlib.h"
+#include "../include/lcd.h"
+ 
 
 int i2c_bus;
 
@@ -40,20 +41,21 @@ void delay(int milliseconds)
     usleep(milliseconds * 1000);
 }
 
-void i2c_init(const char *device) 
+void i2c_init(const char *device,uint8_t i2caddr) 
 {
     i2c_bus = open(device, O_RDWR);
     if (i2c_bus < 0) 
     {
-        fprintf(stderr, "Failed to open the i2c bus\n");
+        fprintf(stderr, "Failed to open the i2c bus %s on address %d\n", device, i2caddr);
         exit(1);
     }
-    if (ioctl(i2c_bus, I2C_SLAVE, LCD_ADDRESS) < 0) 
+    if (ioctl(i2c_bus, I2C_SLAVE, i2caddr) < 0) 
     {
+    fprintf(stderr, "Failed to aquire bus access from %s on address %d\n", device, i2caddr);
         perror("Failed to acquire bus access and/or talk to slave");
         exit(1);
     }
-    
+    printf("Connected to I2C port %s!\n", device);
     // Send init params
     write_command(0);
     write_command(0x33);
@@ -81,18 +83,18 @@ void i2c_write_byte(uint8_t byte)
 void write_command(uint8_t byte) 
 {
     i2c_write_byte(byte);
-    i2c_write_byte(byte | ENABLE_BIT);
+    i2c_write_byte(byte | enable_bit);
     delay(1);
-    i2c_write_byte(byte & ~ENABLE_BIT);
+    i2c_write_byte(byte & ~enable_bit);
     delay(10);
 }
 
 void lcd_write(uint8_t byte, uint8_t mode) 
 {
-    uint8_t backlight_mode = LCD_BACKLIGHT;
+    uint8_t backlight_mode = bglight_bit;
     if (mode == 0) 
     {
-        backlight_mode = LCD_NOBACKLIGHT;
+        backlight_mode = no_bglight_bit;
     }
     write_command(mode | (byte & 0xF0) | backlight_mode);
     write_command(mode | ((byte << 4) & 0xF0) | backlight_mode);
@@ -106,48 +108,48 @@ void lcd_text(const char *text, uint8_t line, uint8_t align)
      switch(line) 
      {
          case 1:
-             lcd_line = LINE_1;
+             lcd_line = line1_bit;
              break;
          case 2:
-             lcd_line = LINE_2;
+             lcd_line = line2_bit;
              break;
          case 3:
-             lcd_line = LINE_3;
+             lcd_line = line3_bit;
              break;
          case 4:
-             lcd_line = LINE_4;
+             lcd_line = line4_bit;
              break;
          default:
-             lcd_line = LINE_1;
+             lcd_line = line5_bit;
              break;
      }
      
      lcd_write(lcd_line, 0);
      
      // Oppdater tekstlinjen på LCD-skjermen
-     static char lcd_lines[LCD_ROWS][LCD_WIDTH + 1] = {0}; // Lagrer teksten på hver linje
+     static char lcd_lines[lcd_height][lcd_with + 1] = {0}; // Lagrer teksten på hver linje
      if (align == LEFT) 
      {
-         snprintf(lcd_lines[line - 1], LCD_WIDTH + 1, "%-.*s", LCD_WIDTH, text);
+         snprintf(lcd_lines[line - 1], lcd_with + 1, "%-.*s", lcd_with, text);
      } 
      else if (align == RIGHT) 
      {
-         snprintf(lcd_lines[line - 1], LCD_WIDTH + 1, "%*.*s", LCD_WIDTH, LCD_WIDTH, text);
+         snprintf(lcd_lines[line - 1], LCD_WIDTH + 1, "%*.*s", lcd_with, lcd_with, text);
      } 
      else if (align == CENTER) 
      {
          int padding = (LCD_WIDTH - strlen(text)) / 2;
-         snprintf(lcd_lines[line - 1], LCD_WIDTH + 1, "%*.*s%s%*.*s", padding, padding, "", text, LCD_WIDTH - padding - strlen(text), LCD_WIDTH - padding - strlen(text), "");
+         snprintf(lcd_lines[line - 1], lcd_width + 1, "%*.*s%s%*.*s", padding, padding, "", text, lcd_width - padding - strlen(text), lcd_with - padding - strlen(text), "");
      }
      
      // Fyll resten av linjen med mellomrom
      int text_len = strlen(lcd_lines[line - 1]);
-     for (int i = text_len; i < LCD_WIDTH; i++) 
+     for (int i = text_len; i < lcd_width; i++) 
      {
          lcd_lines[line - 1][i] = ' ';
      }
      
-     for (int i = 0; i < LCD_WIDTH; i++) 
+     for (int i = 0; i < lcd_height; i++) 
      {
          lcd_write(lcd_lines[line - 1][i], 1);
      }
@@ -157,11 +159,11 @@ void lcd_backlight(uint8_t turn_on)
 {
     if (turn_on) 
     {
-        write_command(0);
+        write_command(bglight_bit);
     } 
     else 
     {
-        write_command(LCD_NOBACKLIGHT);
+        write_command(no_bglight_bit);
     }
 }
 

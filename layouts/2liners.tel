@@ -1,0 +1,6 @@
+# Layout syntax:
+# LINE<number>(<LEFT/RIGHT/CENTER>) Text and/or Variable
+
+LINE1(LEFT) %NICKNAME% %WEEKDAY%:
+LINE2(CENTER) %MESSAGE%
+LINE3(RIGHT) A static message to the right
