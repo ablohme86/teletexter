@@ -1,8 +1,12 @@
-#include "client.h"
-#include <stdlib.h>
+#include "../include/client.h"
+#include "../include/commands.h"
+#include "../include/server.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <pthread.h>
+#include <arpa/inet.h>
 
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 client_t *clients[MAX_CLIENTS];
@@ -43,4 +47,25 @@ void *client_handler(void *arg)
     handle_client(cli);
     remove_client(cli);
     return NULL;
+}
+
+void handle_client(client_t *cli)
+{
+    char buffer[BUFFER_SIZE];
+    int nbytes;
+    while ((nbytes = recv(cli->socket, buffer, sizeof(buffer), 0)) > 0)
+    {
+        buffer[nbytes] = '\0';
+        char *cmd = strtok(buffer, " ");
+        char *args = strtok(NULL, "\0");
+
+        for (int i = 0; commands[i].command[0] != '\0'; ++i)
+        {
+            if (strcmp(commands[i].command, cmd) == 0)
+            {
+                commands[i].function(cli, args);
+                break;
+            }
+        }
+    }
 }

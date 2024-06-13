@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #define LCD_ADDRESS 0x27
 #define LCD_WIDTH 16
 #define LCD_ROWS 2

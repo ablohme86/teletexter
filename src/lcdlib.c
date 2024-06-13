@@ -31,7 +31,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
-#include "lcdlib.h"
+#include "../include/lcdlib.h"
 
 int i2c_bus;
 

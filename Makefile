@@ -1,34 +1,20 @@
-# Makefile for teletexter.c
-
-# Compiler
 CC = gcc
+CFLAGS = -Wall -Wextra -Iinclude -pthread
+LDFLAGS = -pthread
 
-# Compiler flags
-CFLAGS = -Wall -Wextra
-
-# Libraries
-LIBS = -lwiringPi -lwiringPiDev
-
-# Target executable
-TARGET = teletexter
-
-# Source files
-SRCS = teletexter.c lcdlib.c
-
-# Object files
+SRCS = src/teletexter.c src/client.c src/commands.c src/messages.c src/ident.c src/server.c src/lcdlib.c
 OBJS = $(SRCS:.c=.o)
 
-# Default target
-all: $(TARGET)
+all: teletexter post_build_clean
 
-# Linking object files
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
+teletexter: $(OBJS)
+	$(CC) $(CFLAGS) -o teletexter $(OBJS) $(LDFLAGS) -lwiringPi -lwiringPiDev
 
-# Compiling source files
-%.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-# Clean target
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) teletexter
+
+post_build_clean:
+	rm -f $(OBJS)
+
+.PHONY: all clean post_build_clean
+
