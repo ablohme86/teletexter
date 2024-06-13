@@ -29,16 +29,20 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <arpa/inet.h>
+#include <time.h>
 #include "lcdlib.h"
+#include "version.h"
 
 #define PORT 5053
 #define MAX_CLIENTS 10
 #define BUFFER_SIZE 1024
+#define NICKNAME_MAXLENGTH 6
+
 
 typedef struct 
 {
     int socket;
-    char nickname[50];
+    char nickname[NICKNAME_MAXLENGTH];
 } client_t;
 
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -54,7 +58,22 @@ typedef struct
 void handle_ident(client_t *cli, char *args);
 void handle_msg(client_t *cli, char *args);
 void handle_client(client_t *cli);
+void get_current_time(char current_time[15]);
 
+
+void get_current_time(char current_time[15]) {
+    // Hent nåværende tid
+    time_t rawtime;
+    struct tm *timeinfo;
+    
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    // Formater tid og ukedag i ønsket format: "HH:MM Ukedag"
+    strftime(current_time, 15, "%H:%M %a", timeinfo);
+}
+
+    
 void strip_newline(char *str) 
 {
     char *p = str;
@@ -156,16 +175,27 @@ void handle_msg(client_t *cli, char *args)
 
     if (args != NULL) 
     {
+        char current_time_str[20];
+        
+        // Hent dagens dato og tid
+        get_current_time(current_time_str);
+        
         strip_newline(args);  // Fjern \r\n fra args
-        
+
         printf("Message from %s: %s\n", cli->nickname, args);
+        
+        // Lag meldingsformatet for LCD-skjermen
+        char lcd_message[190]; // Størrelsen kan justeres etter behov
+        snprintf(lcd_message, sizeof(lcd_message), "%s %s:", current_time_str,cli->nickname);
+        
+        // Skriv til LCD-skjermen
         lcd_clear();
-        
-        lcd_text(cli->nickname, 1, LEFT);
+        lcd_text(lcd_message, 1, LEFT);
         lcd_text(args, 2, LEFT);
-        
+     //   lcd_text(args, 3, LEFT);
     }
 }
+
 
 int main() 
 {
@@ -175,7 +205,7 @@ int main()
 
     const char *device = "/dev/i2c-1";
     i2c_init(device); // initialize our i2c lib
-
+    printf("         TeleTexter v%d.%d\nCopyright (c) 2024 Alexander Blohme\n==============\n",MAJOR,MINOR);
     printf("connected to LCD display!\n");
     
     server_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -188,7 +218,11 @@ int main()
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = INADDR_ANY;
     server_addr.sin_port = htons(PORT);
-    lcd_text("TeleTexter v0.1",1,LEFT);
+    char apptitle[50]; // Juster størrelsen etter behov
+    
+    snprintf(apptitle, sizeof(apptitle), "TeleTexter v%d.%d", MAJOR, MINOR);
+
+    lcd_text(apptitle,1,LEFT);
     lcd_text("By A. Blohme",2,CENTER);
     if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) 
     {
