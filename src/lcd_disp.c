@@ -36,7 +36,7 @@
 
 int i2c_bus;
 
-uint8_t bglight_bit;
+uint8_t bglight_bit = LCD_BACKLIGHT;    // Sett disse til #DEFINE parameterene i lcd_disp.h hvis ingenting er definert i konfigurasjonsfilene
 uint8_t no_bglight_bit;
 uint8_t cleardisp_bit;
 uint8_t line1_addr;

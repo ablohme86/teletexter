@@ -13,6 +13,7 @@
 
 int main()
 {
+    
     printf("        TeleTexter v%d.%d\nCopyright (c) 2024 Alexander Blohme\n===================================\n",MAJOR,MINOR);
         
     loadConfig("./configs/teletexter.cfg"); // last konfigen

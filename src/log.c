@@ -7,7 +7,7 @@
 
 void create_logs_dir_if_not_exists() 
 {
-    const char *dir_path = "logs";
+    const char *dir_path = "messagelogs";
     struct stat st = {0};
 
     if (stat(dir_path, &st) == -1) 
