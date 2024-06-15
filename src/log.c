@@ -36,7 +36,7 @@ void log_message(const char *ip, const char *nickname, const char *message)
     FILE *file = fopen(log_filename, "a");
     if (file) 
     {
-        fprintf(file, "<%s %s> [%s] <%s>: %s\n", date, time_str, ip, nickname, message);
+        fprintf(file, "%s %s [%s] <%s>: %s\n", date, time_str, ip, nickname, message);
         fclose(file);
     }
     else 

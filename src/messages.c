@@ -17,7 +17,7 @@ void handle_msg(client_t *cli, char *args)
 {
     if (cli->identified == 0)
     {
-        char *error_msg = "Please IDENT first!\n";
+        char *error_msg = "NOT_IDENTIFIED\n";
         send(cli->socket, error_msg, strlen(error_msg), 0);
         return;
     }

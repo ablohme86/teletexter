@@ -59,14 +59,21 @@ void handle_client(client_t *cli)
         buffer[nbytes] = '\0';
         char *cmd = strtok(buffer, " ");
         char *args = strtok(NULL, "\0");
-
+        int cmd_found = 0;
         for (int i = 0; commands[i].command[0] != '\0'; ++i)
         {
             if (strcmp(commands[i].command, cmd) == 0)
             {
+                cmd_found = 1;
                 commands[i].function(cli, args);
                 break;
             }
+        }
+        if (cmd_found == 0)
+        {
+            char invalid_cmd_msg[128];
+            sprintf(invalid_cmd_msg,"INVALID_COMMAND\n");
+            send(cli->socket, invalid_cmd_msg,strlen(invalid_cmd_msg),0);
         }
     }
 }
