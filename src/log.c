@@ -1,5 +1,6 @@
 #include "../include/log.h"
 #include "../include/utils.h"
+#include "../include/config.h"
 #include <time.h>
 #include <arpa/inet.h>
 #include <sys/stat.h>
@@ -7,7 +8,7 @@
 
 void create_logs_dir_if_not_exists() 
 {
-    const char *dir_path = "messagelogs";
+    const char *dir_path = config.loggingConfig.messageLogPath;
     struct stat st = {0};
 
     if (stat(dir_path, &st) == -1) 
@@ -26,10 +27,10 @@ void log_message(const char *ip, const char *nickname, const char *message)
     // Create logs directory if it doesn't exist
     create_logs_dir_if_not_exists();
 
-    char log_filename[50];
-    snprintf(log_filename, sizeof(log_filename), "logs/%s-teletexter.log", date);
+    char log_filename[MAX_PATH_LENGTH];
+    snprintf(log_filename, sizeof(log_filename), "%s/%s-teletexter.log",config.loggingConfig.messageLogPath, date);
 
-    printf("<%s %s> [%s] <%s>: %s\n", date, time_str, ip, nickname, message);
+    printf("<%s %s> [%s] <%s>: %s\n", ip, time_str, date ,nickname, message);
 
     // Open log file for appending
     FILE *file = fopen(log_filename, "a");

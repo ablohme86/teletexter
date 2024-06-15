@@ -43,23 +43,3 @@ extern  uint8_t enable_bit;
 extern  int lcd_width;
 extern  int lcd_height;
 extern int lcd_msg_maxlen;
-
-/*
-char *bglight_bit = 0x08;
-char *no_bglight_bit = 0x00;
-char *clrdisp_bit = 0x01;
-
-char *line_1_bit = "0x80";
-char *line_2_bit = "0xC0";
-char *line_3_bit = "0x94";
-char *line_4_bit = "0xD4";
-
-int lcd_height = 2;
-int lcd_width = 16;
-
-void set_width(int w);
-void set_height(int h);
-void set_backlight_bit(char *bit);
-void set_clrdsp_bit(char *bit);
-void set_nobacklight_bit(char* bit);
-*/
