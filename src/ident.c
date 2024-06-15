@@ -1,6 +1,9 @@
 #include "../include/ident.h"
+#include "../include/config.h"
+#include "../include/pwd.h"
 #include <stdio.h>
 #include <string.h>
+#include <arpa/inet.h>
 
 void handle_ident(client_t *cli, char *args)
 {
@@ -10,6 +13,12 @@ void handle_ident(client_t *cli, char *args)
 		cli->nickname[sizeof(cli->nickname) - 1] = '\0';
 		strip_newline(cli->nickname);
 		printf("Client identified as: '%s'\n", cli->nickname);
+
+		if (config.userConfig.enablePassword)
+		{
+			char *msg = "PWD_REQUIRED\n";
+			send(cli->socket, msg, strlen(msg), 0);
+		}
 	}
 }
 

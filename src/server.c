@@ -74,7 +74,6 @@ int start_server()
 			add_client(cli);
 		}
 	}
-
 	close(server_socket);
 	return EXIT_SUCCESS;
 }

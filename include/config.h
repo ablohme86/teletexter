@@ -21,6 +21,7 @@ struct UserConfig {
     int maxNicknameLength;
     int enablePassword;
     char userFilePath[MAX_PATH_LENGTH];
+
 };
 
 struct LoggingConfig {

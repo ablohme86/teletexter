@@ -6,7 +6,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude -pthread
 LDFLAGS = -pthread
 
-SRCS = src/teletexter.c src/client.c src/commands.c src/messages.c src/ident.c src/server.c src/lcd_disp.c src/config.c src/log.c src/utils.c
+SRCS = src/teletexter.c src/client.c src/commands.c src/messages.c src/pwd.c src/ident.c src/server.c src/lcd_disp.c src/config.c src/log.c src/utils.c
 OBJS = $(SRCS:.c=.o)
 TARGET = bin/teletexter
 all: teletexter post_build_clean
