@@ -10,6 +10,9 @@
 #endif
 #include "../include/config.h"
 #include "../include/console.h"
+
+int server_socket, client_socket;
+
 char *get_ip(client_t *cli)
 {
 	struct sockaddr_in addr;
@@ -18,10 +21,16 @@ char *get_ip(client_t *cli)
 	return inet_ntoa(addr.sin_addr);
 	
 }
+void close_server()
+{
+	close(client_socket);
+	close(server_socket);
+
+}
 
 int start_server()
 {
-	int server_socket, client_socket;
+
 	struct sockaddr_in server_addr, client_addr;
 	socklen_t client_len = sizeof(client_addr);
 

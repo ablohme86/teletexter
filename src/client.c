@@ -1,5 +1,5 @@
 #include "../include/client.h"
-#include "../include/commands.h"
+#include "../include/server_commands.h"
 #include "../include/server.h"
 #include "../include/config.h"
 #include "../include/console.h"

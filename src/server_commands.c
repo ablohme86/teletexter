@@ -1,4 +1,4 @@
-#include "../include/commands.h"
+#include "../include/server_commands.h"
 
 #include <stddef.h>
 

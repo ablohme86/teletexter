@@ -1,25 +1,24 @@
-#include <stdio.h>
-#include <ncurses.h>
-
 #ifdef DISABLE_LCD
 #include "../include/lcd_disp.h"
 #endif
+#include <unistd.h>
+
 #include "../include/server.h"
 #include "../include/config.h"
 #include "../include/version.h"
 #include "../include/console.h"
 
-
 int main()
 {
-    init_console(); // Initialize console
 
-    printf("        TeleTexter v%d.%d\nCopyright (c) 2024 Alexander Blohme\n===================================\n", MAJOR, MINOR);
-    printf("Loading configuration file...\n");
+init_console();
+   printf("        TeleTexter v%d.%d\n", MAJOR, MINOR);
+       printf("Copyright (c) 2024 Alexander Blohme\n");
+   printf("Loading configuration file...\n");
 
-    loadConfig("./configs/teletexter.cfg"); // last konfigen
+   loadConfig("./configs/teletexter.cfg"); // last konfigen
 
-#ifdef LINUX
+#ifndef DISABLE_LCD
     print_to_console("Initializing LCD display...\n");
 
     setuplcd();  // sleng inn nødvendige variabler fra konfig til lcd'en
@@ -33,12 +32,8 @@ int main()
     lcd_text("By A. Blohme",2,CENTER);
 #endif
 
-    // last inn konfigurasjonsfila    
-
-    print_to_console("Server starting...\n");
-
-
- 
+    // last inn konfigurasjonsfila
+    printf("Server starting...\n");
     return start_server();
 }
 // Put in all nessescary parameters for the lcd
