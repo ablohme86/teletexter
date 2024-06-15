@@ -2,6 +2,7 @@
 #include "../include/commands.h"
 #include "../include/server.h"
 #include "../include/config.h"
+#include "../include/console.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,6 +24,7 @@ void add_client(client_t *cli)
             break;
         }
     }
+    printf("%s connected... Awaiting IDENT\n", get_ip(cli));
     pthread_mutex_unlock(&clients_mutex);
 }
 
@@ -37,6 +39,7 @@ void remove_client(client_t *cli)
             break;
         }
     }
+    printf("[%s] %s has disconnected\n", get_ip(cli), cli->nickname);
     pthread_mutex_unlock(&clients_mutex);
     close(cli->socket);
     free(cli);
@@ -71,7 +74,7 @@ void handle_client(client_t *cli)
         }
         if (cmd_found == 0)
         {
-            char invalid_cmd_msg[128];
+            char invalid_cmd_msg[BUFFER_SIZE];
             sprintf(invalid_cmd_msg,"INVALID_COMMAND\n");
             send(cli->socket, invalid_cmd_msg,strlen(invalid_cmd_msg),0);
         }

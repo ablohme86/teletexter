@@ -32,6 +32,7 @@
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
 #include "../include/lcd_disp.h"
+#include "../include/console.h"
 
 
 int i2c_bus;

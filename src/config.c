@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <fcntl.h>
+#include "../include/console.h"
 
 struct Config config = {0}; // Define config here
 

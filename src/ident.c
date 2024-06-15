@@ -1,6 +1,7 @@
 #include "../include/ident.h"
-#include "../include/config.h"
+#include "../include/utils.h"
 #include "../include/pwd.h"
+#include "../include/console.h"
 #include <stdio.h>
 #include <string.h>
 #include <arpa/inet.h>
@@ -8,7 +9,7 @@
 #include <unistd.h>
 
 // Funksjon for å verifisere passordet
-int verify_password(const char *username, const char *password)
+int verify_login(const char *username, const char *password)
 {
     char filepath[256];
     snprintf(filepath, sizeof(filepath), "users/%s", username);
@@ -86,7 +87,7 @@ void handle_ident(client_t *cli, char *args)
         }
     }
 
-    int verify_result = verify_password(nickname, password);
+    int verify_result = verify_login(nickname, password);
     if (verify_result == 0)
     {
         char *error_msg = "LOGIN_ERROR\n";
@@ -108,16 +109,3 @@ void handle_ident(client_t *cli, char *args)
 }
 
 
-void strip_newline(char *str)
-{
-	char *p = str;
-	while (*p)
-	{
-		if (*p == '\r' || *p == '\n')
-		{
-			*p = '\0';
-			break;
-		}
-		p++;
-	}
-}

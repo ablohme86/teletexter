@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
-#include <time.h>
 #include <netinet/in.h>
 #include "../include/lcd_disp.h"
-#include "../include/ident.h"
+#include "../include/console.h"
 #include "../include/messages.h"
 #include "../include/log.h"
 #include "../include/server.h" // Include server.h for get_ip function

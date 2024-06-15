@@ -1,7 +1,7 @@
 #include "../include/log.h"
 #include "../include/utils.h"
 #include "../include/config.h"
-#include <time.h>
+#include "../include/console.h"
 #include <arpa/inet.h>
 #include <sys/stat.h>
 #include <unistd.h>

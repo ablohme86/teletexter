@@ -1,25 +1,27 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include <ncurses.h>
+
 #ifdef DISABLE_LCD
 #include "../include/lcd_disp.h"
 #endif
-#include "../include/client.h"
-#include "../include/commands.h"
-#include "../include/messages.h"
-#include "../include/ident.h"
 #include "../include/server.h"
 #include "../include/config.h"
 #include "../include/version.h"
+#include "../include/console.h"
+
 
 int main()
 {
-    
-    printf("        TeleTexter v%d.%d\nCopyright (c) 2024 Alexander Blohme\n===================================\n",MAJOR,MINOR);
-        
+    init_console(); // Initialize console
+
+    printf("        TeleTexter v%d.%d\nCopyright (c) 2024 Alexander Blohme\n===================================\n", MAJOR, MINOR);
+    printf("Loading configuration file...\n");
+
     loadConfig("./configs/teletexter.cfg"); // last konfigen
+
 #ifdef LINUX
+    print_to_console("Initializing LCD display...\n");
+
     setuplcd();  // sleng inn nødvendige variabler fra konfig til lcd'en
 
     i2c_init(config.lcdConfig.lcdDeviceFile,config.lcdConfig.lcdAddress); // aktiver / start opp lcd biblioteket med dev fil og addr fra config
@@ -32,6 +34,8 @@ int main()
 #endif
 
     // last inn konfigurasjonsfila    
+
+    print_to_console("Server starting...\n");
 
 
  

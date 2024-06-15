@@ -4,7 +4,6 @@
 
 #include "../include/ident.h"
 #include "../include/messages.h"
-//#include "../include/pwd.h"
 
 command_t commands[] = {
     {"IDENT", handle_ident},

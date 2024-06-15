@@ -9,6 +9,7 @@
 #include "../include/lcd_disp.h"
 #endif
 #include "../include/config.h"
+#include "../include/console.h"
 char *get_ip(client_t *cli)
 {
 	struct sockaddr_in addr;
@@ -37,7 +38,7 @@ int start_server()
 	
 	if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) 
 	{
-		perror("Bind failed");
+		printf("Bind failed\n");
 #ifndef DISABLE_LCD
 		lcd_text("Sockets failed!",2,CENTER);
 #endif
