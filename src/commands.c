@@ -1,4 +1,7 @@
 #include "../include/commands.h"
+
+#include <stddef.h>
+
 #include "../include/ident.h"
 #include "../include/messages.h"
 #include "../include/pwd.h"
