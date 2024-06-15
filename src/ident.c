@@ -19,6 +19,9 @@ void handle_ident(client_t *cli, char *args)
 			char *msg = "PWD_REQUIRED\n";
 			send(cli->socket, msg, strlen(msg), 0);
 		}
+		else {
+			cli->identified = 1;
+		}
 	}
 }
 

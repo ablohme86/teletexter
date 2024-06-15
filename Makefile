@@ -1,18 +1,26 @@
 # MAKEFILE FOR TELETEXTER
 # COPYRIGHT (C) 2024 ALEXANDER BLOHME <ALEXANDER@TELETEXTER.ORG>
 
-
 CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude -pthread
 LDFLAGS = -pthread
+LDLIBS = -lwiringPi -lwiringPiDev
 
-SRCS = src/teletexter.c src/client.c src/commands.c src/messages.c src/pwd.c src/ident.c src/server.c src/lcd_disp.c src/config.c src/log.c src/utils.c
+SRCS = src/teletexter.c src/client.c src/commands.c src/messages.c src/pwd.c src/ident.c src/server.c src/config.c src/log.c src/utils.c
 OBJS = $(SRCS:.c=.o)
 TARGET = bin/teletexter
+
+# Sjekk for --disablelcd flagg
+ifdef DISABLE_LCD
+    SRCS := $(filter-out src/lcd_disp.c, $(SRCS))
+    LDLIBS :=
+    CFLAGS += -DDISABLE_LCD
+endif
+
 all: teletexter post_build_clean
 
 teletexter: $(OBJS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS) -lwiringPi -lwiringPiDev
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS) $(LDLIBS)
 
 clean:
 	rm -f $(OBJS) $(TARGET)

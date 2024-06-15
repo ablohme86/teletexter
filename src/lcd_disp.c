@@ -32,7 +32,7 @@
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
 #include "../include/lcd_disp.h"
- 
+
 
 int i2c_bus;
 

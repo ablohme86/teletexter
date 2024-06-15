@@ -5,7 +5,9 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <pthread.h>
+#ifndef DISABLE_LCD
 #include "../include/lcd_disp.h"
+#endif
 #include "../include/config.h"
 char *get_ip(client_t *cli)
 {
@@ -36,7 +38,9 @@ int start_server()
 	if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) 
 	{
 		perror("Bind failed");
+#ifndef DISABLE_LCD
 		lcd_text("Sockets failed!",2,CENTER);
+#endif
 		close(server_socket);
 		return EXIT_FAILURE;
 	}

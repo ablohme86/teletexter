@@ -3,12 +3,11 @@
 
 #include <netinet/in.h>
 
-#define BUFFER_SIZE 2048
-#define MAX_CLIENTS 100
 
 typedef struct {
     int socket;
     char nickname[32];
+    int identified;
     struct sockaddr_in address;
 } client_t;
 

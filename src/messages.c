@@ -15,12 +15,13 @@
 
 void handle_msg(client_t *cli, char *args) 
 {
-    if (strlen(cli->nickname) == 0) 
+    if (cli->identified == 0)
     {
-        char *error_msg = "No nickname is set! Please IDENT first!\n";
+        char *error_msg = "Please IDENT first!\n";
         send(cli->socket, error_msg, strlen(error_msg), 0);
         return;
     }
+
 
     if (args != NULL) 
     {
@@ -37,10 +38,13 @@ void handle_msg(client_t *cli, char *args)
         log_message(ip, cli->nickname, args);
 
         char lcd_message[190];
+
+#ifndef DISABLE_LCD
         snprintf(lcd_message, sizeof(lcd_message), "%s %s %s:", weekday_str,cur_time, cli->nickname);
 
         lcd_clear();
         lcd_text(lcd_message, 1, LEFT);
         lcd_text(args, 2, LEFT);
+#endif
     }
 }

@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <arpa/inet.h>
+
 int verify_password(const char *username, const char *password)
 {
     char filepath[256];
@@ -15,6 +16,8 @@ int verify_password(const char *username, const char *password)
     FILE *file = fopen(filepath, "r");
     if (file == NULL)
     {
+        // Sender tilbake melding til klienten om at brukeren ikke kunne bli funnet
+        fprintf(stderr, "User could not be found: %s @ %s!\n", username, filepath);
         return 0; // User file does not exist
     }
 
@@ -74,6 +77,12 @@ void handle_pwd(client_t *cli, char *args)
         {
             char *success_msg = "IDENTIFIED\n";
             send(cli->socket, success_msg, strlen(success_msg), 0);
+            cli->identified = 1;
         }
+    }
+    else
+    {
+        char *error_msg = "User could not be found\n";  // Melding når args er NULL
+        send(cli->socket, error_msg, strlen(error_msg), 0);
     }
 }

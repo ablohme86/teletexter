@@ -1,6 +1,7 @@
 #include "../include/client.h"
 #include "../include/commands.h"
 #include "../include/server.h"
+#include "../include/config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,12 +10,12 @@
 #include <arpa/inet.h>
 
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
-client_t *clients[MAX_CLIENTS];
+client_t *clients[100]; // total max capacity
 
 void add_client(client_t *cli)
 {
     pthread_mutex_lock(&clients_mutex);
-    for (int i = 0; i < MAX_CLIENTS; ++i)
+    for (int i = 0; i < config.serverConfig.maxClients; ++i)
     {
         if (clients[i] == NULL)
         {
@@ -28,7 +29,7 @@ void add_client(client_t *cli)
 void remove_client(client_t *cli)
 {
     pthread_mutex_lock(&clients_mutex);
-    for (int i = 0; i < MAX_CLIENTS; ++i)
+    for (int i = 0; i < config.serverConfig.maxClients; ++i)
     {
         if (clients[i] == cli)
         {
