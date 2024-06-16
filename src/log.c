@@ -30,7 +30,7 @@ void log_message(const char *ip, const char *nickname, const char *message)
     char log_filename[MAX_PATH_LENGTH];
     snprintf(log_filename, sizeof(log_filename), "%s/%s-teletexter.log",config.loggingConfig.messageLogPath, date);
 
-    
+
     // Open log file for appending
     FILE *file = fopen(log_filename, "a");
     if (file) 

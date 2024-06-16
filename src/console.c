@@ -34,6 +34,10 @@ void handle_echo(char *args)
 }
 void handle_exit(char *args)
 {
+    if (args == 0)
+    {
+
+    }
     cleanup_console();
 
     exit(1);
@@ -41,13 +45,22 @@ void handle_exit(char *args)
 
 void sigwinch_handler(int signum)
 {
+    if (signum == 0)    // to depress unused char warning
+    {
+
+    }
     // Handle window resize signal if needed
 }
 
 void *input_thread(void *arg)
 {
+    if (arg == (int)0) {
+
+    }
     char input[256] = ""; // Buffer for user input
-    int input_len = 0;    // Length of user input
+
+    // replaced fron 'int' to 'unsigned' to supress compiler warning, but do we need negative values anyways for this??
+    unsigned int input_len = 0;    // Length of user input
 
     while (1)
     {
@@ -139,6 +152,10 @@ void print_to_console(const char *fmt, ...)
 
 int fprintf_real(FILE *stream, const char *fmt, ...)
 {
+    if (stream == 0)    // suppress warning
+    {
+
+    }
     va_list args;
     va_start(args, fmt);
     int ret = vw_printw(output_win, fmt, args);
