@@ -59,24 +59,28 @@ void delay(int milliseconds)
     if (lcd_height == 0)
     {
         fprintf(stderr, "lcd_height (%d) is not set! Exiting",lcd_height);
+	cleanup_console();
         exit(1);
     }
     else if (lcd_width == 0)
     {
         fprintf(stderr, "lcd_width (%d) is not set! Exiting\n",lcd_width);
+	cleanup_console();
         exit(1);
     }
      i2c_bus = open(device, O_RDWR);
      if (i2c_bus < 0) 
      {
          fprintf(stderr, "Failed to open the i2c bus %s on address %d\n", device, i2caddr);
-         exit(1);
+	cleanup_console(); 
+        exit(1);
      }
      if (ioctl(i2c_bus, I2C_SLAVE, LCD_ADDRESS) < 0) 
      {
      fprintf(stderr, "Failed to aquire bus access from %s on address %d\n", device, i2caddr);
          perror("Failed to acquire bus access and/or talk to slave");
-         exit(1);
+	cleanup_console(); 
+        exit(1);
      }
      printf("Connected to I2C port %s on address %u\n", device, i2caddr);
      // Send init params
@@ -99,6 +103,7 @@ void delay(int milliseconds)
      if (write(i2c_bus, &byte, 1) != 1) 
      {
          fprintf(stderr, "Failed to write to the i2c bus\n");
+	cleanup_console();
          exit(1);
      }
  }

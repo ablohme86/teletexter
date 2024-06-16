@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -Iinclude -pthread
 LDFLAGS = -pthread -lncurses
 LDLIBS = -lwiringPi -lwiringPiDev
 
-SRCS = src/teletexter.c src/client.c src/server_commands.c src/console.c src/messages.c src/ident.c src/server.c src/config.c src/log.c src/utils.c
+SRCS = src/teletexter.c src/lcd_disp.c src/client.c src/server_commands.c src/console.c src/messages.c src/ident.c src/server.c src/config.c src/log.c src/utils.c
 OBJS = $(SRCS:.c=.o)
 TARGET = bin/teletexter
 

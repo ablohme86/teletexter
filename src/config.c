@@ -35,7 +35,6 @@ const char *valid_keywords[] = {
     "EnablePassword",
     "UserFile",
     "MessageLogPath",
-    "SystemLogPath",
     "LCDCols",
     "LCDRows",
     "LCDAddress",

@@ -1,4 +1,4 @@
-#ifdef DISABLE_LCD
+#ifndef DISABLE_LCD
 #include "../include/lcd_disp.h"
 #endif
 #include <unistd.h>
@@ -40,7 +40,7 @@ init_console();
 void setuplcd()
 {
 
-#ifdef LINUX
+#ifndef DISABLE_LCD
     lcd_msg_maxlen = config.messageConfig.maxMessageLength;
     bglight_bit = config.lcdConfig.lcdBacklight;
     lcd_width = config.lcdConfig.lcdWidth;
