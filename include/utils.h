@@ -9,6 +9,8 @@
 
 #define TIME_STR_LEN 20
 
+int is_numerical_cpy(const char *str, int *number);
+int is_numerical(const char *str);
 void get_time(char *time_str); // Eks: 13:28
 void get_date(char *date_str); // Eks: 18.12.86
 void get_short_weekday(char *weekday_str); // Eks: Fri (for fredag)

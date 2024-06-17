@@ -2,7 +2,7 @@
 # COPYRIGHT (C) 2024 ALEXANDER BLOHME <ALEXANDER@TELETEXTER.ORG>
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude -pthread
+CFLAGS = -Wall -Wunused-variable -Wunused-but-set-variable -Wextra -Iinclude -pthread 
 LDFLAGS = -pthread -lncurses
 LDLIBS = -lwiringPi -lwiringPiDev
 
@@ -29,4 +29,3 @@ post_build_clean:
 	rm -f $(OBJS)
 
 .PHONY: all clean post_build_clean
-

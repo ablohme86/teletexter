@@ -200,7 +200,34 @@ void lcd_text(const char *text, uint8_t line, uint8_t align)
          write_command(no_bglight_bit);
      }
  }
- 
+
+
+void lcd_scroll(const char *full_message,int line) {
+    int full_message_length = strlen(full_message);
+
+    if (full_message_length <= lcd_width) {
+        // Meldingen er ikke lengre enn LCD-bredden, vis den direkte
+        lcd_text(full_message, 1, LEFT);
+        return;
+    }
+
+    // Initial display of the first portion of the message
+    char displayed_msg_buffer[lcd_width + 1];  // +1 for null-terminator
+    strncpy(displayed_msg_buffer, full_message, lcd_width);
+    displayed_msg_buffer[lcd_width] = '\0';
+    lcd_text(displayed_msg_buffer, line, LEFT);
+
+    // Scroll the message horizontally
+    for (int i = 1; i <= full_message_length - lcd_width; i++) {
+        delay(300); // Wait 300 milliseconds before scrolling
+
+        // Construct the next portion of the message to display
+        strncpy(displayed_msg_buffer, full_message + i, lcd_width);
+        displayed_msg_buffer[lcd_width] = '\0';
+
+        lcd_text(displayed_msg_buffer, 1, LEFT);
+    }
+}
 
  
  void lcd_clear() 

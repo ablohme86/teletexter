@@ -17,6 +17,7 @@ void remove_client(client_t *cli);
 void handle_client(client_t *cli);
 void handle_disconnect_client(client_t *cli, int argc, char **argv);
 void *client_handler(void *arg);
-void send_client_errmsg(client_t *cli, char *errmsg);
+int is_identified(client_t *cli);
+int check_access_lvl(client_t *cli, int a_l);
 
 #endif // CLIENT_H

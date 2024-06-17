@@ -30,6 +30,7 @@ void lcd_write(uint8_t byte, uint8_t mode);
 void lcd_text(const char *text, uint8_t line, uint8_t align);
 void lcd_backlight(uint8_t turn_on);
 void lcd_clear();
+void lcd_scroll(const char *full_message, int line);
 
 extern  uint8_t bglight_bit;
 extern  uint8_t no_bglight_bit;

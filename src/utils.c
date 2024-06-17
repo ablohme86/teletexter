@@ -1,9 +1,69 @@
 #include "../include/utils.h"
 #include <ctype.h>
+#include <limits.h>
+#include <errno.h>
 
-int check_valid_characters(char *str) {
-    while (*str) {
-        if (!isalnum((unsigned char)*str)) {
+int is_numerical_cpy(const char *str, int *number)
+{
+    char *endptr;
+    errno = 0; // tilbakestill errno før kall til strtol
+    long val = strtol(str, &endptr, 10);
+
+    // Sjekk for feil
+    if (errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) {
+        return 0; // Underflow eller overflow funnet
+    }
+
+    if (endptr == str) {
+        return 0; // Ingen tegn ble konvertert
+    }
+
+    // Sjekk for ytterligere tegn etter nummeret
+    while (*endptr != '\0') {
+        if (!isspace((unsigned char)*endptr)) {
+            return 0; // Det finnes ikke-numeriske tegn
+        }
+        endptr++;
+    }
+
+    *number = (int)val;
+    return 1; // Gyldig nummer funnet og konvertert
+}
+
+int is_numerical(const char *str) {
+    if (str == NULL || *str == '\0') {
+        return 0;
+    }
+
+    char *endptr;
+    errno = 0;
+    long val = strtol(str, &endptr, 10);
+
+    if (errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) {
+        return 0;
+    }
+
+    if (endptr == str) {
+        return 0;
+    }
+
+    while (*endptr != '\0') {
+        if (!isspace((unsigned char)*endptr)) {
+            return 0;
+        }
+        endptr++;
+    }
+
+    return 1;
+}
+
+
+int check_valid_characters(char *str)
+{
+    while (*str)
+    {
+        if (!isalnum((unsigned char)*str))
+        {
             return 0; // Return 0 if a non-alphanumeric character is found
         }
         str++;

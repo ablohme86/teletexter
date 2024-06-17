@@ -18,6 +18,8 @@ struct ServerConfig {
 struct MessageConfig {
     int maxMessageLength;
     char layoutFile[MAX_FILENAME_LENGTH];
+    int scrollLongMessages;
+    int scrollSpeed;
 };
 
 struct UserConfig {

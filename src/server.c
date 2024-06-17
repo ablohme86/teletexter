@@ -29,6 +29,37 @@ void close_server()
 
 }
 
+void ok_status(client_t *cli, int status_no,char *cust_msg,...)
+{
+
+	char st_buff[BUFFER_SIZE];
+	if (cust_msg == NULL)
+	{
+		char desc_buff[50];
+		snprintf(desc_buff,sizeof(desc_buff), "OK %d\n", status_no);
+	}
+	else
+	{
+		snprintf(st_buff,sizeof(st_buff), "OK %d :%s\n",status_no,cust_msg);
+	}
+	send(cli->socket,st_buff,strlen(st_buff),0);
+}
+void bad_status(client_t *cli, int status_no,char *cust_msg,...)
+{
+
+	char st_buff[BUFFER_SIZE];
+	if (cust_msg == NULL)
+	{
+		char desc_buff[50];
+		snprintf(desc_buff,sizeof(desc_buff), "ERROR %d\n", status_no);
+	}
+	else
+	{
+		snprintf(st_buff,sizeof(st_buff), "ERROR %d :%s\n",status_no,cust_msg);
+	}
+	send(cli->socket,st_buff,strlen(st_buff),0);
+}
+
 int start_server()
 {
 

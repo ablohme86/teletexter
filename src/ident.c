@@ -60,6 +60,7 @@ int verify_login(const char *username, const char *password, client_t *cli)
 }
 void handle_ident(client_t *cli, int argc, char **argv)
 {
+    (void)argc;
     // Hent argumenter fra argv
     char *nickname = argv[0];
     char *password = argv[1];

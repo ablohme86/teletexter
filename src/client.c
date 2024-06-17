@@ -18,13 +18,7 @@
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 client_t *clients[100]; // total max capacity
 
-void send_client_errmsg(client_t *cli, char *errmsg)
-{
-    char r_msg[BUFFER_SIZE];
-    snprintf(r_msg,sizeof(r_msg), "ERROR :%s\n", errmsg);
-    log_sys_message("[%s] Client got an error: %s", get_ip(cli), errmsg);
-    send(cli->socket,r_msg,strlen(r_msg), 0);
-}
+
 
 void add_client(client_t *cli)
 {
@@ -98,7 +92,24 @@ void remove_client(client_t *cli)
     //free(cli);
 }
 
-
+int check_access_lvl(client_t *cli, int access_required)
+{
+    if (cli->identified < access_required)
+    {
+        bad_status(cli,ACCESS_DENIED,"Your access is not high enough for this operation!");
+        return 0;
+    }
+    return 1;
+}
+int is_identified(client_t *cli)
+{
+    if (cli->identified == 0)
+    {
+        bad_status(cli,MISSING_IDENT,"You are not identified!");
+        return 0;
+    }
+    return 1;
+}
 
 void *client_handler(void *arg)
 {
@@ -107,6 +118,7 @@ void *client_handler(void *arg)
     remove_client(cli);
     return NULL;
 }
+
 void handle_client(client_t *cli)
 {
     char buffer[BUFFER_SIZE];
@@ -122,48 +134,69 @@ void handle_client(client_t *cli)
             buffer[len - 1] = '\0';
             len--;
         }
-
-        // Split command and arguments from buffer
-        char *cmd = strtok(buffer, " ");
-        char *args = strtok(NULL, "\n"); // Capture rest of string including spaces
-
         int cmd_found = 0;
-        for (int i = 0; commands[i].command[0] != '\0'; ++i)
-        {
-            if (strcmp(commands[i].command, cmd) == 0) {
-                cmd_found = 1;
 
-                if (commands[i].requires_args)
-                {
-                    if (args == NULL || strcmp(args, "") == 0)
+        if (strcmp(buffer,"") == 0)
+        {
+
+            log_sys_message("[%s] Found invalid characters in command!",get_ip(cli));
+            bad_status(cli,INVALID_CMD,"Found invalid  characters in command!");
+
+        }
+        else
+        {
+            // Split command and arguments from buffer
+            char *cmd = strtok(buffer, " ");
+
+            char *args = strtok(NULL, "\n"); // Capture rest of string including spaces
+
+
+            for (int i = 0; commands[i].command[0] != '\0'; ++i)
+            {
+                if (strcmp(commands[i].command, cmd) == 0) {
+                    cmd_found = 1;
+
+                    if (commands[i].requires_args)
                     {
-                        char missing_args_msg[BUFFER_SIZE];
-                        snprintf(missing_args_msg, sizeof(missing_args_msg), "MISSING_ARGS :%s needs %d arguments...\n", strip_newline_return(cmd), commands[i].requires_args);
-                        log_sys_message("[%s] Missing arguments on command %s, requires: %d", get_ip(cli), cmd, commands[i].requires_args);
-                        send(cli->socket, missing_args_msg, strlen(missing_args_msg), 0);
+                        if (args == NULL || strcmp(args, "") == 0)
+                        {
+                            char missing_args_msg[BUFFER_SIZE];
+                            snprintf(missing_args_msg, sizeof(missing_args_msg), "MISSING_ARGS: %s needs %d arguments...\n", strip_newline_return(cmd), commands[i].requires_args);
+                            log_sys_message("[%s] Missing arguments on command %s, requires: %d", get_ip(cli), cmd, commands[i].requires_args);
+                            send(cli->socket, missing_args_msg, strlen(missing_args_msg), 0);
+                        }
+                        else
+                        {
+                            int argc;
+                            char **argv = split_args(args, &argc);
+
+                            if (argc < commands[i].requires_args)
+                            {
+                                char missing_args_msg[BUFFER_SIZE];
+                                snprintf(missing_args_msg, sizeof(missing_args_msg), "MISSING_ARGS: %s needs %d arguments, but got %d.\n", strip_newline_return(cmd), commands[i].requires_args, argc);
+                                log_sys_message("[%s] Missing arguments on command %s, requires: %d, got: %d", get_ip(cli), cmd, commands[i].requires_args, argc);
+                                send(cli->socket, missing_args_msg, strlen(missing_args_msg), 0);
+                            }
+                            else
+                            {
+                                commands[i].function(cli, argc, argv);
+                            }
+                            free(argv);
+                        }
                     }
                     else
                     {
-                        int argc;
-                        char **argv = split_args(args, &argc);
-                        commands[i].function(cli, argc, argv);
-                        free(argv);
+                        commands[i].function(cli, 0, NULL);
                     }
+                    break;
                 }
-                else
-                {
-                    commands[i].function(cli, 0, NULL);
-                }
-                break;
+            }
+            if (!cmd_found)
+            {
+                bad_status(cli,INVALID_CMD,NULL);
+                log_sys_message("[%s] Invalid command: %s", get_ip(cli), cmd);
             }
         }
 
-        if (!cmd_found)
-        {
-            char invalid_cmd_msg[BUFFER_SIZE];
-            snprintf(invalid_cmd_msg, sizeof(invalid_cmd_msg), "INVALID_COMMAND %s\n", strip_newline_return(cmd));
-            log_sys_message("[%s] Invalid command: %s", get_ip(cli), cmd);
-            send(cli->socket, invalid_cmd_msg, strlen(invalid_cmd_msg), 0);
-        }
     }
 }

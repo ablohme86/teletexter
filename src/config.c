@@ -33,6 +33,8 @@ const char *valid_keywords[] = {
     "MaxNicknameLength",
     "EnablePassword",
     "UserFiles",
+    "ScrollLongMessages",
+    "ScrollSpeed",
     "MessageLogPath",
     "SystemLogPath",
     "LCDCols",
@@ -113,6 +115,14 @@ void loadConfig(const char *filename)
         else if (strcmp(key, "MaxClients") == 0)
         {
             config.serverConfig.maxClients = atoi(value);
+        }
+        else if (strcmp(key,"ScrollLongMessages") == 0)
+        {
+            config.messageConfig.scrollLongMessages = atoi(value);
+        }
+        else if (strcmp(key,"ScrollSpeed") == 0)
+        {
+            config.messageConfig.scrollSpeed = atoi(value);
         }
         else if (strcmp(key, "MaxMessageLength") == 0)
         {

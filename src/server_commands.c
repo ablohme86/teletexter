@@ -12,6 +12,7 @@
 command_t commands[] = {
     {"IDENT", handle_ident, 2},
     {"MSG", handle_msg, 1},
+    {"MSG_CUSTOM",handle_msg_custom,3},
     {"MSG_CLEAR", handle_clear_display, 0},
     {"BYE", handle_disconnect_client,0},
     {"", NULL, 0}
@@ -21,7 +22,7 @@ command_t commands[] = {
 char **split_args(char *args, int *argc)
 {
     char **argv = malloc(MAX_ARGS * sizeof(char *));
-    char *arg;
+   // char *arg;
     int count = 0;
     int in_quote = 0;
     char *start = NULL;
