@@ -9,7 +9,6 @@ typedef struct command {
     int requires_args;
 } command_t;
 
-
 extern command_t commands[];
 
 #endif /* COMMANDS_H */

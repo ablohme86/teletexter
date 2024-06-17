@@ -29,7 +29,6 @@ void add_client(client_t *cli)
             break;
         }
     }
-    printf("%s connected... Awaiting IDENT\n", get_ip(cli));
     log_sys_message("[%s] Connected! Awaiting IDENT", get_ip(cli));
     pthread_mutex_unlock(&clients_mutex);
 }
@@ -38,32 +37,57 @@ void handle_disconnect_client(client_t *cli, char *args)
 {
 
     (void) args; // Suppress compiler warning
+    char exit_msg[BUFFER_SIZE];
+
+    if (strcmp(cli->nickname,"") != 0)
+    {
+        snprintf(exit_msg,sizeof(exit_msg),"See ya later %s! Bye for now!\n", cli->nickname);
+        log_sys_message("[%s] %s disconnected!", get_ip(cli), cli->nickname);
+    }
+    else
+    {
+        snprintf(exit_msg,sizeof(exit_msg),"Hmmf! You left without telling me who you are??!\n");
+        log_sys_message("[%s] Disconnected!", get_ip(cli));
+    }
+    // Send a last message before cleanup work begins!
+    send(cli->socket, exit_msg, strlen(exit_msg), 0);
     remove_client(cli);
+    //  remove_client(cli);
 }
 
 void remove_client(client_t *cli)
 {
+    if (cli == NULL) {
+        return; // Sjekk om cli er gyldig
+    }
+
     pthread_mutex_lock(&clients_mutex);
+
+    // Lukk cli->socket hvis det er gyldig
+    if (cli->socket != -1) {
+        close(cli->socket);
+    }
 
     // Finn og merk cli som NULL i clients-arrayet
     for (int i = 0; i < config.serverConfig.maxClients; ++i)
     {
         if (clients[i] == cli)
         {
-            printf("Found client, setting NULL\n");
             clients[i] = NULL;
             break;
         }
     }
 
     pthread_mutex_unlock(&clients_mutex);
-
-    // Lukk cli->socket og frigjør cli
-    if (cli->socket != -1) {
-        close(cli->socket);
+    if (cli == NULL) {
+        printf("cli is NULL now, cannot free memory :O");
+        return; // Sjekk om cli er gyldig
     }
-    free(cli);
+
+    // Frigjør cli
+    //free(cli);
 }
+
 
 
 void *client_handler(void *arg)

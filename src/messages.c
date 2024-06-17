@@ -8,10 +8,47 @@
 #include "../include/server.h" // Include server.h for get_ip function
 #include "../include/utils.h"
 
+void handle_msg_custom(client_t *cli, char *args)
+{
+    char r_msg[BUFFER_SIZE];
 
+    if (cli->identified)
+    {
+        
+    }
+    else
+    {
+        snprintf(r_msg,sizeof(r_msg), "ACCESS_DENIED MSG_CUSTOM\n");
+        log_sys_message("[%s] tried to set custom message without proper access", get_ip(cli));
+        send(cli->socket,r_msg,strlen(r_msg), 0);
+    }
+}
 
+void handle_clear_display(client_t *cli, char *args)
+{
+    (void) args;
+    char r_msg[BUFFER_SIZE];
 
-void handle_msg(client_t *cli, char *args) 
+    if (cli->identified)
+    {
+#ifndef DISABLE_LCD
+        lcd_clear();
+#endif
+
+        snprintf(r_msg,sizeof(r_msg), "DISPLAY_CLEARED\n");
+        log_sys_message("[%s] %s cleared display", get_ip(cli), cli->nickname);
+        send(cli->socket,r_msg,strlen(r_msg), 0);
+    }
+    else
+    {
+        snprintf(r_msg,sizeof(r_msg), "ACCESS_DENIED CLEAR_DISPLAY\n");
+        log_sys_message("[%s] tried to clear display without proper access", get_ip(cli));
+        send(cli->socket,r_msg,strlen(r_msg), 0);
+    }
+
+}
+
+void handle_msg(client_t *cli, char *args)
 {
     if (cli->identified == 0)
     {

@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+
+
 // Funksjon for å verifisere passordet
 int verify_login(const char *username, const char *password, client_t *cli)
 {
