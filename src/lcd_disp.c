@@ -45,9 +45,9 @@ uint8_t line3_addr = LINE_3;
 uint8_t line4_addr = LINE_4;
 uint8_t enable_bit = ENABLE_BIT;
 
- int lcd_height;
- int lcd_width;
- int lcd_msg_maxlen;
+ unsigned int lcd_height;
+ unsigned int lcd_width;
+ unsigned int lcd_msg_maxlen;
 void delay(int milliseconds) 
  {
      usleep(milliseconds * 1000);
@@ -111,9 +111,9 @@ void delay(int milliseconds)
  {
      i2c_write_byte(byte);
      i2c_write_byte(byte | ENABLE_BIT);
-     delay(1);
+     delay(5);
      i2c_write_byte(byte & ~ENABLE_BIT);
-     delay(10);
+     delay(5);
  }
  
  void lcd_write(uint8_t byte, uint8_t mode) 
@@ -158,7 +158,7 @@ void lcd_text(const char *text, uint8_t line, uint8_t align)
       
       // Oppdater tekstlinjen på LCD-skjermen
      char **lcd_lines = malloc(lcd_height * sizeof(char *));
-     for (int i = 0; i < lcd_height; ++i)
+     for (unsigned int i = 0; i < lcd_height; ++i)
      {
          lcd_lines[i] = malloc((lcd_width + 1) * sizeof(char));
      }
@@ -178,12 +178,12 @@ void lcd_text(const char *text, uint8_t line, uint8_t align)
       
       // Fyll resten av linjen med mellomrom
       int text_len = strlen(lcd_lines[line - 1]);
-      for (int i = text_len; i < lcd_width; i++) 
+      for (unsigned int i = text_len; i < lcd_width; i++) 
       {
           lcd_lines[line - 1][i] = ' ';
       }
       
-      for (int i = 0; i < lcd_width; i++) 
+      for (unsigned int i = 0; i < lcd_width; i++) 
       {
           lcd_write(lcd_lines[line - 1][i], 1);
       }
@@ -202,10 +202,12 @@ void lcd_text(const char *text, uint8_t line, uint8_t align)
  }
 
 
-void lcd_scroll(const char *full_message,int line) {
-    int full_message_length = strlen(full_message);
+void lcd_scroll(const char *full_message,int line, unsigned int scrollspeed_ms) 
+{
+    unsigned int full_message_length = strlen(full_message);
 
-    if (full_message_length <= lcd_width) {
+    if (full_message_length <= lcd_width) 
+    {
         // Meldingen er ikke lengre enn LCD-bredden, vis den direkte
         lcd_text(full_message, 1, LEFT);
         return;
@@ -218,14 +220,15 @@ void lcd_scroll(const char *full_message,int line) {
     lcd_text(displayed_msg_buffer, line, LEFT);
 
     // Scroll the message horizontally
-    for (int i = 1; i <= full_message_length - lcd_width; i++) {
-        delay(300); // Wait 300 milliseconds before scrolling
+    for (unsigned int i = 1; i <= full_message_length - lcd_width; i++) 
+    {
+        delay(scrollspeed_ms); // Wait X milliseconds before scrolling
 
         // Construct the next portion of the message to display
         strncpy(displayed_msg_buffer, full_message + i, lcd_width);
         displayed_msg_buffer[lcd_width] = '\0';
 
-        lcd_text(displayed_msg_buffer, 1, LEFT);
+        lcd_text(displayed_msg_buffer, line, LEFT);
     }
 }
 

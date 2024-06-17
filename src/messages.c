@@ -125,7 +125,7 @@ void handle_msg(client_t *cli, int argc, char **argv)
         {
             if (config.messageConfig.scrollLongMessages == 1)
             {
-                lcd_scroll(full_message,2);
+                lcd_scroll(full_message,2, config.messageConfig.scrollSpeed);
 
             }
         }

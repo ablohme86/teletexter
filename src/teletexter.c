@@ -20,7 +20,10 @@ void sigint_handler(int sig)
 
     printf("sigint %d received! Now, HANDLE I-T!\n", sig);
     sigint_received = 1;
+    
     close_server();    // properly close the server...
+    // TODO:  close all remainign clients...
+        
     exit(1);  // ...and get TFO'utta here!
 }
 
@@ -35,10 +38,7 @@ int main(int argc, char **argv)
 
     printf("        TeleTexter v%d.%d\n", MAJOR, MINOR);
     printf("Copyright (c) 2024 Alexander Blohme\n");
-    for (int i=0; i <= 50; i+=16)
-    {
-        printf("Tall: %d\n", i);
-    }
+
 
     if (manage_startup_args(argc, argv) == 0)
     {
