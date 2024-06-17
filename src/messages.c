@@ -7,26 +7,47 @@
 #include "../include/log.h"
 #include "../include/server.h" // Include server.h for get_ip function
 #include "../include/utils.h"
+#include "../include/client.h"
 
-void handle_msg_custom(client_t *cli, char *args)
+void handle_msg_custom(client_t *cli,int argc, char **argv)
 {
-    char r_msg[BUFFER_SIZE];
 
+
+    char r_msg[BUFFER_SIZE];
     if (cli->identified)
     {
-        
+
+
+        int align = 0;
+        if (argv[1] == "LEFT")
+        {
+            align = LEFT;
+        }
+        else if (argv[1] == "RIGHT")
+        {
+            align = RIGHT;
+        }
+        else if (argv[1] == "CENTER")
+        {
+            align = CENTER;
+        }
+        else
+        {
+            send_client_errmsg(cli,"Wrong alignment! Use LEFT, RIGHT or CENTER");
+            return;
+        }
     }
     else
     {
-        snprintf(r_msg,sizeof(r_msg), "ACCESS_DENIED MSG_CUSTOM\n");
-        log_sys_message("[%s] tried to set custom message without proper access", get_ip(cli));
-        send(cli->socket,r_msg,strlen(r_msg), 0);
+           send_client_errmsg(cli, "NOT_IDENTIFIED");
+        return;
     }
 }
 
-void handle_clear_display(client_t *cli, char *args)
+void handle_clear_display(client_t *cli, int argc, char **argv)
 {
-    (void) args;
+    (void) argc;
+    (void) argv;
     char r_msg[BUFFER_SIZE];
 
     if (cli->identified)
@@ -48,7 +69,7 @@ void handle_clear_display(client_t *cli, char *args)
 
 }
 
-void handle_msg(client_t *cli, char *args)
+void handle_msg(client_t *cli, int argc, char **argv)
 {
     if (cli->identified == 0)
     {
@@ -59,19 +80,20 @@ void handle_msg(client_t *cli, char *args)
     }
 
 
-    if (args != NULL) 
+    if (argc != NULL)
     {
         char weekday_str[20];
         char cur_time[10];
         
         get_short_weekday(weekday_str);
         get_time(cur_time);
-        strip_newline(args);
+        strip_newline(argv[0]);
+        printf("Sending this message to LcD display: %s\n", argv[0]);
 
         char *ip;
         ip = get_ip(cli); // Call get_ip to retrieve client's IP address
 
-        log_message(ip, cli->nickname, args);
+        log_message(ip, cli->nickname, argv[0]);
 
         char lcd_message[190];
 
@@ -80,7 +102,7 @@ void handle_msg(client_t *cli, char *args)
 
         lcd_clear();
         lcd_text(lcd_message, 1, LEFT);
-        lcd_text(args, 2, LEFT);
+        lcd_text(argv[1], 2, LEFT);
 #endif
     }
 }

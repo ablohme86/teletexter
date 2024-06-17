@@ -18,6 +18,14 @@
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 client_t *clients[100]; // total max capacity
 
+void send_client_errmsg(client_t *cli, char *errmsg)
+{
+    char r_msg[BUFFER_SIZE];
+    snprintf(r_msg,sizeof(r_msg), "ERROR :%s\n", errmsg);
+    log_sys_message("[%s] Client got an error: %s", get_ip(cli), errmsg);
+    send(cli->socket,r_msg,strlen(r_msg), 0);
+}
+
 void add_client(client_t *cli)
 {
     pthread_mutex_lock(&clients_mutex);
@@ -33,10 +41,12 @@ void add_client(client_t *cli)
     pthread_mutex_unlock(&clients_mutex);
 }
 
-void handle_disconnect_client(client_t *cli, char *args)
+void handle_disconnect_client(client_t *cli,int argc, char **argv)
 {
 
-    (void) args; // Suppress compiler warning
+
+    (void) argc; // Suppress compiler warning
+    (void) argv;
     char exit_msg[BUFFER_SIZE];
 
     if (strcmp(cli->nickname,"") != 0)
@@ -46,7 +56,7 @@ void handle_disconnect_client(client_t *cli, char *args)
     }
     else
     {
-        snprintf(exit_msg,sizeof(exit_msg),"Hmmf! You left without telling me who you are??!\n");
+        snprintf(exit_msg,sizeof(exit_msg),"Hmmf! You left without telling me who you are?!\n");
         log_sys_message("[%s] Disconnected!", get_ip(cli));
     }
     // Send a last message before cleanup work begins!
@@ -123,20 +133,28 @@ void handle_client(client_t *cli)
             if (strcmp(commands[i].command, cmd) == 0) {
                 cmd_found = 1;
 
-                // Check if the command requires arguments and if args is NULL or empty
-                if (commands[i].requires_args && (args == NULL || strcmp(args, "") == 0))
+                if (commands[i].requires_args)
                 {
-                    char missing_args_msg[BUFFER_SIZE];
-                    snprintf(missing_args_msg, sizeof(missing_args_msg), "MISSING_ARGS: %s needs %d arguments...\n", strip_newline_return(cmd), commands[i].requires_args);
-                    log_sys_message("[%s] Missing arguments on command %s, requires: %d", get_ip(cli), cmd, commands[i].requires_args);
-                    send(cli->socket, missing_args_msg, strlen(missing_args_msg), 0);
+                    if (args == NULL || strcmp(args, "") == 0)
+                    {
+                        char missing_args_msg[BUFFER_SIZE];
+                        snprintf(missing_args_msg, sizeof(missing_args_msg), "MISSING_ARGS :%s needs %d arguments...\n", strip_newline_return(cmd), commands[i].requires_args);
+                        log_sys_message("[%s] Missing arguments on command %s, requires: %d", get_ip(cli), cmd, commands[i].requires_args);
+                        send(cli->socket, missing_args_msg, strlen(missing_args_msg), 0);
+                    }
+                    else
+                    {
+                        int argc;
+                        char **argv = split_args(args, &argc);
+                        commands[i].function(cli, argc, argv);
+                        free(argv);
+                    }
                 }
                 else
                 {
-                    strip_newline(args);
-                    commands[i].function(cli, args);
-                    break;
+                    commands[i].function(cli, 0, NULL);
                 }
+                break;
             }
         }
 
@@ -149,4 +167,3 @@ void handle_client(client_t *cli)
         }
     }
 }
-

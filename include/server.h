@@ -9,4 +9,5 @@ char *get_ip(client_t *cli);
 void setuplcd();
 void close_server();
 
+
 #endif /* SERVER_H */

@@ -15,7 +15,8 @@ typedef struct {
 void add_client(client_t *cli);
 void remove_client(client_t *cli);
 void handle_client(client_t *cli);
-void handle_disconnect_client(client_t *cli, char *args);
+void handle_disconnect_client(client_t *cli, int argc, char **argv);
 void *client_handler(void *arg);
+void send_client_errmsg(client_t *cli, char *errmsg);
 
 #endif // CLIENT_H

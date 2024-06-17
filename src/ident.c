@@ -58,47 +58,11 @@ int verify_login(const char *username, const char *password, client_t *cli)
 
     return strcmp(password, stored_password) == 0;
 }
-void handle_ident(client_t *cli, char *args)
+void handle_ident(client_t *cli, int argc, char **argv)
 {
-
-    char nickname[256];
-    char password[256];
-
-    // Kopier hele args til en midlertidig buffer
-    char temp_args[256];
-    strncpy(temp_args, args, sizeof(temp_args) - 1);
-    temp_args[sizeof(temp_args) - 1] = '\0';
-
-    // Del opp temp_args med strtok
-    char *token = strtok(temp_args, " ");
-    if (token != NULL)
-    {
-        // token inneholder nå det første ordet (nickname)
-        strncpy(nickname, token, sizeof(nickname) - 1);
-        nickname[sizeof(nickname) - 1] = '\0';
-
-        // Finn starten av passordet
-        token = strtok(NULL, "");
-        if (token != NULL)
-        {
-            strncpy(password, token, sizeof(password) - 1);
-            password[sizeof(password) - 1] = '\0';
-        }
-        else
-        {
-            // Hvis det ikke er noe passord gitt
-            char *error_msg = "IDENT_MISSING_PASSWORD\n";
-            send(cli->socket, error_msg, strlen(error_msg), 0);
-            return;
-        }
-    }
-    else
-    {
-        // Hvis det ikke er noe nickname gitt
-        char *error_msg = "IDENT_MISSING_NICKNAME\n";
-        send(cli->socket, error_msg, strlen(error_msg), 0);
-        return;
-    }
+    // Hent argumenter fra argv
+    char *nickname = argv[0];
+    char *password = argv[1];
 
     int verify_result = verify_login(nickname, password, cli);
     if (verify_result == 0)
