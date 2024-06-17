@@ -13,7 +13,8 @@ void get_time(char *time_str); // Eks: 13:28
 void get_date(char *date_str); // Eks: 18.12.86
 void get_short_weekday(char *weekday_str); // Eks: Fri (for fredag)
 void strip_newline(char *str);
-
+int check_valid_characters(char *str); // Checks if the string contains only a-z, A-Z, 0-9
+char *strip_newline_return(char *str);
 
 
 // Andre funksjonsdeklarasjoner her...

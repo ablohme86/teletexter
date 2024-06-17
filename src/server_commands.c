@@ -4,10 +4,11 @@
 
 #include "../include/ident.h"
 #include "../include/messages.h"
+#include "../include/client.h"
 
 command_t commands[] = {
-    {"IDENT", handle_ident},
-   // {"PWD", handle_pwd},
-    {"MSG", handle_msg},
-    {"", NULL}
+    {"IDENT", handle_ident, 2},
+    {"MSG", handle_msg, 1},
+    {"BYE", handle_disconnect_client,0},
+    {"", NULL, 0}
 };

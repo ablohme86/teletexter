@@ -5,7 +5,6 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "../include/console.h"
 
 struct Config config = {0}; // Define config here
 
@@ -33,8 +32,9 @@ const char *valid_keywords[] = {
     "LayoutFile", 
     "MaxNicknameLength",
     "EnablePassword",
-    "UserFile",
+    "UserFiles",
     "MessageLogPath",
+    "SystemLogPath",
     "LCDCols",
     "LCDRows",
     "LCDAddress",
@@ -130,9 +130,17 @@ void loadConfig(const char *filename)
         {
             config.userConfig.enablePassword = atoi(value);
         }
-        else if (strcmp(key, "UserFile") == 0)
+        else if (strcmp(key, "UserFiles") == 0)
         {
             strncpy(config.userConfig.userFilePath, value, MAX_PATH_LENGTH);
+        }
+        else if (strcmp(key, "BanList") == 0)
+        {
+            strncpy(config.serverConfig.banList, value, MAX_FILENAME_LENGTH);
+        }
+        else if (strcmp(key, "WhiteList") == 0)
+        {
+            strncpy(config.serverConfig.whiteList, value, MAX_FILENAME_LENGTH);
         }
         else if (strcmp(key, "MessageLogPath") == 0)
         {

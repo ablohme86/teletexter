@@ -3,7 +3,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include "../include/lcd_disp.h"
-#include "../include/console.h"
 #include "../include/messages.h"
 #include "../include/log.h"
 #include "../include/server.h" // Include server.h for get_ip function
@@ -17,6 +16,7 @@ void handle_msg(client_t *cli, char *args)
     if (cli->identified == 0)
     {
         char *error_msg = "NOT_IDENTIFIED\n";
+        log_sys_message("[%s] Client cannot send MSG, not identified yet!", get_ip(cli));
         send(cli->socket, error_msg, strlen(error_msg), 0);
         return;
     }

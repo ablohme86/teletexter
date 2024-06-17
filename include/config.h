@@ -10,6 +10,9 @@
 struct ServerConfig {
     int port;
     int maxClients;
+    char banList[MAX_FILENAME_LENGTH];
+    char whiteList[MAX_FILENAME_LENGTH];
+
 };
 
 struct MessageConfig {

@@ -1,7 +1,11 @@
 #include "../include/ident.h"
+
+#include <log.h>
+#include <server.h>
+
 #include "../include/utils.h"
 #include "../include/pwd.h"
-#include "../include/console.h"
+#include "../include/config.h"
 #include <stdio.h>
 #include <string.h>
 #include <arpa/inet.h>
@@ -9,15 +13,15 @@
 #include <unistd.h>
 
 // Funksjon for å verifisere passordet
-int verify_login(const char *username, const char *password)
+int verify_login(const char *username, const char *password, client_t *cli)
 {
     char filepath[256];
-    snprintf(filepath, sizeof(filepath), "users/%s", username);
+    snprintf(filepath, sizeof(filepath), "%s/%s",config.userConfig.userFilePath, username);
 
     FILE *file = fopen(filepath, "r");
     if (file == NULL)
     {
-        fprintf(stderr, "Userfile for %s could not be found at %s!\n", username, filepath);
+        log_sys_message( "Userfile for %s could not be found at %s!\n", username, filepath);
         return 0; // User file does not exist
     }
 
@@ -37,6 +41,10 @@ int verify_login(const char *username, const char *password)
         {
             enabled = atoi(line + 8);
         }
+        else if (strncmp(line,"ACCESS_LEVEL ", 13) == 0)
+        {
+            cli->access_level = atoi(line + 13);
+        }
     }
 
     fclose(file);
@@ -48,64 +56,71 @@ int verify_login(const char *username, const char *password)
 
     return strcmp(password, stored_password) == 0;
 }
-
-// Håndter IDENT-kommandoen
 void handle_ident(client_t *cli, char *args)
 {
-    if (strlen(args) == 0)
+
+    char nickname[256];
+    char password[256];
+
+    // Kopier hele args til en midlertidig buffer
+    char temp_args[256];
+    strncpy(temp_args, args, sizeof(temp_args) - 1);
+    temp_args[sizeof(temp_args) - 1] = '\0';
+
+    // Del opp temp_args med strtok
+    char *token = strtok(temp_args, " ");
+    if (token != NULL)
     {
-        char *error_msg = "IDENT_MISSING_ARGS\n";
+        // token inneholder nå det første ordet (nickname)
+        strncpy(nickname, token, sizeof(nickname) - 1);
+        nickname[sizeof(nickname) - 1] = '\0';
+
+        // Finn starten av passordet
+        token = strtok(NULL, "");
+        if (token != NULL)
+        {
+            strncpy(password, token, sizeof(password) - 1);
+            password[sizeof(password) - 1] = '\0';
+        }
+        else
+        {
+            // Hvis det ikke er noe passord gitt
+            char *error_msg = "IDENT_MISSING_PASSWORD\n";
+            send(cli->socket, error_msg, strlen(error_msg), 0);
+            return;
+        }
+    }
+    else
+    {
+        // Hvis det ikke er noe nickname gitt
+        char *error_msg = "IDENT_MISSING_NICKNAME\n";
         send(cli->socket, error_msg, strlen(error_msg), 0);
         return;
     }
 
-    char nickname[256];
-    char password[256];
-    int args_count = sscanf(args, "%255s %255s", nickname, password);
-
-    if (args_count < 2) {
-        // Handle error
-        printf("Not enough arguments provided.\n");
-
-    }
-
-    // Find the position in the original args string where the password starts
-    char *password_pos = strchr(args, ' ');
-    if (password_pos != NULL)
-    {
-        // Move past the first space
-        password_pos++;
-        // Find the start of the actual password (second space)
-        password_pos = strchr(password_pos, ' ');
-        if (password_pos != NULL)
-        {
-            // Move past the second space to get the start of the full password
-            password_pos++;
-            // Copy the rest of the string as the password
-            strncpy(password, password_pos, sizeof(password) - 1);
-            password[sizeof(password) - 1] = '\0'; // Ensure null-terminated string
-        }
-    }
-
-    int verify_result = verify_login(nickname, password);
+    int verify_result = verify_login(nickname, password, cli);
     if (verify_result == 0)
     {
+        log_sys_message( "[%s] Wrong credentials: username %s!", get_ip(cli), nickname);
         char *error_msg = "LOGIN_ERROR\n";
         send(cli->socket, error_msg, strlen(error_msg), 0);
     }
     else if (verify_result == -1)
     {
+        log_sys_message("[%s] The user '%s' is blocked from access!", get_ip(cli), nickname);
         char *error_msg = "USER_BLOCKED\n";
         send(cli->socket, error_msg, strlen(error_msg), 0);
     }
     else
     {
         char *success_msg = "IDENTIFIED\n";
+        log_sys_message( "[%s] Successfully identified as %s!", get_ip(cli), nickname);
         send(cli->socket, success_msg, strlen(success_msg), 0);
         strncpy(cli->nickname, nickname, sizeof(cli->nickname) - 1);
         cli->nickname[sizeof(cli->nickname) - 1] = '\0';
         cli->identified = 1;
     }
 }
+
 
 

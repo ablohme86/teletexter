@@ -8,8 +8,9 @@
 #ifndef DISABLE_LCD
 #include "../include/lcd_disp.h"
 #endif
+#include <log.h>
+
 #include "../include/config.h"
-#include "../include/console.h"
 
 int server_socket, client_socket;
 
@@ -47,7 +48,8 @@ int start_server()
 	
 	if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) 
 	{
-		printf("Bind failed\n");
+		log_sys_message("Cannot start server: Bind failed!");
+		perror("Bind error");
 #ifndef DISABLE_LCD
 		lcd_text("Sockets failed!",2,CENTER);
 #endif

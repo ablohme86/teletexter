@@ -32,7 +32,6 @@
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
 #include "../include/lcd_disp.h"
-#include "../include/error_handler.h"
 
 
 int i2c_bus;
@@ -49,8 +48,6 @@ uint8_t enable_bit = ENABLE_BIT;
  int lcd_height;
  int lcd_width;
  int lcd_msg_maxlen;
-char errmsg[MAX_ERR_MSG];
-
 void delay(int milliseconds) 
  {
      usleep(milliseconds * 1000);
@@ -60,25 +57,29 @@ void delay(int milliseconds)
  {
     if (lcd_height == 0)
     {
-        snprintf(errmsg,sizeof(errmsg), "lcd_height (%d) is not set! Exiting",lcd_height);
-        exit_error(errmsg);
-
+        fprintf(stderr, "lcd_height (%d) is not set! Exiting",lcd_height);
+	
+        exit(1);
     }
     else if (lcd_width == 0)
     {
-        snprintf(errmsg,sizeof(errmsg), "lcd_width (%d) is not set! Exiting\n",lcd_width);
-        exit_error(errmsg);
+        fprintf(stderr, "lcd_width (%d) is not set! Exiting\n",lcd_width);
+	
+        exit(1);
     }
      i2c_bus = open(device, O_RDWR);
      if (i2c_bus < 0) 
      {
-         snprintf(errmsg,sizeof(errmsg), "Failed to open the i2c bus %s on address %d\n", device, i2caddr);
-         exit_error(errmsg);
+         fprintf(stderr, "Failed to open the i2c bus %s on address %d\n", device, i2caddr);
+	 
+        exit(1);
      }
      if (ioctl(i2c_bus, I2C_SLAVE, LCD_ADDRESS) < 0) 
      {
-         snprintf(errmsg,sizeof(errmsg),"Failed to aquire bus access from %s on address %d\n", device, i2caddr);
-         exit_error(errmsg);
+     fprintf(stderr, "Failed to aquire bus access from %s on address %d\n", device, i2caddr);
+         perror("Failed to acquire bus access and/or talk to slave");
+	 
+        exit(1);
      }
      printf("Connected to I2C port %s on address %u\n", device, i2caddr);
      // Send init params
@@ -100,8 +101,9 @@ void delay(int milliseconds)
  {
      if (write(i2c_bus, &byte, 1) != 1) 
      {
-
-         exit_error("Failed to write to the i2c bus!\n");
+         fprintf(stderr, "Failed to write to the i2c bus\n");
+	
+         exit(1);
      }
  }
  
