@@ -49,7 +49,8 @@ const char *valid_keywords[] = {
     "LCDLine3",
     "LCDLine4",
     "LCDClrDisp",
-    "LCDEnableBit"
+    "LCDEnableBit",
+    "ServerIdentifier"
     
     
 };
@@ -124,6 +125,10 @@ void loadConfig(const char *filename)
         else if (strcmp(key,"ScrollLongMessages") == 0)
         {
             config.messageConfig.scrollLongMessages = atoi(value);
+        }
+        else if (strcmp(key,"ServerIdentifier") == 0)
+        {
+            strncpy(config.serverConfig.serverIdentifier, value, MAX_IDENTIFIER_LENGTH);
         }
         else if (strcmp(key,"ScrollSpeed") == 0)
         {

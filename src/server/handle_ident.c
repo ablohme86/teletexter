@@ -11,52 +11,6 @@
 #include <unistd.h>
 
 
-
-// Funksjon for å verifisere passordet
-int verify_login(const char *username, const char *password, client_t *cli)
-{
-    char filepath[256];
-    strip_newline(username);
-    snprintf(filepath, sizeof(filepath), "%s/%s",config.userConfig.userFilePath, username);
-
-    FILE *file = fopen(filepath, "r");
-    if (file == NULL)
-    {
-        log_sys_message( "Userfile for %s could not be found at %s!\n", username, filepath);
-        return 0; // User file does not exist
-    }
-
-    char stored_password[256];
-    int enabled = 0;
-
-    char line[256];
-    while (fgets(line, sizeof(line), file))
-    {
-        if (strncmp(line, "PWD ", 4) == 0)
-        {
-            strncpy(stored_password, line + 4, sizeof(stored_password) - 1);
-            stored_password[sizeof(stored_password) - 1] = '\0';
-            strip_newline(stored_password);
-        }
-        else if (strncmp(line, "ENABLED ", 8) == 0)
-        {
-            enabled = atoi(line + 8);
-        }
-        else if (strncmp(line,"ACCESS_LEVEL ", 13) == 0)
-        {
-            cli->user->access_level = atoi(line + 13);
-        }
-    }
-
-    fclose(file);
-
-    if (!enabled)
-    {
-        return -1; // User is blocked
-    }
-
-    return strcmp(password, stored_password) == 0;
-}
 void handle_ident(client_t *cli, int argc, char **argv)
 {
     (void)argc;
@@ -72,9 +26,8 @@ void handle_ident(client_t *cli, int argc, char **argv)
     if (db_login == LOGIN_OK)
     {
         cli->identified = 1;
-        log_sys_message("[%s] %s successfully logged in with access level %d", cli->ipv4addr,cli->user->username,cli->user->access_level);
+        log_sys_message("[%s] %s (%d) successfully logged in with access level %d", cli->ipv4addr,cli->user->username,cli->user->id,cli->user->access_level);
         ok_status(cli,LOGIN_OK,"LOGIN_OK");
-        //printf("Login Success: user: %s, password (from db): %s\n",cli->user->username,cli->user->password);
     }
     else
     {

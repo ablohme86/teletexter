@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+
+
 sqlite3 *db;
 char *err_msg;
 
@@ -93,53 +95,40 @@ int init_db(char *db_name)
 
     return rc;
 }
-int add_user(User *user)
+
+
+int db_create_message(Message *msg)
 {
-    char *err_msg = 0;
-    char sql[256];
-
-    snprintf(sql, sizeof(sql), "INSERT INTO users (username, password, access_level, enabled) VALUES ('%s', '%s', %d, %d);", user->username, user->password, user->access_level, user->enabled);
-
-    int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    if (msg->id != 0)
+    {
+        return DB_MESSAGE_IS_NOT_NEW;
+    }
+    sqlite3_stmt *stmt;
+    const char *sql = "INSERT INTO messages (date,time,message,poster_id,status) VALUES (?,?,?,?,?)";
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
 
     if (rc != SQLITE_OK) {
-        fprintf(stderr, "SQL error: %s\n", err_msg);
+        log_err_message("[DATABASE] Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        sqlite3_free(stmt);
+        return rc;
+    }
+
+    // Bind parameters
+    sqlite3_bind_text(stmt, 0, msg->date, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, msg->time, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2,msg->message,-1,SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 3,msg->poster_id);
+    sqlite3_bind_int(stmt,4,msg->status);
+
+     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+
+    if (rc != SQLITE_OK) {
+        log_err_message("[DATABASE] Cannot create a new message in database, SQL error: %s\n", sqlite3_errmsg(db));
         sqlite3_free(err_msg);
         return rc;
     }
 
-    return SQLITE_OK;
-}
 
-
-int get_user(int id, User *user)
-{
-    sqlite3_stmt *stmt;
-    char sql[256];
-
-    snprintf(sql, sizeof(sql), "SELECT * FROM users WHERE id = %d;", id);
-
-    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
-
-    if (rc != SQLITE_OK)
-    {
-        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
-        return rc;
-    }
-
-    rc = sqlite3_step(stmt);
-
-    if (rc == SQLITE_ROW)
-    {
-        user->id = sqlite3_column_int(stmt, 0);
-        strcpy(user->username, (const char *)sqlite3_column_text(stmt, 1));
-        strcpy(user->password, (const char *)sqlite3_column_text(stmt, 2));
-        user->access_level = sqlite3_column_int(stmt, 3);
-        user->enabled = sqlite3_column_int(stmt, 4);
-    }
-
-    sqlite3_finalize(stmt);
-    return SQLITE_OK;
 }
 
 
@@ -155,6 +144,7 @@ int check_user_login(const char *username, const char *pwd, User *user)
     }
 
     // Bind parameters
+
     sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 2, pwd, -1, SQLITE_STATIC);
 
@@ -168,6 +158,8 @@ int check_user_login(const char *username, const char *pwd, User *user)
             log_err_message("[MEMORY] For some reason the User pointer was not initialized during client-connect! I will now fail miserably :´-(! Bye...");
         }
 
+
+        user->id = sqlite3_column_int(stmt,0);
         strcpy(user->username, (const char *)sqlite3_column_text(stmt, 1));
         strcpy(user->password, (const char *)sqlite3_column_text(stmt, 2));
         user->access_level = sqlite3_column_int(stmt, 3);
@@ -189,37 +181,4 @@ int check_user_login(const char *username, const char *pwd, User *user)
 }
 
 
-int update_user(User *user) {
-    char *err_msg = 0;
-    char sql[256];
 
-    snprintf(sql, sizeof(sql), "UPDATE users SET username = '%s', password = '%s', access_level = %d, enabled = %d WHERE id = %d;",
-             user->username, user->password, user->access_level, user->enabled, user->id);
-
-    int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
-
-    if (rc != SQLITE_OK) {
-        fprintf(stderr, "SQL error: %s\n", err_msg);
-        sqlite3_free(err_msg);
-        return rc;
-    }
-
-    return SQLITE_OK;
-}
-
-int delete_user(int id) {
-    char *err_msg = 0;
-    char sql[256];
-
-    snprintf(sql, sizeof(sql), "DELETE FROM users WHERE id = %d;", id);
-
-    int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
-
-    if (rc != SQLITE_OK) {
-        fprintf(stderr, "SQL error: %s\n", err_msg);
-        sqlite3_free(err_msg);
-        return rc;
-    }
-
-    return SQLITE_OK;
-}

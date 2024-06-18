@@ -34,8 +34,8 @@ void handle_msg_custom(client_t *cli,int argc, char **argv)
                 bad_status(cli,LINE_NOT_AVAILABLE,"LINE_NOT_AVAILABLE");
                 break;
             case INVALID_ALIGN:
-                break;
                 bad_status(cli,INVALID_ALIGN,"INVALID_ALIGN");
+            break;
             case LINE_CANNOT_BE_ZERO:
                 bad_status(cli,LINE_CANNOT_BE_ZERO,"LINE_CANNOT_BE_ZERO");
                 break;
@@ -44,11 +44,13 @@ void handle_msg_custom(client_t *cli,int argc, char **argv)
                 break;
         };
 
+
     }
     else
     {
+        bad_status(cli,MISSING_IDENT,"Please IDENT first!");
         log_sys_message("[%s] Attempted to use MSG_CUSTOM without being identified",get_ip(cli));
-        return;
+
     }
 }
 
@@ -80,11 +82,10 @@ void handle_msg(client_t *cli, int argc, char **argv)
         log_sys_message("[%s] Client cannot send MSG, not identified yet!", get_ip(cli));
         return;
     }
-
-
     if (argc > 0)
     {
         char full_message[100];
+        char *errmsg;
 
 
         strncpy(full_message,argv[0], sizeof(full_message));

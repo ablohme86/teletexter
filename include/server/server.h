@@ -36,6 +36,6 @@ void setuplcd();
 void close_server();
 void ok_status(client_t *cli, int status_no,char *cust_msg,...);
 void bad_status(client_t *cli, int status_no,char *cust_msg,...);
-
+void send_server_ident(client_t *cli);
 
 #endif /* SERVER_H */

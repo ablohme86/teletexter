@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define DB_MESSAGE_IS_NOT_NEW 700
 
 // Strukturer som representerer tabellene
 typedef struct {
@@ -19,12 +20,12 @@ typedef struct {
 } User;
 
 typedef struct {
-    int id;
+     int id;
     char date[11];
     char time[9];
     char message[256];
     int poster_id;
-    int status;
+    int status;    // 0 for active, 1 for archived
 } Message;
 
 // Funksjoner for å samhandle med databasen
@@ -33,8 +34,8 @@ int get_user(int id, User *user);
 int update_user(User *user);
 int delete_user(int id);
 
-int add_message( Message *msg);
-int get_message( int id, Message *msg);
+int db_create_message( Message *msg);
+int db_get_message( int id, Message *msg);
 int update_message( Message *msg);
 int delete_message( int id);
 int check_user_login( const char *username, const char *pwd, User *user);

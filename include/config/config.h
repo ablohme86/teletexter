@@ -6,6 +6,7 @@
 
 #define MAX_FILENAME_LENGTH 100
 #define MAX_PATH_LENGTH 100
+#define MAX_IDENTIFIER_LENGTH 100
 
 struct ServerConfig {
     int port;
@@ -13,6 +14,8 @@ struct ServerConfig {
     char banList[MAX_FILENAME_LENGTH];
     char whiteList[MAX_FILENAME_LENGTH];
     char dbFile[MAX_FILENAME_LENGTH];
+    char serverIdentifier[MAX_IDENTIFIER_LENGTH];
+
 
 };
 

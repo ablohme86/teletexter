@@ -1,18 +1,21 @@
 #include "../../include/server/server.h"
-#include <stdio.h>
+
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <pthread.h>
+#include "../../include/version.h"
 #ifndef DISABLE_LCD
 #include "../../include/lcd/lcd_disp.h"
 #endif
 #include <log.h>
-
+#include <stdio.h>
 #include "../../include/config/config.h"
 
 int server_socket, client_socket;
+
+char ip[INET_ADDRSTRLEN];
 
 char *get_ip(client_t *cli)
 {
@@ -64,6 +67,8 @@ int start_server()
 
 	struct sockaddr_in server_addr, client_addr;
 	socklen_t client_len = sizeof(client_addr);
+	int addrlen = sizeof(server_addr);
+
 
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_socket == -1) 
@@ -86,6 +91,14 @@ int start_server()
 		close(server_socket);
 		return EXIT_FAILURE;
 	}
+
+	if (getsockname(server_socket, (struct sockaddr *)&server_addr, (socklen_t *)&addrlen) == -1) {
+		perror("getsockname failed");
+		close(server_socket);
+		exit(EXIT_FAILURE);
+	}
+
+	inet_ntop(AF_INET, &(server_addr.sin_addr), ip, INET_ADDRSTRLEN);
 
 	if (listen(server_socket, 3) < 0) 
 	{
@@ -118,8 +131,35 @@ int start_server()
 		else 
 		{
 			add_client(cli);
+			send_server_ident(cli);
 		}
 	}
 	close(server_socket);
 	return EXIT_SUCCESS;
+}
+/*int send_client(client_t *cli,char **errmsg, char *msg,...)
+{
+
+} */
+
+void send_server_ident(client_t *cli)
+{
+	char *welcome_msg_line1 = NULL;
+	char *welcome_msg_dots = NULL;
+	char welcome_msg_srv_info[128];
+	char *serveridentifier = config.serverConfig.serverIdentifier;
+	char welcome_msg[512];
+
+
+	snprintf(welcome_msg_line1,sizeof(welcome_msg_line1),"TELETEXTER v%d.%d\n", MAJOR,MINOR);
+	int line1_length = strlen(welcome_msg_line1);
+	for (int i = 0; i < line1_length; i++)
+	{
+		welcome_msg_dots[i] = '-';
+	}
+	welcome_msg_dots[line1_length+1] = '\n';
+	snprintf(welcome_msg_srv_info,sizeof(welcome_msg_srv_info), "SERVER_IDENT %s\nIPADDRESS %s\n", serveridentifier,ip);
+	snprintf(welcome_msg,sizeof(welcome_msg),"%s%s%s",welcome_msg_line1,welcome_msg_dots,welcome_msg_srv_info);
+	send(cli->socket,welcome_msg,strlen(welcome_msg),0);
+
 }
