@@ -36,6 +36,7 @@ const char *valid_keywords[] = {
     "ScrollLongMessages",
     "ScrollSpeed",
     "MessageLogPath",
+    "DatabaseFile",
     "SystemLogPath",
     "LCDCols",
     "LCDRows",
@@ -115,6 +116,10 @@ void loadConfig(const char *filename)
         else if (strcmp(key, "MaxClients") == 0)
         {
             config.serverConfig.maxClients = atoi(value);
+        }
+        else if (strcmp(key,"DatabaseFile") == 0)
+        {
+            strncpy(config.serverConfig.dbFile,value,MAX_FILENAME_LENGTH);
         }
         else if (strcmp(key,"ScrollLongMessages") == 0)
         {

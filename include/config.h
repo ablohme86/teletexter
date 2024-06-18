@@ -12,6 +12,7 @@ struct ServerConfig {
     int maxClients;
     char banList[MAX_FILENAME_LENGTH];
     char whiteList[MAX_FILENAME_LENGTH];
+    char dbFile[MAX_FILENAME_LENGTH];
 
 };
 

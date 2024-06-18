@@ -9,7 +9,7 @@
 #include "../include/server.h"
 #include "../include/config.h"
 #include "../include/version.h"
-#include "../include/utils.h"
+#include "../include/db_handler.h.h"
 #include "../include/app_args.h"
 
 volatile sig_atomic_t sigint_received = 0;
