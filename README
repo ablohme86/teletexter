@@ -7,3 +7,35 @@ What is Teletexter?
  Teletexter is a program that can send text messages to your I2C LCD Display
  from a TCP/IP connection, it is highly customizable where you can set the layout
  for your messages the way you want. It supports most I2C displays out there.
+ You can also send 100% custom messages for each line.
+
+
+ Client Commands:
+
+IDENT <username> <password
+  Description:
+
+  Success: 201 (LOGIN_OK)
+  Errors: 307 (INVALID_CREDENTIALS) - Wrong username & password.
+          303 (MISSING_ARGS)        - Missing either username or password.
+          300 (GENERAL_ERR)         - Somthing not related to the login failed.
+              
+
+MSG <"Message">
+ Description: Sends a message from the identified user to the display 
+ 
+   Success: 200 (MSG_SET_OK)
+   Errors: 303 (MISSING_ARGS)        - You have not specified a message
+
+MSG_CUSTOM <align> <line> <"Message">
+  Description: Send any message to any line on the display
+  Arguments: <align> - REQUIRED - Set the alignment of the text to either: LEFT, RIGHT or CENTER
+             <line>  - REQUIRED - Which line to set the text at.
+             <"Message"> - REQUIRED - The message you want to show.
+
+
+MSG_CLEAR
+  Description: Clears the whole display
+
+MSG_CLEAR <line>
+  Description: Clears display line number <line> (1 to 4)
