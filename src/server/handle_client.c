@@ -1,18 +1,15 @@
-#include "../include/client.h"
-
 #include <ctype.h>
-#include <log.h>
-
-#include "../include/server_commands.h"
-#include "../include/server.h"
-#include "../include/config.h"
-#include "../include/utils.h"
+#include "../../include/server/handle_client.h"
+#include "../../include/server/server_commands.h"
+#include "../../include/server/server.h"
+#include "../../include/config/config.h"
+#include "../../include/log.h"
+#include "../../include/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <pthread.h>
-#include <utils.h>
 #include <arpa/inet.h>
 
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;

@@ -2,7 +2,7 @@
 #define COMMANDS_H
 #define MAX_ARGS 10 // maks antall argumenter
 
-#include "client.h"
+#include "handle_client.h"
 
 typedef struct {
     char command[50];

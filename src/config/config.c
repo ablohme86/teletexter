@@ -1,5 +1,5 @@
 // Written by S.L Blohme
-#include "../include/config.h"
+#include "../include/config/config.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>

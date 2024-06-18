@@ -1,7 +1,7 @@
 //
 // Created by Alexander Blohme on 18/06/2024.
 //
-#include "../include/db_handler.h"
+#include "../../include/db/db_handler.h"
 #include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,10 +11,12 @@ sqlite3 *db;
 char *err_msg;
 
 
-int execute_sql_commands(const char *sql_commands) {
+int execute_sql_commands(const char *sql_commands)
+{
     int rc = sqlite3_exec(db, sql_commands, 0, 0, &err_msg);
 
-    if (rc != SQLITE_OK) {
+    if (rc != SQLITE_OK)
+    {
         fprintf(stderr, "Failed to execute SQL commands: %s\n", err_msg);
         sqlite3_free(err_msg);
         return rc;
@@ -23,7 +25,8 @@ int execute_sql_commands(const char *sql_commands) {
     return SQLITE_OK;
 }
 
-int init_db(char *db_name) {
+int init_db(char *db_name)
+{
     printf("Loading database from file %s\n", db_name);
 
     int is_new_db = access(db_name, F_OK) == -1;
@@ -88,13 +91,12 @@ int init_db(char *db_name) {
 
     return rc;
 }
-
-int add_user(sqlite3 *db, User *user) {
+int add_user(User *user)
+{
     char *err_msg = 0;
     char sql[256];
 
-    snprintf(sql, sizeof(sql), "INSERT INTO users (username, password, access_level, enabled) VALUES ('%s', '%s', %d, %d);",
-             user->username, user->password, user->access_level, user->enabled);
+    snprintf(sql, sizeof(sql), "INSERT INTO users (username, password, access_level, enabled) VALUES ('%s', '%s', %d, %d);", user->username, user->password, user->access_level, user->enabled);
 
     int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
 
@@ -107,7 +109,9 @@ int add_user(sqlite3 *db, User *user) {
     return SQLITE_OK;
 }
 
-int get_user(sqlite3 *db, int id, User *user) {
+
+int get_user(int id, User *user)
+{
     sqlite3_stmt *stmt;
     char sql[256];
 
@@ -115,14 +119,16 @@ int get_user(sqlite3 *db, int id, User *user) {
 
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
 
-    if (rc != SQLITE_OK) {
+    if (rc != SQLITE_OK)
+    {
         fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
         return rc;
     }
 
     rc = sqlite3_step(stmt);
 
-    if (rc == SQLITE_ROW) {
+    if (rc == SQLITE_ROW)
+    {
         user->id = sqlite3_column_int(stmt, 0);
         strcpy(user->username, (const char *)sqlite3_column_text(stmt, 1));
         strcpy(user->password, (const char *)sqlite3_column_text(stmt, 2));
@@ -134,7 +140,37 @@ int get_user(sqlite3 *db, int id, User *user) {
     return SQLITE_OK;
 }
 
-int update_user(sqlite3 *db, User *user) {
+int check_user_login( const char *username, const char *pwd, User *user)
+{
+    sqlite3_stmt *stmt;
+    char sql[256];
+
+    snprintf(sql, sizeof(sql), "SELECT * FROM users WHERE username = %s AND password = %s", username,pwd);
+
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        return rc;
+    }
+
+    rc = sqlite3_step(stmt);
+
+    if (rc == SQLITE_ROW)
+    {
+        user->id = sqlite3_column_int(stmt, 0);
+        strcpy(user->username, (const char *)sqlite3_column_text(stmt, 1));
+        strcpy(user->password, (const char *)sqlite3_column_text(stmt, 2));
+        user->access_level = sqlite3_column_int(stmt, 3);
+        user->enabled = sqlite3_column_int(stmt, 4);
+    }
+
+    sqlite3_finalize(stmt);
+    return SQLITE_OK;
+}
+
+
+int update_user(User *user) {
     char *err_msg = 0;
     char sql[256];
 
@@ -152,7 +188,7 @@ int update_user(sqlite3 *db, User *user) {
     return SQLITE_OK;
 }
 
-int delete_user(sqlite3 *db, int id) {
+int delete_user(int id) {
     char *err_msg = 0;
     char sql[256];
 

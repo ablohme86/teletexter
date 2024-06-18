@@ -1,4 +1,4 @@
-#include "../include/server.h"
+#include "../../include/server/server.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,11 +6,11 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 #ifndef DISABLE_LCD
-#include "../include/lcd_disp.h"
+#include "../../include/lcd/lcd_disp.h"
 #endif
 #include <log.h>
 
-#include "../include/config.h"
+#include "../../include/config/config.h"
 
 int server_socket, client_socket;
 

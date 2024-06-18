@@ -28,15 +28,16 @@ typedef struct {
 } Message;
 
 // Funksjoner for å samhandle med databasen
-int add_user(sqlite3 *db, User *user);
-int get_user(sqlite3 *db, int id, User *user);
-int update_user(sqlite3 *db, User *user);
-int delete_user(sqlite3 *db, int id);
+int add_user(User *user);
+int get_user(int id, User *user);
+int update_user(User *user);
+int delete_user(int id);
 
-int add_message(sqlite3 *db, Message *msg);
-int get_message(sqlite3 *db, int id, Message *msg);
-int update_message(sqlite3 *db, Message *msg);
-int delete_message(sqlite3 *db, int id);
+int add_message( Message *msg);
+int get_message( int id, Message *msg);
+int update_message( Message *msg);
+int delete_message( int id);
+int check_user_login( const char *username, const char *pwd, User *user);
 
 int init_db(char *db_name);
 

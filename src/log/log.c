@@ -3,7 +3,7 @@
 #include <stdarg.h>
 
 #include "../include/utils.h"
-#include "../include/config.h"
+#include "../include/config/config.h"
 #include <arpa/inet.h>
 #include <sys/stat.h>
 #include <unistd.h>

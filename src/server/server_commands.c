@@ -1,13 +1,12 @@
-#include "../include/server_commands.h"
+#include "../../include/server/server_commands.h"
 
 #include <stddef.h>
 #include <stdlib.h>
-#include <string.h>
 #include <ctype.h>
 
-#include "../include/ident.h"
-#include "../include/messages.h"
-#include "../include/client.h"
+#include "../../include/server/handle_ident.h"
+#include "../../include/server/handle_msg.h"
+#include "../../include/server/handle_client.h"
 
 command_t commands[] = {
     {"IDENT", handle_ident, 2},

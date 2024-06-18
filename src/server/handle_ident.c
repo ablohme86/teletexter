@@ -1,11 +1,9 @@
-#include "../include/ident.h"
-
-#include <log.h>
-#include <server.h>
-
-#include "../include/utils.h"
-#include "../include/pwd.h"
-#include "../include/config.h"
+#include "../../include/server/handle_ident.h"
+#include "../../include/db/db_handler.h"
+#include "../../include/utils.h"
+#include "../../include/config/config.h"
+#include "../../include/log.h"
+#include "../../include/server/server.h"
 #include <stdio.h>
 #include <string.h>
 #include <arpa/inet.h>

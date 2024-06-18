@@ -1,15 +1,15 @@
 #ifndef DISABLE_LCD
-#include "../include/lcd_disp.h"
+#include "../include/lcd/lcd_disp.h"
 #endif
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
 #include <string.h>
 #include <stdlib.h>
-#include "../include/server.h"
-#include "../include/config.h"
+#include "../include/server/server.h"
+#include "../include/config/config.h"
 #include "../include/version.h"
-#include "../include/db_handler.h"
+#include "../include/db/db_handler.h"
 #include "../include/app_args.h"
 
 volatile sig_atomic_t sigint_received = 0;

@@ -19,7 +19,7 @@ struct ServerConfig {
 struct MessageConfig {
     int maxMessageLength;
     char layoutFile[MAX_FILENAME_LENGTH];
-    int scrollLongMessages;
+    unsigned int scrollLongMessages;
     unsigned int scrollSpeed;
 };
 
@@ -40,8 +40,8 @@ struct LCDConfig {
     char lcdDeviceFile[MAX_FILENAME_LENGTH];
     uint8_t lcdClrDisp;
     uint8_t lcdEnableBit;
-    int lcdWidth;
-    int lcdHeight;
+    unsigned int lcdWidth;
+    unsigned int lcdHeight;
     uint8_t lcdLine1Addr;
     uint8_t lcdLine2Addr;
     uint8_t lcdLine3Addr;

@@ -2,11 +2,13 @@
 #define CLIENT_H
 
 #include <netinet/in.h>
+#include "../db/db_handler.h"
 
 
 typedef struct {
     int socket;
     char nickname[32];
+    User *user;
     int identified;
     int access_level;
     struct sockaddr_in address;
