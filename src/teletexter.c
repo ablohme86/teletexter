@@ -9,7 +9,7 @@
 #include "../include/server.h"
 #include "../include/config.h"
 #include "../include/version.h"
-#include "../include/db_handler.h.h"
+#include "../include/db_handler.h"
 #include "../include/app_args.h"
 
 volatile sig_atomic_t sigint_received = 0;
@@ -28,7 +28,7 @@ void sigint_handler(int sig)
 }
 
 
-int main(int argc, char **argv)
+int main(const int argc, char **argv)
 {
     struct sigaction sa;
     sa.sa_handler = sigint_handler;
@@ -36,13 +36,11 @@ int main(int argc, char **argv)
     sa.sa_flags = 0;
     sigaction(SIGINT, &sa, NULL);
 
-    printf("        TeleTexter v%d.%d\n", MAJOR, MINOR);
-    printf("Copyright (c) 2024 Alexander Blohme\n");
-
-
+    printf("\n\n        TeleTexter v%d.%d\n", MAJOR, MINOR);
+    printf("Copyright (c) 2024 Alexander Blohme\n-----------------------------------\n\n");
     if (manage_startup_args(argc, argv) == 0)
     {
-        printf("Loading configuration file...\n");
+        printf("Loading configuration file %s...\n",configPath);
         loadConfig(configPath);
     }
     else
@@ -50,8 +48,8 @@ int main(int argc, char **argv)
         printf("Exiting...\n");
         exit(1);
     }
-
-    loadConfig("./configs/teletexter.cfg"); // last konfigen
+    loadConfig(configPath); // last konfigen
+    init_db(config.serverConfig.dbFile);
 
 #ifndef DISABLE_LCD
     printf("Initializing LCD display...\n");
@@ -65,8 +63,6 @@ int main(int argc, char **argv)
     lcd_text("By A. Blohme", 2, CENTER);
 #endif
 
-    // last inn konfigurasjonsfila
-    printf("Server starting...\n");
     return start_server();
 }
 

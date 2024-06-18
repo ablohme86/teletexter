@@ -5,6 +5,7 @@
 #ifndef APP_ARGS_H
 #define APP_ARGS_H
 #include <stdio.h>
+#include "utils.h"
 
 
 char *configPath = "/etc/teletexter/teletexter.cfg";
@@ -70,7 +71,6 @@ int manage_startup_args(int argc, char **argv)
         return 1;
     }
 
-    printf("Config file: %s\n", config_file);
     if (arg_srv_port != 0)
     {
         printf("Port: %d\n", arg_srv_port);
