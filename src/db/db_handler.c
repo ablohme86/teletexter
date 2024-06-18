@@ -2,6 +2,8 @@
 // Created by Alexander Blohme on 18/06/2024.
 //
 #include "../../include/db/db_handler.h"
+#include "../../include/log.h"
+#include "../../include/server/server.h"
 #include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -140,33 +142,50 @@ int get_user(int id, User *user)
     return SQLITE_OK;
 }
 
-int check_user_login( const char *username, const char *pwd, User *user)
+
+int check_user_login(const char *username, const char *pwd, User *user)
 {
     sqlite3_stmt *stmt;
-    char sql[256];
-
-    snprintf(sql, sizeof(sql), "SELECT * FROM users WHERE username = %s AND password = %s", username,pwd);
-
-    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    const char *sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
 
     if (rc != SQLITE_OK) {
-        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        log_err_message("[DATABASE] Failed to prepare statement: %s\n", sqlite3_errmsg(db));
         return rc;
     }
 
+    // Bind parameters
+    sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, pwd, -1, SQLITE_STATIC);
+
+    // Execute statement
     rc = sqlite3_step(stmt);
 
     if (rc == SQLITE_ROW)
     {
-        user->id = sqlite3_column_int(stmt, 0);
+        if (user == NULL)
+        {
+            log_err_message("[MEMORY] For some reason the User pointer was not initialized during client-connect! I will now fail miserably :´-(! Bye...");
+        }
+
         strcpy(user->username, (const char *)sqlite3_column_text(stmt, 1));
         strcpy(user->password, (const char *)sqlite3_column_text(stmt, 2));
         user->access_level = sqlite3_column_int(stmt, 3);
         user->enabled = sqlite3_column_int(stmt, 4);
     }
+    else if (rc == SQLITE_DONE)
+    {
+        return INVALID_CREDENTIALS;
+
+    }
+    else
+    {
+        log_err_message("[DATABASE] Failed to fetch data from SQL table: %s", sqlite3_errmsg(db));
+        return DATABASE_QUERY_ERROR;
+    }
 
     sqlite3_finalize(stmt);
-    return SQLITE_OK;
+    return LOGIN_OK;
 }
 
 

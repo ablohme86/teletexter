@@ -7,11 +7,10 @@
 
 typedef struct {
     int socket;
-    char nickname[32];
     User *user;
     int identified;
-    int access_level;
     struct sockaddr_in address;
+    char *ipv4addr;
 } client_t;
 
 void add_client(client_t *cli);

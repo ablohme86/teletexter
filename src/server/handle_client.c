@@ -40,10 +40,10 @@ void handle_disconnect_client(client_t *cli,int argc, char **argv)
     (void) argv;
     char exit_msg[BUFFER_SIZE];
 
-    if (strcmp(cli->nickname,"") != 0)
+    if (cli->identified > 0)
     {
-        snprintf(exit_msg,sizeof(exit_msg),"See ya later %s! Bye for now!\n", cli->nickname);
-        log_sys_message("[%s] %s disconnected!", get_ip(cli), cli->nickname);
+        snprintf(exit_msg,sizeof(exit_msg),"See ya later %s! Bye for now!\n", cli->user->username);
+        log_sys_message("[%s] %s disconnected!", get_ip(cli), cli->user->username);
     }
     else
     {
@@ -158,9 +158,9 @@ void handle_client(client_t *cli)
                         if (args == NULL || strcmp(args, "") == 0)
                         {
                             char missing_args_msg[BUFFER_SIZE];
-                            snprintf(missing_args_msg, sizeof(missing_args_msg), "MISSING_ARGS: %s needs %d arguments...\n", strip_newline_return(cmd), commands[i].requires_args);
-                            log_sys_message("[%s] Missing arguments on command %s, requires: %d", get_ip(cli), cmd, commands[i].requires_args);
-                            send(cli->socket, missing_args_msg, strlen(missing_args_msg), 0);
+                            snprintf(missing_args_msg, sizeof(missing_args_msg), "%s needs %d arguments\n", strip_newline_return(cmd), commands[i].requires_args);
+                            log_sys_message("[%s] Missing arguments on command %s, requires: %d", cli->ipv4addr, cmd, commands[i].requires_args);
+                            bad_status(cli,MISSING_ARGS,missing_args_msg);
                         }
                         else
                         {
@@ -170,9 +170,9 @@ void handle_client(client_t *cli)
                             if (argc < commands[i].requires_args)
                             {
                                 char missing_args_msg[BUFFER_SIZE];
-                                snprintf(missing_args_msg, sizeof(missing_args_msg), "MISSING_ARGS: %s needs %d arguments, but got %d.\n", strip_newline_return(cmd), commands[i].requires_args, argc);
+                                snprintf(missing_args_msg, sizeof(missing_args_msg), "%s needs %d arguments, but got %d.\n", strip_newline_return(cmd), commands[i].requires_args, argc);
                                 log_sys_message("[%s] Missing arguments on command %s, requires: %d, got: %d", get_ip(cli), cmd, commands[i].requires_args, argc);
-                                send(cli->socket, missing_args_msg, strlen(missing_args_msg), 0);
+                                bad_status(cli,MISSING_ARGS,missing_args_msg);
                             }
                             else
                             {

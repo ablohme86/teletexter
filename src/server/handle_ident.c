@@ -16,6 +16,7 @@
 int verify_login(const char *username, const char *password, client_t *cli)
 {
     char filepath[256];
+    strip_newline(username);
     snprintf(filepath, sizeof(filepath), "%s/%s",config.userConfig.userFilePath, username);
 
     FILE *file = fopen(filepath, "r");
@@ -43,7 +44,7 @@ int verify_login(const char *username, const char *password, client_t *cli)
         }
         else if (strncmp(line,"ACCESS_LEVEL ", 13) == 0)
         {
-            cli->access_level = atoi(line + 13);
+            cli->user->access_level = atoi(line + 13);
         }
     }
 
@@ -62,29 +63,26 @@ void handle_ident(client_t *cli, int argc, char **argv)
     // Hent argumenter fra argv
     char *nickname = argv[0];
     char *password = argv[1];
+    
 
-    int verify_result = verify_login(nickname, password, cli);
-    if (verify_result == 0)
+    strip_newline(password);
+    strip_newline(nickname);
+
+    int db_login = check_user_login(nickname,password,cli->user);
+    if (db_login == LOGIN_OK)
     {
-        log_sys_message( "[%s] Wrong credentials: username %s!", get_ip(cli), nickname);
-        char *error_msg = "LOGIN_ERROR\n";
-        send(cli->socket, error_msg, strlen(error_msg), 0);
-    }
-    else if (verify_result == -1)
-    {
-        log_sys_message("[%s] The user '%s' is blocked from access!", get_ip(cli), nickname);
-        char *error_msg = "USER_BLOCKED\n";
-        send(cli->socket, error_msg, strlen(error_msg), 0);
+        cli->identified = 1;
+        log_sys_message("[%s] %s successfully logged in with access level %d", cli->ipv4addr,cli->user->username,cli->user->access_level);
+        ok_status(cli,LOGIN_OK,"LOGIN_OK");
+        //printf("Login Success: user: %s, password (from db): %s\n",cli->user->username,cli->user->password);
     }
     else
     {
-        char *success_msg = "IDENTIFIED\n";
-        log_sys_message( "[%s] Successfully identified as %s!", get_ip(cli), nickname);
-        send(cli->socket, success_msg, strlen(success_msg), 0);
-        strncpy(cli->nickname, nickname, sizeof(cli->nickname) - 1);
-        cli->nickname[sizeof(cli->nickname) - 1] = '\0';
-        cli->identified = 1;
+        cli->identified = 0;
+        log_sys_message("[%s] Invalid credentials for user %s",cli->ipv4addr, nickname);
+        bad_status(cli,INVALID_CREDENTIALS,"INVALID_CREDENTIALS");
     }
+
 }
 
 

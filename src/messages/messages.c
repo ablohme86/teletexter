@@ -22,7 +22,7 @@ int new_message(char *msg, client_t *sender)
     get_short_weekday(weekday_str);
     get_time(cur_time);
 
-    snprintf(top_line_msg, sizeof(top_line_msg), "%s %s %s:", weekday_str,cur_time, sender->nickname);
+    snprintf(top_line_msg, sizeof(top_line_msg), "%s %s %s:", weekday_str,cur_time, sender->user->username);
 
 #ifndef DISABLE_LCD
     lcd_clear();

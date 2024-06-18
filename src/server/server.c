@@ -16,10 +16,9 @@ int server_socket, client_socket;
 
 char *get_ip(client_t *cli)
 {
-	struct sockaddr_in addr;
-	socklen_t addr_len = sizeof(addr);
-	getpeername(cli->socket, (struct sockaddr *)&addr, &addr_len);
-	return inet_ntoa(addr.sin_addr);
+	socklen_t addr_len = sizeof(cli->address);
+	getpeername(cli->socket, (struct sockaddr *)&cli->address, &addr_len);
+	return inet_ntoa(cli->address.sin_addr);
 	
 }
 void close_server()
@@ -108,8 +107,8 @@ int start_server()
 
 		client_t *cli = (client_t *)malloc(sizeof(client_t));
 		cli->socket = client_socket;
-		memset(cli->nickname, 0, sizeof(cli->nickname));
-
+		cli->user = (User *)malloc(sizeof(User)); // allocate memory for the new User object
+		cli->ipv4addr = get_ip(cli);
 		pthread_t tid;
 		if (pthread_create(&tid, NULL, client_handler, (void *)cli) != 0) 
 		{

@@ -62,7 +62,7 @@ void handle_clear_display(client_t *cli, int argc, char **argv)
 #ifndef DISABLE_LCD
         lcd_clear();
 #endif
-        log_sys_message("[%s] %s cleared display", get_ip(cli), cli->nickname);
+        log_sys_message("[%s] %s cleared display",cli->ipv4addr, cli->user->username);
         ok_status(cli,LCD_CLEARED,"LCD is clean as a whistle!");
     }
     else

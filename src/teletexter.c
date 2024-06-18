@@ -42,6 +42,10 @@ int main(const int argc, char **argv)
     {
         printf("Loading configuration file %s...\n",configPath);
         loadConfig(configPath);
+        if (arg_srv_port != 0)
+        {
+            config.serverConfig.port = arg_srv_port;
+        }
     }
     else
     {
