@@ -112,8 +112,6 @@ int start_server()
     freeaddrinfo(res); // Frigjør getaddrinfo-resultatene
 
     inet_ntop(AF_INET, &(server_addr->sin_addr), ip, INET_ADDRSTRLEN);
-    printf("Server IP address: %s\n", ip);
-    printf("Server port: %d\n", ntohs(server_addr->sin_port));
 
     if (listen(server_socket, 3) < 0)
     {
@@ -122,7 +120,7 @@ int start_server()
         return EXIT_FAILURE;
     }
 
-    printf("Server listening on port %d\n", config.serverConfig.port);
+    printf("Server listening on %s @ port %d\n", config.serverConfig.serverHost , config.serverConfig.port);
 
     while (1)
     {

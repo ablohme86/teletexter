@@ -52,7 +52,6 @@ int main(const int argc, char **argv)
         printf("Exiting...\n");
         exit(1);
     }
-    loadConfig(configPath); // last konfigen
     init_db(config.serverConfig.dbFile);
 
 #ifndef DISABLE_LCD

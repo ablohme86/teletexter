@@ -9,23 +9,24 @@
 #include <stdlib.h>
 #include <string.h>
 #define DB_MESSAGE_IS_NOT_NEW 700
+#define DB_SAVE_OK SQLITE_OK
 
 // Strukturer som representerer tabellene.
 typedef struct {
-    int id;
+    unsigned int id;
     char username[100];
     char password[100];
-    int access_level;
-    int enabled;
+    unsigned int access_level;
+    unsigned int enabled;
 } User;
 
 typedef struct {
-     int id;
+    unsigned int id;
     char date[11];
     char time[9];
     char message[256];
-    int poster_id;
-    int status;    // 0 for active, 1 for archived
+    unsigned int poster_id;
+    unsigned int status;    // 0 for active, 1 for archived
 } Message;
 
 // Funksjoner for å samhandle med databasen
@@ -34,7 +35,7 @@ int get_user(int id, User *user);
 int update_user(User *user);
 int delete_user(int id);
 
-int db_create_message( Message *msg);
+int db_save_message( Message *msg);
 int db_get_message( int id, Message *msg);
 int update_message( Message *msg);
 int delete_message( int id);

@@ -42,12 +42,12 @@ void handle_disconnect_client(client_t *cli,int argc, char **argv)
 
     if (cli->identified > 0)
     {
-        snprintf(exit_msg,sizeof(exit_msg),"See ya later %s! Bye for now!\n", cli->user->username);
+        snprintf(exit_msg,sizeof(exit_msg),"See ya later %s! Bye for now!", cli->user->username);
         log_sys_message("[%s] %s disconnected!", get_ip(cli), cli->user->username);
     }
     else
     {
-        snprintf(exit_msg,sizeof(exit_msg),"Hmmf! You left without telling me who you are?!\n");
+        snprintf(exit_msg,sizeof(exit_msg),"Hmmf! You left without telling me who you are?!");
         log_sys_message("[%s] Disconnected!", get_ip(cli));
     }
     // Send a last message before cleanup work begins!
@@ -80,8 +80,10 @@ void remove_client(client_t *cli)
     }
 
     pthread_mutex_unlock(&clients_mutex);
-    if (cli == NULL) {
-        printf("cli is NULL now, cannot free memory :O");
+    if (cli == NULL) 
+    {
+        log_sys_message("cli is NULL, cannot free pointer!");    
+        
         return; // Sjekk om cli er gyldig
     }
 

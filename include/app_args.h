@@ -71,19 +71,6 @@ int manage_startup_args(int argc, char **argv)
         return 1;
     }
 
-    if (arg_srv_port != 0)
-    {
-        printf("Port: %d\n", arg_srv_port);
-    }
-    if (arg_bind_ip != NULL)
-    {
-        printf("Bind IP: %s\n", arg_bind_ip);
-    }
-    if (arg_usr_path != NULL)
-    {
-        printf("Users path: %s\n", arg_usr_path);
-    }
-
     configPath = config_file;
     return 0;
 }

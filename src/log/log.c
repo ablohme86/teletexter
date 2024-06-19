@@ -29,9 +29,9 @@ void log_message(const char *ip, const char *nickname, const char *message)
     // Create logs directory if it doesn't exist
     create_logs_dir_if_not_exists();
 
-    char log_filename[MAX_PATH_LENGTH];
-    snprintf(log_filename, sizeof(log_filename), "%s/%s-teletexter-messages.log",config.loggingConfig.messageLogPath, date);
-
+    int log_filename_size = snprintf(NULL, 0, "%s/%s-teletexter-messages.log", config.loggingConfig.messageLogPath, date) + 1;
+    char *log_filename = malloc(log_filename_size);
+    snprintf(log_filename, log_filename_size, "%s/%s-teletexter-messages.log", config.loggingConfig.messageLogPath, date);
 
     // Open log file for appending
     FILE *file = fopen(log_filename, "a");
@@ -44,8 +44,9 @@ void log_message(const char *ip, const char *nickname, const char *message)
     {
         fprintf(stderr, "Failed to open log file for appending.\n");
     }
-}
 
+    free(log_filename);
+}
 
 void log_sys_message(const char *fmt, ...)
 {
@@ -57,18 +58,23 @@ void log_sys_message(const char *fmt, ...)
     // Create logs directory if it doesn't exist
     create_logs_dir_if_not_exists();
 
-    char log_filename[MAX_PATH_LENGTH];
-    char log_msg[MAX_LOG_MESSAGE_LENGTH];
-
-    snprintf(log_filename, sizeof(log_filename), "%s/%s-teletexter-system.log", config.loggingConfig.messageLogPath, date);
+    int log_filename_size = snprintf(NULL, 0, "%s/%s-teletexter-system.log", config.loggingConfig.messageLogPath, date) + 1;
+    char *log_filename = malloc(log_filename_size);
+    snprintf(log_filename, log_filename_size, "%s/%s-teletexter-system.log", config.loggingConfig.messageLogPath, date);
 
     va_list args;
     va_start(args, fmt);
-    vsnprintf(log_msg, sizeof(log_msg), fmt, args);
+    int log_msg_size = vsnprintf(NULL, 0, fmt, args) + 1;
+    va_end(args);
+    char *log_msg = malloc(log_msg_size);
+
+    va_start(args, fmt);
+    vsnprintf(log_msg, log_msg_size, fmt, args);
     va_end(args);
 
-    char final_log_msg[MAX_LOG_MESSAGE_LENGTH];
-    snprintf(final_log_msg, sizeof(final_log_msg), "%s-%s %s\n", date, time_str, log_msg);
+    int final_log_msg_size = snprintf(NULL, 0, "%s-%s %s\n", date, time_str, log_msg) + 1;
+    char *final_log_msg = malloc(final_log_msg_size);
+    snprintf(final_log_msg, final_log_msg_size, "%s-%s %s\n", date, time_str, log_msg);
 
     // Open log file for appending
     FILE *file = fopen(log_filename, "a");
@@ -84,10 +90,12 @@ void log_sys_message(const char *fmt, ...)
     }
 
     // Print to console
-    fprintf(stdout,"%s", final_log_msg);
+    fprintf(stdout, "%s", final_log_msg);
+
+    free(log_filename);
+    free(log_msg);
+    free(final_log_msg);
 }
-
-
 void log_err_message(const char *fmt, ...)
 {
     char date[11];
@@ -98,18 +106,23 @@ void log_err_message(const char *fmt, ...)
     // Create logs directory if it doesn't exist
     create_logs_dir_if_not_exists();
 
-    char log_filename[MAX_PATH_LENGTH];
-    char log_msg[MAX_LOG_MESSAGE_LENGTH];
-
-    snprintf(log_filename, sizeof(log_filename), "%s/%s-teletexter-system.log", config.loggingConfig.messageLogPath, date);
+    int log_filename_size = snprintf(NULL, 0, "%s/%s-error-teletexter-system.log", config.loggingConfig.messageLogPath, date) + 1;
+    char *log_filename = malloc(log_filename_size);
+    snprintf(log_filename, log_filename_size, "%s/%s-error-teletexter-system.log", config.loggingConfig.messageLogPath, date);
 
     va_list args;
     va_start(args, fmt);
-    vsnprintf(log_msg, sizeof(log_msg), fmt, args);
+    int log_msg_size = vsnprintf(NULL, 0, fmt, args) + 1;
+    va_end(args);
+    char *log_msg = malloc(log_msg_size);
+
+    va_start(args, fmt);
+    vsnprintf(log_msg, log_msg_size, fmt, args);
     va_end(args);
 
-    char final_log_msg[MAX_LOG_MESSAGE_LENGTH];
-    snprintf(final_log_msg, sizeof(final_log_msg), "%s-%s %s\n", date, time_str, log_msg);
+    int final_log_msg_size = snprintf(NULL, 0, "%s-%s %s\n", date, time_str, log_msg) + 1;
+    char *final_log_msg = malloc(final_log_msg_size);
+    snprintf(final_log_msg, final_log_msg_size, "%s-%s %s\n", date, time_str, log_msg);
 
     // Open log file for appending
     FILE *file = fopen(log_filename, "a");
@@ -125,5 +138,9 @@ void log_err_message(const char *fmt, ...)
     }
 
     // Print to console
-    fprintf(stderr,"%s", final_log_msg);
+    fprintf(stderr, "%s", final_log_msg);
+
+    free(log_filename);
+    free(log_msg);
+    free(final_log_msg);
 }

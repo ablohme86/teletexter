@@ -97,38 +97,48 @@ int init_db(char *db_name)
 }
 
 
-int db_create_message(Message *msg)
+int db_save_message(Message *msg)
 {
-    if (msg->id != 0)
-    {
-        return DB_MESSAGE_IS_NOT_NEW;
-    }
+    log_sys_message("[DATABASE] Creating new message...");
+
+
+    
     sqlite3_stmt *stmt;
-    const char *sql = "INSERT INTO messages (date,time,message,poster_id,status) VALUES (?,?,?,?,?)";
+    char sql[1024];
+    if (msg->id == 0)   // ny melding, opprett i db:
+    {
+        snprintf(sql, sizeof(sql), "INSERT INTO messages (date, time, message, poster_id, status) VALUES (?, ?, ?, ?, ?)");
+        log_sys_message("[DATABASE] New message, inserting into db...");
+    }
+    else
+    {
+        snprintf(sql, sizeof(sql), "UPDATE messages SET date=?, time=?, message=?, poster_id=?, status=? WHERE id = ?");
+        log_sys_message("[DATABASE] Updating message id %d", msg->id);
+    }
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-
+    
     if (rc != SQLITE_OK) {
-        log_err_message("[DATABASE] Failed to prepare statement: %s\n", sqlite3_errmsg(db));
-        sqlite3_free(stmt);
+        log_err_message("[DATABASE] Failed to prepare statement: %s", sqlite3_errmsg(db));
         return rc;
     }
-
-    // Bind parameters
-    sqlite3_bind_text(stmt, 0, msg->date, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 1, msg->time, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2,msg->message,-1,SQLITE_STATIC);
-    sqlite3_bind_int(stmt, 3,msg->poster_id);
-    sqlite3_bind_int(stmt,4,msg->status);
-
-     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
-
-    if (rc != SQLITE_OK) {
-        log_err_message("[DATABASE] Cannot create a new message in database, SQL error: %s\n", sqlite3_errmsg(db));
-        sqlite3_free(err_msg);
+    
+    // Bind parameters (Note: Indices start from 1)
+    sqlite3_bind_text(stmt, 1, msg->date, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, msg->time, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, msg->message, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 4, msg->poster_id);
+    sqlite3_bind_int(stmt, 5, msg->status);
+    
+    // Execute statement
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        log_err_message("[DATABASE] Cannot perform message operation, SQL error: %s", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
         return rc;
     }
-
-
+    
+    sqlite3_finalize(stmt);
+    return SQLITE_OK;
 }
 
 
@@ -139,7 +149,7 @@ int check_user_login(const char *username, const char *pwd, User *user)
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
 
     if (rc != SQLITE_OK) {
-        log_err_message("[DATABASE] Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        log_err_message("[DATABASE] Failed to prepare statement: %s", sqlite3_errmsg(db));
         return rc;
     }
 

@@ -27,7 +27,7 @@ void handle_msg_custom(client_t *cli,int argc, char **argv)
     char *inc_msg = argv[2];
     if (is_identified(cli) == 1)
     {
-        int set_msg_status = set_text(inc_align,inc_msg,p_line,cli);
+        int set_msg_status = set_line_text(inc_msg,p_line,inc_align);
         switch (set_msg_status)
         {
             case LINE_NOT_AVAILABLE:
@@ -75,21 +75,36 @@ void handle_clear_display(client_t *cli, int argc, char **argv)
 
 }
 
+void handle_latest_msg(client_t *cli)   // handle LATEST_MSG call from client
+{
+
+}
+void handle_next_msg(client_t *cli) // handle NEXT_MSG from client
+{
+}
+void handle_set_msg_no(client_t *cli, int msg_no)
+{
+}
+void handle_prev_msg(client_t cli)
+{
+}
+
 void handle_msg(client_t *cli, int argc, char **argv)
 {
     if (is_identified(cli) == 0)
     {
         log_sys_message("[%s] Client cannot send MSG, not identified yet!", get_ip(cli));
+        bad_status(cli,ACCESS_DENIED,NULL);
         return;
     }
     if (argc > 0)
     {
         char full_message[100];
-        char *errmsg;
 
 
         strncpy(full_message,argv[0], sizeof(full_message));
         strip_newline(full_message);
-        new_message(full_message,cli);
+        new_message(full_message,cli->user);
+        ok_status(cli,MSG_SET_OK,"MSG_SET_OK");
     }
 }

@@ -209,7 +209,7 @@ void lcd_scroll(const char *full_message,int line, unsigned int scrollspeed_ms)
     if (full_message_length <= lcd_width) 
     {
         // Meldingen er ikke lengre enn LCD-bredden, vis den direkte
-        lcd_text(full_message, 1, LEFT);
+        lcd_text(full_message, line, LEFT);
         return;
     }
 
@@ -230,6 +230,8 @@ void lcd_scroll(const char *full_message,int line, unsigned int scrollspeed_ms)
 
         lcd_text(displayed_msg_buffer, line, LEFT);
     }
+    delay(1000);    // vent 1 sek før vi setter teksten tilbake til normalen
+    lcd_text(full_message,line,LEFT);
 }
 
  
