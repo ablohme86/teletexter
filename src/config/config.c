@@ -43,6 +43,7 @@ const char *valid_keywords[] = {
     "LCDAddress",
     "LCDDeviceFile",
     "LCDNoBacklight",
+    "ServerBindAddress",
     "LCDBacklight",
     "LCDLine1",
     "LCDLine2",
@@ -126,6 +127,11 @@ void loadConfig(const char *filename)
         {
             config.messageConfig.scrollLongMessages = atoi(value);
         }
+        else if (strcmp(key,"ServerBindAddress") == 0)
+        {
+            strncpy(config.serverConfig.serverHost, value, MAX_IDENTIFIER_LENGTH);
+        }
+
         else if (strcmp(key,"ServerIdentifier") == 0)
         {
             strncpy(config.serverConfig.serverIdentifier, value, MAX_IDENTIFIER_LENGTH);

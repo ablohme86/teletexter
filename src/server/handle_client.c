@@ -158,7 +158,7 @@ void handle_client(client_t *cli)
                         if (args == NULL || strcmp(args, "") == 0)
                         {
                             char missing_args_msg[BUFFER_SIZE];
-                            snprintf(missing_args_msg, sizeof(missing_args_msg), "%s needs %d arguments\n", strip_newline_return(cmd), commands[i].requires_args);
+                            snprintf(missing_args_msg, sizeof(missing_args_msg), "%s needs %d arguments", strip_newline_return(cmd), commands[i].requires_args);
                             log_sys_message("[%s] Missing arguments on command %s, requires: %d", cli->ipv4addr, cmd, commands[i].requires_args);
                             bad_status(cli,MISSING_ARGS,missing_args_msg);
                         }
@@ -170,7 +170,7 @@ void handle_client(client_t *cli)
                             if (argc < commands[i].requires_args)
                             {
                                 char missing_args_msg[BUFFER_SIZE];
-                                snprintf(missing_args_msg, sizeof(missing_args_msg), "%s needs %d arguments, but got %d.\n", strip_newline_return(cmd), commands[i].requires_args, argc);
+                                snprintf(missing_args_msg, sizeof(missing_args_msg), "%s needs %d arguments, but got %d", strip_newline_return(cmd), commands[i].requires_args, argc);
                                 log_sys_message("[%s] Missing arguments on command %s, requires: %d, got: %d", get_ip(cli), cmd, commands[i].requires_args, argc);
                                 bad_status(cli,MISSING_ARGS,missing_args_msg);
                             }

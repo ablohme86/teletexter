@@ -15,7 +15,7 @@ struct ServerConfig {
     char whiteList[MAX_FILENAME_LENGTH];
     char dbFile[MAX_FILENAME_LENGTH];
     char serverIdentifier[MAX_IDENTIFIER_LENGTH];
-
+    char serverHost[MAX_IDENTIFIER_LENGTH];
 
 };
 

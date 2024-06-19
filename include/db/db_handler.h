@@ -10,7 +10,7 @@
 #include <string.h>
 #define DB_MESSAGE_IS_NOT_NEW 700
 
-// Strukturer som representerer tabellene
+// Strukturer som representerer tabellene.
 typedef struct {
     int id;
     char username[100];
@@ -39,7 +39,6 @@ int db_get_message( int id, Message *msg);
 int update_message( Message *msg);
 int delete_message( int id);
 int check_user_login( const char *username, const char *pwd, User *user);
-
 int init_db(char *db_name);
 
 
