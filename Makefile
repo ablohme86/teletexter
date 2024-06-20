@@ -16,6 +16,11 @@ ifdef DISABLE_LCD
     LDLIBS :=
     CFLAGS += -DDISABLE_LCD
 endif
+
+ifdef DEBUG
+   CFLAGS += -DDEBUG
+endif
+
 ifdef DISABLE_SQL
    SRCS := $(filter-out src/db/db_handler.c, $(SRCS))
 endif

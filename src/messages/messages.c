@@ -18,7 +18,8 @@ typedef struct {
     char buff[MAX_LINE_MSG_LENGTH];
 
 } MessageLine;
-MessageLine *messageLines[128]; // maximum 129 supported lines...
+MessageLine *messageLines[128]; // maximum 129 supported lines..
+Message currentMessage;
 
 
 
@@ -39,13 +40,16 @@ int new_message(char *msg, User *user)
     strcpy(new_msg->message, msg);
     new_msg->poster_id = user->id;
     db_save_message(new_msg);
+    #ifdef DEBUG
+    log_sys_message("[DEBUG/MESSAGE] Sending message to LCD panel");
+    #endif
 
-
-
+    currentMessage = *new_msg;   
+    free(new_msg);
 #ifndef DISABLE_LCD
     lcd_clear();
-    set_line_text(top_line_msg, 1, LEFT);   
-    set_line_text(msg,2,LEFT);
+    set_line_text(top_line_msg, 1, "LEFT");   
+    set_line_text(msg,2,"LEFT");
 #endif
     return MSG_SET_OK;
 }
@@ -72,36 +76,44 @@ int set_line_text(const char *msg, unsigned int line,const char *align)
         // allokér minne til linjens peker
         messageLines[line] = (MessageLine *)malloc(sizeof(MessageLine));
         messageLines[line]->line = line;
-    
     }
+
 
     int r_align = 0;
 
     if (strcmp(align,"LEFT") == 0)
     {
+
         r_align = LEFT;
-    }
+    }    
     else if (strcmp(align,"RIGHT") == 0)
     {
         r_align = RIGHT;
     }
     else if (strcmp(align,"CENTER") == 0)
     {
-        r_align = CENTER;
-    }
+       r_align = CENTER;
+    }    
     else
     {
-        return INVALID_ALIGN;
+      return INVALID_ALIGN;
     }
+    
 
-    if (line == 0)
-    {
-        return LINE_CANNOT_BE_ZERO;   // Line cannot be zero!
-    }
 
     strcpy(messageLines[line]->buff, msg);
+
+  
 #ifndef DISABLE_LCD
+#ifdef DEBUG
+    fprintf(stdout,"Running lcd_text!... ");
+#endif
+
     lcd_text(msg,line,r_align);
+    #ifdef DEBUG
+        fprintf(stdout,"DONE!\n");
+    #endif
+
 #endif
     if (strlen(msg) > config.lcdConfig.lcdWidth)
     {

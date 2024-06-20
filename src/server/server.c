@@ -135,10 +135,12 @@ int start_server()
         cli->socket = client_socket;
         cli->user = (User *)malloc(sizeof(User)); // allocate memory for the new User object
         cli->ipv4addr = get_ip(cli);
+        cli->identified = 0;
         pthread_t tid;
         if (pthread_create(&tid, NULL, client_handler, (void *)cli) != 0)
         {
             perror("Could not create thread");
+            
             free(cli->user);
             free(cli);
         }

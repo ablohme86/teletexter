@@ -104,7 +104,7 @@ int is_identified(client_t *cli)
 {
     if (cli->identified == 0)
     {
-        bad_status(cli,MISSING_IDENT,"You are not identified!");
+       // bad_status(cli,MISSING_IDENT,"You are not identified!");
         return 0;
     }
     return 1;
