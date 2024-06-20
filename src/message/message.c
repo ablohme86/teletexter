@@ -32,20 +32,14 @@ int save_message(Message *msg)
     if (msg->id == 0)
     {
         snprintf(sql, sizeof(sql), "INSERT INTO messages (date, time, message, poster_id, status) VALUES (?, ?, ?, ?, ?)");
-        log_sys_message("[MESSAGE] New message, inserting into db...");
+        log_sys_message("[%s] New message, inserting into db...", MSG_INTERFACE);
         res = execute_sql(sql, "sssii", 5, msg->date, msg->time, msg->message, msg->poster_id, msg->status);
     }
     else
     {
         snprintf(sql, sizeof(sql), "UPDATE messages SET date = ?, time = ?, message = ?, poster_id = ?, status = ? WHERE id = ?");
-        log_sys_message("[MESSAGE] Updating message id %d", msg->id);
+        log_sys_message("[%s] Updating message id %d",MSG_INTERFACE, msg->id);
         res = execute_sql(sql, "sssiii", 6, msg->date, msg->time, msg->message, msg->poster_id, msg->status, msg->id);
-    }
-
-    if (res == SQLITE_OK) {
-        log_sys_message("[MESSAGE] The system did not crash!");
-    } else {
-        log_err_message("[DATABASE] Error occurred during message save operation: %d", res);
     }
 
     return res;
@@ -69,10 +63,8 @@ int new_message(char *msg, User *user)
     strcpy(new_msg->message, msg);
     new_msg->poster_id = user->id;
     save_message(new_msg);
-    log_sys_message("[DEBUG/MESSAGE] Sending message to LCD panel");
 
     currentMessage = *new_msg;
-    log_sys_message("currentMessage is set!");
     //free(new_msg);
 #ifndef DISABLE_LCD
     lcd_clear();

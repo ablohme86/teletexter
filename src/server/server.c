@@ -120,7 +120,7 @@ int start_server()
         return EXIT_FAILURE;
     }
 
-    printf("Server listening on %s @ port %d\n", config.serverConfig.serverHost , config.serverConfig.port);
+    log_sys_message("Server listening on %s @ port %d\n", config.serverConfig.serverHost , config.serverConfig.port);
 
     while (1)
     {

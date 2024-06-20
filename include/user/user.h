@@ -4,6 +4,7 @@
 
 #ifndef USER_H
 #define USER_H
+#define USR_INTERFACE "USER"
 
 // Strukturer som representerer tabellene.
 typedef struct {

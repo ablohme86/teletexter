@@ -8,6 +8,8 @@
 
 #define NO_MESSAGE_SET 600
 #define MAX_LINE_MSG_LENGTH 100
+#define MSG_INTERFACE "MESSAGE"
+
 
 typedef struct {
     unsigned int id;

@@ -3,6 +3,7 @@
 
 #include "handle_client.h"
 #define BUFFER_SIZE 1024
+#define SCK_INTERFACE "NETWORK"
 
 int start_server();
 char *get_ip(client_t *cli);

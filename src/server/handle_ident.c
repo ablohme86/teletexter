@@ -20,13 +20,13 @@ void handle_ident(client_t *cli, int argc, char **argv)
     if (db_login > 0)
     {
         cli->identified = 1;
-        log_sys_message("[%s] %s (%d) successfully logged in with access level %d", cli->ipv4addr,cli->user->username,cli->user->id,cli->user->access_level);
+        log_sys_message("[%s] %s %s (%d) successfully logged in with access level %d",SCK_INTERFACE, cli->ipv4addr,cli->user->username,cli->user->id,cli->user->access_level);
         ok_status(cli,LOGIN_OK,"LOGIN_OK");
     }
     else
     {
         cli->identified = 0;
-        log_sys_message("[%s] Invalid credentials for user %s",cli->ipv4addr, nickname);
+        log_sys_message("[%s] %s Invalid credentials for user %s",SCK_INTERFACE,cli->ipv4addr, nickname);
         bad_status(cli,LOGIN_FAILED,"Invalid credentials!");
     }
 

@@ -23,7 +23,7 @@ int select_from_db(const char *sql, select_callback callback, void *data)
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
 
     if (rc != SQLITE_OK) {
-        log_err_message("[DATABASE] Failed to prepare statement: %s", sqlite3_errmsg(db));
+        log_err_message("[%s] Failed to prepare statement: %s",DB_INTERFACE, sqlite3_errmsg(db));
         return rc;
     }
 
@@ -44,7 +44,7 @@ int select_from_db(const char *sql, select_callback callback, void *data)
     }
 
     if (rc != SQLITE_DONE) {
-        log_err_message("[DATABASE] Failed to execute query: %s", sqlite3_errmsg(db));
+        log_err_message("[%s] Failed to execute query: %s",DB_INTERFACE, sqlite3_errmsg(db));
     }
 
     sqlite3_finalize(stmt);
@@ -62,7 +62,7 @@ int create_db(const char *sql_commands)
 
     if (rc != SQLITE_OK)
     {
-        fprintf(stderr, "Failed to execute SQL commands: %s\n", err_msg);
+        log_err_message("[%s] Failed to create tables of database: %s", DB_INTERFACE);
         sqlite3_free(err_msg);
         return rc;
     }
@@ -76,7 +76,7 @@ int execute_sql(const char *sql, const char *param_types, int param_count, ...)
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     if (rc != SQLITE_OK)
     {
-        log_err_message("[DATABASE] Failed to prepare statement: %s", sqlite3_errmsg(db));
+        log_err_message("[%s] Failed to prepare statement: %s",DB_INTERFACE, sqlite3_errmsg(db));
         return rc;
     }
 
@@ -109,7 +109,7 @@ int execute_sql(const char *sql, const char *param_types, int param_count, ...)
         }
         else
         {
-            log_err_message("[DATABASE] Unknown parameter type: %c", *p);
+            log_err_message("[%s] Unknown parameter type: %c",DB_INTERFACE, *p);
             va_end(args);
             sqlite3_finalize(stmt);
             return SQLITE_ERROR;
@@ -123,7 +123,7 @@ int execute_sql(const char *sql, const char *param_types, int param_count, ...)
     rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE)
     {
-        log_err_message("[DATABASE] Cannot perform SQL operation, SQL error: %s", sqlite3_errmsg(db));
+        log_err_message("[%s] Cannot perform SQL operation, SQL error: %s", DB_INTERFACE,sqlite3_errmsg(db));
         sqlite3_finalize(stmt);
         return rc;
     }
@@ -135,21 +135,19 @@ int execute_sql(const char *sql, const char *param_types, int param_count, ...)
 
 int init_db(char *db_name)
 {
-    printf("Loading database from file %s\n", db_name);
-
     int is_new_db = access(db_name, F_OK) == -1;
 
     int rc = sqlite3_open(db_name, &db);
     if (rc != SQLITE_OK)
     {
-        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        log_err_message("[%s] Cannot open database: '%s'", DB_INTERFACE,sqlite3_errmsg(db));
         sqlite3_close(db);
         exit(1);
     }
 
     if (is_new_db)
     {
-        printf("Database file %s is new. Initializing...\n", db_name);
+        log_sys_message("[%s] Database file %s is new. Initializing...",DB_INTERFACE, db_name);
         const char *sql_commands =
             "BEGIN TRANSACTION;"
             "CREATE TABLE IF NOT EXISTS users ("
@@ -186,17 +184,12 @@ int init_db(char *db_name)
         rc = create_db(sql_commands);
         if (rc != SQLITE_OK)
         {
-            fprintf(stderr, "Failed to initialize database schema on file %s\n", db_name);
+            log_err_message( "[%s] Failed to initialize database schema on file %s",DB_INTERFACE, db_name);
             sqlite3_close(db);
             exit(1);
         }
-        printf("New database %s initialized!\n", db_name);
+        log_sys_message("[%s] New database %s initialized!",DB_INTERFACE, db_name);
     }
-    else
-    {
-        //printf("Database already exists. Skipping table creation.\n");
-    }
-
     return rc;
 }
 

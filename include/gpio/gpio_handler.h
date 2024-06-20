@@ -6,6 +6,7 @@
 #ifndef GPIO_HANDLER_H
 #define GPIO_HANDLER_H
 
+#define GPIO_INTERFACE "GPIO"
 
 void init_gpio();
 

@@ -28,7 +28,7 @@ void add_client(client_t *cli)
             break;
         }
     }
-    log_sys_message("[%s] Connected! Awaiting IDENT", get_ip(cli));
+    log_sys_message("[%s] %s Connected ", SCK_INTERFACE, cli->ipv4addr);
     pthread_mutex_unlock(&clients_mutex);
 }
 
@@ -42,13 +42,13 @@ void handle_disconnect_client(client_t *cli,int argc, char **argv)
 
     if (cli->identified > 0)
     {
-        snprintf(exit_msg,sizeof(exit_msg),"See ya later %s! Bye for now!", cli->user->username);
-        log_sys_message("[%s] %s disconnected!", get_ip(cli), cli->user->username);
+        snprintf(exit_msg,sizeof(exit_msg),"See ya later %s (%s)! Bye for now!\n", cli->user->username,cli->ipv4addr);
+        log_sys_message("[%s] %s (%s) disconnected!", SCK_INTERFACE, cli->user->username,cli->ipv4addr);
     }
     else
     {
-        snprintf(exit_msg,sizeof(exit_msg),"Hmmf! You left without telling me who you are?!");
-        log_sys_message("[%s] Disconnected!", get_ip(cli));
+        snprintf(exit_msg,sizeof(exit_msg),"Hmmf! You left without telling me who you are?!\n");
+        log_sys_message("[%s] %s disconnected!", SCK_INTERFACE,cli->ipv4addr);
     }
     // Send a last message before cleanup work begins!
     send(cli->socket, exit_msg, strlen(exit_msg), 0);
@@ -95,7 +95,7 @@ int check_access_lvl(client_t *cli, int access_required)
 {
     if (cli->identified < access_required)
     {
-        bad_status(cli,ACCESS_DENIED,"Your access is not high enough for this operation!");
+        bad_status(cli,ACCESS_DENIED,"Your access level is not high enough for this operation!");
         return 0;
     }
     return 1;
@@ -104,7 +104,6 @@ int is_identified(client_t *cli)
 {
     if (cli->identified == 0)
     {
-       // bad_status(cli,MISSING_IDENT,"You are not identified!");
         return 0;
     }
     return 1;
@@ -138,7 +137,7 @@ void handle_client(client_t *cli)
         if (strcmp(buffer,"") == 0)
         {
             bad_status(cli,INVALID_COMMAND,"No command given!");
-            log_sys_message("[%s] Invalid command: %s", get_ip(cli), buffer);
+            log_sys_message("[%s] %s Invalid command: %s",get_ip(cli), SCK_INTERFACE, buffer);
         }
         else
         {
@@ -159,7 +158,7 @@ void handle_client(client_t *cli)
                         {
                             char missing_args_msg[BUFFER_SIZE];
                             snprintf(missing_args_msg, sizeof(missing_args_msg), "%s needs %d arguments", strip_newline_return(cmd), commands[i].requires_args);
-                            log_sys_message("[%s] Missing arguments on command %s, requires: %d", cli->ipv4addr, cmd, commands[i].requires_args);
+                            log_sys_message("[%s] %s Missing arguments on command %s, requires: %d", SCK_INTERFACE,cli->ipv4addr, cmd, commands[i].requires_args);
                             bad_status(cli,MISSING_ARGS,missing_args_msg);
                         }
                         else
@@ -171,7 +170,7 @@ void handle_client(client_t *cli)
                             {
                                 char missing_args_msg[BUFFER_SIZE];
                                 snprintf(missing_args_msg, sizeof(missing_args_msg), "%s needs %d arguments, but got %d", strip_newline_return(cmd), commands[i].requires_args, argc);
-                                log_sys_message("[%s] Missing arguments on command %s, requires: %d, got: %d", get_ip(cli), cmd, commands[i].requires_args, argc);
+                                log_sys_message("[%s] %s Missing arguments on command %s, requires: %d, got: %d", SCK_INTERFACE,get_ip(cli), cmd, commands[i].requires_args, argc);
                                 bad_status(cli,MISSING_ARGS,missing_args_msg);
                             }
                             else
@@ -191,7 +190,7 @@ void handle_client(client_t *cli)
             if (!cmd_found)
             {
                 bad_status(cli,INVALID_COMMAND,"Invalid command!");
-                log_sys_message("[%s] Invalid command: %s", get_ip(cli), cmd);
+                log_sys_message("[%s] Invalid command: %s", SCK_INTERFACE, cmd);
             }
         }
 

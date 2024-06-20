@@ -4,11 +4,7 @@
 #ifndef DB_HANDLER_H
 #define DB_HANDLER_H
 #include <sqlite3.h>
-#define DB_MESSAGE_IS_NOT_NEW 700
-#define DB_SAVE_OK SQLITE_OK
-
-
-
+#define DB_INTERFACE "DATABASE"
 
 // Funksjoner for å samhandle med databasen
 
