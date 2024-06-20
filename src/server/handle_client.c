@@ -5,7 +5,7 @@
 #include "../../include/config/config.h"
 #include "../../include/log.h"
 #include "../../include/utils.h"
-#include <stdio.h>
+#include "../../include/status.h"
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -137,10 +137,8 @@ void handle_client(client_t *cli)
 
         if (strcmp(buffer,"") == 0)
         {
-
-            log_sys_message("[%s] Found invalid characters in command!",get_ip(cli));
-            bad_status(cli,INVALID_CMD,"Found invalid  characters in command!");
-
+            bad_status(cli,INVALID_COMMAND,"No command given!");
+            log_sys_message("[%s] Invalid command: %s", get_ip(cli), buffer);
         }
         else
         {
@@ -192,7 +190,7 @@ void handle_client(client_t *cli)
             }
             if (!cmd_found)
             {
-                bad_status(cli,INVALID_CMD,NULL);
+                bad_status(cli,INVALID_COMMAND,"Invalid command!");
                 log_sys_message("[%s] Invalid command: %s", get_ip(cli), cmd);
             }
         }

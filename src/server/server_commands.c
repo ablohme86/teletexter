@@ -14,6 +14,7 @@ command_t commands[] = {
     {"MSG_CUSTOM",handle_msg_custom,3},
     {"MSG_CLEAR", handle_clear_display, 0},
     {"BYE", handle_disconnect_client,0},
+    {"CLEAR_LINE", handle_clear_line,1},
     {"", NULL, 0}
 };
 

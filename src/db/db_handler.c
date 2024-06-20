@@ -15,7 +15,48 @@ sqlite3 *db;
 char *err_msg;
 
 
-int execute_sql_commands(const char *sql_commands)
+
+
+int select_from_db(const char *sql, select_callback callback, void *data)
+{
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+
+    if (rc != SQLITE_OK) {
+        log_err_message("[DATABASE] Failed to prepare statement: %s", sqlite3_errmsg(db));
+        return rc;
+    }
+
+    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+        int column_count = sqlite3_column_count(stmt);
+        char **values = (char **)malloc(column_count * sizeof(char *));
+        char **columns = (char **)malloc(column_count * sizeof(char *));
+
+        for (int i = 0; i < column_count; i++) {
+            values[i] = (char *)sqlite3_column_text(stmt, i);
+            columns[i] = (char *)sqlite3_column_name(stmt, i);
+        }
+
+        callback(data, column_count, values, columns);
+
+        free(values);
+        free(columns);
+    }
+
+    if (rc != SQLITE_DONE) {
+        log_err_message("[DATABASE] Failed to execute query: %s", sqlite3_errmsg(db));
+    }
+
+    sqlite3_finalize(stmt);
+    if (rc == SQLITE_OK || SQLITE_DONE)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+
+int create_db(const char *sql_commands)
 {
     int rc = sqlite3_exec(db, sql_commands, 0, 0, &err_msg);
 
@@ -25,6 +66,69 @@ int execute_sql_commands(const char *sql_commands)
         sqlite3_free(err_msg);
         return rc;
     }
+
+    return SQLITE_OK;
+}
+
+int execute_sql(const char *sql, const char *param_types, int param_count, ...)
+{
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (rc != SQLITE_OK)
+    {
+        log_err_message("[DATABASE] Failed to prepare statement: %s", sqlite3_errmsg(db));
+        return rc;
+    }
+
+    va_list args;
+    va_start(args, param_count);
+
+    int param_index = 1;
+    const char *p = param_types;
+
+    while (*p)
+    {
+        if (*p == 'i')
+        {
+            int param = va_arg(args, int);
+            sqlite3_bind_int(stmt, param_index, param);
+        }
+        else if (*p == 's')
+        {
+            const char *param = va_arg(args, const char *);
+            sqlite3_bind_text(stmt, param_index, param, -1, SQLITE_STATIC);
+        }
+        else if (*p == 'd')
+        {
+            double param = va_arg(args, double);
+            sqlite3_bind_double(stmt, param_index, param);
+        }
+        else if (*p == 'n')
+        {
+            sqlite3_bind_null(stmt, param_index);
+        }
+        else
+        {
+            log_err_message("[DATABASE] Unknown parameter type: %c", *p);
+            va_end(args);
+            sqlite3_finalize(stmt);
+            return SQLITE_ERROR;
+        }
+        param_index++;
+        p++;
+    }
+
+    va_end(args);
+
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        log_err_message("[DATABASE] Cannot perform SQL operation, SQL error: %s", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        return rc;
+    }
+
+    sqlite3_finalize(stmt);
 
     return SQLITE_OK;
 }
@@ -79,7 +183,7 @@ int init_db(char *db_name)
             "value INTEGER"
             ");"
             "COMMIT;";
-        rc = execute_sql_commands(sql_commands);
+        rc = create_db(sql_commands);
         if (rc != SQLITE_OK)
         {
             fprintf(stderr, "Failed to initialize database schema on file %s\n", db_name);
@@ -97,98 +201,6 @@ int init_db(char *db_name)
 }
 
 
-int db_save_message(Message *msg)
-{
-    log_sys_message("[DATABASE] Creating new message...");
-
-
-    
-    sqlite3_stmt *stmt;
-    char sql[1024];
-    if (msg->id == 0)   // ny melding, opprett i db:
-    {
-        snprintf(sql, sizeof(sql), "INSERT INTO messages (date, time, message, poster_id, status) VALUES (?, ?, ?, ?, ?)");
-        log_sys_message("[DATABASE] New message, inserting into db...");
-    }
-    else
-    {
-        snprintf(sql, sizeof(sql), "UPDATE messages SET date=?, time=?, message=?, poster_id=?, status=? WHERE id = ?");
-        log_sys_message("[DATABASE] Updating message id %d", msg->id);
-    }
-    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-    
-    if (rc != SQLITE_OK) {
-        log_err_message("[DATABASE] Failed to prepare statement: %s", sqlite3_errmsg(db));
-        return rc;
-    }
-    
-    // Bind parameters (Note: Indices start from 1)
-    sqlite3_bind_text(stmt, 1, msg->date, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, msg->time, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, msg->message, -1, SQLITE_STATIC);
-    sqlite3_bind_int(stmt, 4, msg->poster_id);
-    sqlite3_bind_int(stmt, 5, msg->status);
-    
-    // Execute statement
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_DONE) {
-        log_err_message("[DATABASE] Cannot perform message operation, SQL error: %s", sqlite3_errmsg(db));
-        sqlite3_finalize(stmt);
-        return rc;
-    }
-    
-    sqlite3_finalize(stmt);
-    return SQLITE_OK;
-}
-
-
-int check_user_login(const char *username, const char *pwd, User *user)
-{
-    sqlite3_stmt *stmt;
-    const char *sql = "SELECT * FROM users WHERE username = ? AND password = ?";
-    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-
-    if (rc != SQLITE_OK) {
-        log_err_message("[DATABASE] Failed to prepare statement: %s", sqlite3_errmsg(db));
-        return rc;
-    }
-
-    // Bind parameters
-
-    sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, pwd, -1, SQLITE_STATIC);
-
-    // Execute statement
-    rc = sqlite3_step(stmt);
-
-    if (rc == SQLITE_ROW)
-    {
-        if (user == NULL)
-        {
-            log_err_message("[MEMORY] For some reason the User pointer was not initialized during client-connect! I will now fail miserably :´-(! Bye...");
-        }
-
-
-        user->id = sqlite3_column_int(stmt,0);
-        strcpy(user->username, (const char *)sqlite3_column_text(stmt, 1));
-        strcpy(user->password, (const char *)sqlite3_column_text(stmt, 2));
-        user->access_level = sqlite3_column_int(stmt, 3);
-        user->enabled = sqlite3_column_int(stmt, 4);
-    }
-    else if (rc == SQLITE_DONE)
-    {
-        return INVALID_CREDENTIALS;
-
-    }
-    else
-    {
-        log_err_message("[DATABASE] Failed to fetch data from SQL table: %s", sqlite3_errmsg(db));
-        return DATABASE_QUERY_ERROR;
-    }
-
-    sqlite3_finalize(stmt);
-    return LOGIN_OK;
-}
 
 
 

@@ -1,15 +1,9 @@
 #include "../../include/server/handle_ident.h"
-#include "../../include/db/db_handler.h"
+#include "../../include/status.h"
 #include "../../include/utils.h"
-#include "../../include/config/config.h"
+#include "../../include/user/user.h" // for user object
 #include "../../include/log.h"
 #include "../../include/server/server.h"
-#include <stdio.h>
-#include <string.h>
-#include <arpa/inet.h>
-#include <stdlib.h>
-#include <unistd.h>
-
 
 void handle_ident(client_t *cli, int argc, char **argv)
 {
@@ -23,7 +17,7 @@ void handle_ident(client_t *cli, int argc, char **argv)
     strip_newline(nickname);
 
     int db_login = check_user_login(nickname,password,cli->user);
-    if (db_login == LOGIN_OK)
+    if (db_login > 0)
     {
         cli->identified = 1;
         log_sys_message("[%s] %s (%d) successfully logged in with access level %d", cli->ipv4addr,cli->user->username,cli->user->id,cli->user->access_level);
@@ -33,7 +27,7 @@ void handle_ident(client_t *cli, int argc, char **argv)
     {
         cli->identified = 0;
         log_sys_message("[%s] Invalid credentials for user %s",cli->ipv4addr, nickname);
-        bad_status(cli,INVALID_CREDENTIALS,"INVALID_CREDENTIALS");
+        bad_status(cli,LOGIN_FAILED,"Invalid credentials!");
     }
 
 }

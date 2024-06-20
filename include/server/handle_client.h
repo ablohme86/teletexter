@@ -2,7 +2,7 @@
 #define CLIENT_H
 
 #include <netinet/in.h>
-#include "../db/db_handler.h"
+#include "../user/user.h"
 
 
 typedef struct {

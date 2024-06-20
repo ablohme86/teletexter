@@ -6,11 +6,12 @@
 #include <string.h>
 #include <stdio.h>
 #include "../../include/config/config.h"
-#include "../../include/messages/messages.h"
+#include "../../include/message/message.h"
 #include "../../include/lcd/lcd_disp.h"
 #include "../../include/db/db_handler.h"
 #include "../../include/utils.h" 
-#include "../../include/server/handle_client.h"
+#include "../../include/log.h"
+#include "../../include/status.h"
 
 
 typedef struct {
@@ -18,9 +19,37 @@ typedef struct {
     char buff[MAX_LINE_MSG_LENGTH];
 
 } MessageLine;
-MessageLine *messageLines[128]; // maximum 129 supported lines..
-Message currentMessage;
+MessageLine *messageLines[128]; // stores all lines string data thats on display
+Message currentMessage;   // message on display
 
+int save_message(Message *msg)
+{
+    log_sys_message("[DATABASE] Creating new message...");
+
+    char sql[1024];
+    int res;
+
+    if (msg->id == 0)
+    {
+        snprintf(sql, sizeof(sql), "INSERT INTO messages (date, time, message, poster_id, status) VALUES (?, ?, ?, ?, ?)");
+        log_sys_message("[MESSAGE] New message, inserting into db...");
+        res = execute_sql(sql, "sssii", 5, msg->date, msg->time, msg->message, msg->poster_id, msg->status);
+    }
+    else
+    {
+        snprintf(sql, sizeof(sql), "UPDATE messages SET date = ?, time = ?, message = ?, poster_id = ?, status = ? WHERE id = ?");
+        log_sys_message("[MESSAGE] Updating message id %d", msg->id);
+        res = execute_sql(sql, "sssiii", 6, msg->date, msg->time, msg->message, msg->poster_id, msg->status, msg->id);
+    }
+
+    if (res == SQLITE_OK) {
+        log_sys_message("[MESSAGE] The system did not crash!");
+    } else {
+        log_err_message("[DATABASE] Error occurred during message save operation: %d", res);
+    }
+
+    return res;
+}
 
 
 int new_message(char *msg, User *user)
@@ -33,43 +62,48 @@ int new_message(char *msg, User *user)
     get_time(cur_time);
 
     snprintf(top_line_msg, sizeof(top_line_msg), "%s %s %s:", weekday_str,cur_time, user->username);
-    Message *new_msg = (Message *)calloc(1, sizeof(Message)); // bruker calloc for å forsikre om at alle variabler er nullstilt
+    Message *new_msg = (Message *)malloc(sizeof(Message)); // bruker calloc for å forsikre om at alle variabler er nullstilt
 
     get_date(new_msg->date);
     get_time(new_msg->time);
     strcpy(new_msg->message, msg);
     new_msg->poster_id = user->id;
-    db_save_message(new_msg);
-    #ifdef DEBUG
+    save_message(new_msg);
     log_sys_message("[DEBUG/MESSAGE] Sending message to LCD panel");
-    #endif
 
-    currentMessage = *new_msg;   
-    free(new_msg);
+    currentMessage = *new_msg;
+    log_sys_message("currentMessage is set!");
+    //free(new_msg);
 #ifndef DISABLE_LCD
     lcd_clear();
     set_line_text(top_line_msg, 1, "LEFT");   
     set_line_text(msg,2,"LEFT");
 #endif
-    return MSG_SET_OK;
+    return MESSAGE_SET;
 }
 
 int scroll_message(int sel_line)    // Scrolls the selected line
 {
     if (messageLines[sel_line] == NULL)
     {
-        return NO_MESSAGE_SET;
+        return 0;
     }
+#ifndef DISABLE_LCD
     lcd_scroll(messageLines[sel_line]->buff,sel_line,config.messageConfig.scrollSpeed);
+#endif
     return 0;
 }
 
+void clear_line(int line)
+{
+    set_line_text("",line,LEFT);
+}
 
 int set_line_text(const char *msg, unsigned int line,const char *align)
 {
     if (line > config.lcdConfig.lcdWidth)
     {
-        return LINE_NOT_AVAILABLE;    // The set line is higher than available lines
+        return INVALID_LINE;    // The set line is higher than available lines
     }
     if (messageLines[line] == NULL)
     {
@@ -126,5 +160,5 @@ int set_line_text(const char *msg, unsigned int line,const char *align)
         }
     }
 
-    return MSG_SET_OK;
+    return MESSAGE_SET;
 }

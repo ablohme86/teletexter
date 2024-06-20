@@ -8,8 +8,8 @@
 #include "../../include/server/server.h"
 #include "../../include/utils.h"
 #include "../../include/server/handle_client.h"
-#include "../../include/config/config.h"
-#include "../../include/messages/messages.h"
+#include "../../include/status.h"
+#include "../../include/message/message.h"
 
 void handle_msg_custom(client_t *cli,int argc, char **argv)
 {
@@ -21,7 +21,7 @@ void handle_msg_custom(client_t *cli,int argc, char **argv)
     if (is_numerical_cpy(inc_line,&p_line) != 1)       // pass p_line's pointer addr to function so it will edit it!
     {
         log_sys_message("[%s] Specified LINE number '%s' is not specified or not a number",get_ip(cli) , inc_line);
-        bad_status(cli,LINE_ARG_NOT_NUMBER,"Provided LINE was not a number!");
+        bad_status(cli,INVALID_LINE,"Provided LINE was not a number!");
         return;
     }
     char *inc_msg = argv[2];
@@ -30,17 +30,14 @@ void handle_msg_custom(client_t *cli,int argc, char **argv)
         int set_msg_status = set_line_text(inc_msg,p_line,inc_align);
         switch (set_msg_status)
         {
-            case LINE_NOT_AVAILABLE:
-                bad_status(cli,LINE_NOT_AVAILABLE,"LINE_NOT_AVAILABLE");
+            case INVALID_LINE:
+                bad_status(cli,INVALID_LINE,"LINE_NOT_AVAILABLE");
                 break;
             case INVALID_ALIGN:
                 bad_status(cli,INVALID_ALIGN,"INVALID_ALIGN");
             break;
-            case LINE_CANNOT_BE_ZERO:
-                bad_status(cli,LINE_CANNOT_BE_ZERO,"LINE_CANNOT_BE_ZERO");
-                break;
-            case MSG_SET_OK:
-                ok_status(cli,MSG_SET_OK,"MSG_SET_OK");
+            case MESSAGE_SET:
+                ok_status(cli,MESSAGE_SET,"MSG_SET_OK");
                 break;
         };
 
@@ -48,7 +45,7 @@ void handle_msg_custom(client_t *cli,int argc, char **argv)
     }
     else
     {
-        bad_status(cli,MISSING_IDENT,"Please IDENT first!");
+        bad_status(cli,ACCESS_DENIED,"Please IDENT first!");
         log_sys_message("[%s] Attempted to use MSG_CUSTOM without being identified",get_ip(cli));
 
     }
@@ -65,14 +62,33 @@ void handle_clear_display(client_t *cli, int argc, char **argv)
         lcd_clear();
 #endif
         log_sys_message("[%s] %s cleared display",cli->ipv4addr, cli->user->username);
-        ok_status(cli,LCD_CLEARED,"LCD is clean as a whistle!");
+        ok_status(cli,CLEAR_DISPLAY,"LCD is clean as a whistle!");
     }
     else
     {
         log_sys_message("[%s] tried to clear display without proper access", get_ip(cli));
         bad_status(cli,ACCESS_DENIED,NULL);
     }
-
+}
+void handle_clear_line(client_t *cli, int argc, char **argv)
+{
+    char *inc_line = argv[0];
+    int p_line;
+    if (cli->identified)
+    {
+        if (is_numerical_cpy(inc_line,&p_line) != 1)
+        {
+            bad_status(cli,INVALID_LINE,"Cannot clear line, invalid line number!");
+            log_sys_message("[%s] %s provided invalid line for clearing", get_ip(cli), cli->user->username);
+            return;
+        }
+        clear_line(p_line);
+        ok_status(cli,LINE_CLEARED,"Line %d was successfully cleared!", p_line);
+    }
+    else
+    {
+        bad_status(cli,ACCESS_DENIED,"You must IDENT first!");
+    }
 }
 
 void handle_latest_msg(client_t *cli)   // handle LATEST_MSG call from client
@@ -105,6 +121,6 @@ void handle_msg(client_t *cli, int argc, char **argv)
         strncpy(full_message,argv[0], sizeof(full_message));
         strip_newline(full_message);
         new_message(full_message,cli->user);
-        ok_status(cli,MSG_SET_OK,"MSG_SET_OK");
+        ok_status(cli,MESSAGE_SET,"Message created!");
     }
 }
