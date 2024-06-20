@@ -16,21 +16,21 @@ char *err_msg;
 
 
 
-
 int select_from_db(const char *sql, select_callback callback, void *data)
 {
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
 
     if (rc != SQLITE_OK) {
-        log_err_message("[%s] Failed to prepare statement: %s",DB_INTERFACE, sqlite3_errmsg(db));
+        log_err_message("[DATABASE] Failed to prepare statement: %s", sqlite3_errmsg(db));
         return rc;
     }
 
+    int found = 0;
     while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
         int column_count = sqlite3_column_count(stmt);
-        char **values = (char **)malloc(column_count * sizeof(char *));
-        char **columns = (char **)malloc(column_count * sizeof(char *));
+        char *values[column_count];
+        char *columns[column_count];
 
         for (int i = 0; i < column_count; i++) {
             values[i] = (char *)sqlite3_column_text(stmt, i);
@@ -39,20 +39,15 @@ int select_from_db(const char *sql, select_callback callback, void *data)
 
         callback(data, column_count, values, columns);
 
-        free(values);
-        free(columns);
+        found = 1;
     }
 
     if (rc != SQLITE_DONE) {
-        log_err_message("[%s] Failed to execute query: %s",DB_INTERFACE, sqlite3_errmsg(db));
+        log_err_message("[DATABASE] Failed to execute query: %s", sqlite3_errmsg(db));
     }
 
     sqlite3_finalize(stmt);
-    if (rc == SQLITE_OK || SQLITE_DONE)
-    {
-        return 1;
-    }
-    return 0;
+    return found ? 1 : 0;
 }
 
 
