@@ -121,16 +121,14 @@ void print_time(int unixtime, char *output_variable)
     strftime(output_variable, 20, "%H:%M:%S", tm_info);
 }
 
-long get_unixtime()
-{
-
+long get_unixtime() {
     time_t current_time;
-    
+
     // Få gjeldende tid
-    return time(&current_time);
+    current_time = time(NULL);
 
+    return (long)current_time;
 }
-
 
 void get_date(char *date_str) 
 {

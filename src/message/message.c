@@ -29,15 +29,15 @@ int save_message(Message *msg)
 
     if (msg->id < 1)
     {
-        snprintf(sql, sizeof(sql), "INSERT INTO messages (date, time, message, poster_id, status) VALUES (?, ?, ?, ?, ?)");
+        snprintf(sql, sizeof(sql), "INSERT INTO messages (datetime, message, poster_id, status) VALUES (?, ?, ?, ?)");
         log_sys_message("[%s] New message, inserting into db...", MSG_INTERFACE);
-        res = execute_sql(sql, "sssii", 5, msg->date, msg->time, msg->message, msg->poster_id, msg->status);
+        res = execute_sql(sql, "isii", 4, msg->datetime, msg->message, msg->poster_id, msg->status);
     }
     else
     {
-        snprintf(sql, sizeof(sql), "UPDATE messages SET date = ?, time = ?, message = ?, poster_id = ?, status = ? WHERE id = ?");
+        snprintf(sql, sizeof(sql), "UPDATE messages SET datetime = ?, message = ?, poster_id = ?, status = ? WHERE id = ?");
         log_sys_message("[%s] Updating message id %d",MSG_INTERFACE, msg->id);
-        res = execute_sql(sql, "sssiii", 6, msg->date, msg->time, msg->message, msg->poster_id, msg->status, msg->id);
+        res = execute_sql(sql, "isiii", 5, msg->datetime, msg->message, msg->poster_id, msg->status, msg->id);
     }
 
     return res;
@@ -56,8 +56,8 @@ int new_message(char *msg, User *user)
     snprintf(top_line_msg, sizeof(top_line_msg), "%s %s %s:", weekday_str,cur_time, user->username);
     Message *new_msg = (Message *)calloc(1,sizeof(Message)); // bruker calloc for å forsikre om at alle variabler er nullstilt
 
-    get_date(new_msg->date);
-    get_time(new_msg->time);
+    new_msg->datetime = get_unixtime();
+    printf("Current time is: %d", new_msg->datetime);
     strcpy(new_msg->message, msg);
     new_msg->poster_id = user->id;
     save_message(new_msg);
@@ -157,30 +157,29 @@ int set_line_text(const char *msg, unsigned int line,const char *align)
 
 int message_callback(void *data, int argc, char **argv, char **azColName)
 {
-    Message *message = (User *)data;
+    Message *message = (Message *)data;
     for (int i = 0; i < argc; i++) 
     {
         if (strcmp(azColName[i], "id") == 0) 
         {
             message->id = atoi(argv[i]);
         }
-        else if (strcmp(azColName[i], "date") == 0)
+        else if (strcmp(azColName[i], "datetime") == 0)
         {
-            strncpy(message->date, argv[i], sizeof(message->date) - 1);
-            message->date[sizeof(message->date) - 1] = '\0';  // Ensure null-termination
+            message->datetime = atoi(argv[i]);
         }
-        else if (strcmp(azColName[i], "access_level") == 0)
+        else if (strcmp(azColName[i], "poster_id") == 0)
         {
-            user->access_level = atoi(argv[i]);
+            message->poster_id = atoi(argv[i]);
         }
-        else if (strcmp(azColName[i], "enabled") == 0)
+        else if (strcmp(azColName[i], "status") == 0)
         {
-            user->enabled = atoi(argv[i]);
+            message->status = atoi(argv[i]);
         }
-        else if (strcmp(azColName[i], "password") == 0)
+        else if (strcmp(azColName[i], "message") == 0)
         {
-            strncpy(user->password, argv[i], sizeof(user->password) - 1);
-            user->password[sizeof(user->password) - 1] = '\0';  // Ensure null-termination
+            strncpy(message->message, argv[i], sizeof(message->message) - 1);
+            message->message[sizeof(message->message) - 1] = '\0';  // Ensure null-termination
         }
     }
     return 0;

@@ -13,7 +13,7 @@
 
 typedef struct {
     unsigned int id;
-    char date[11];
+    long datetime;
     char time[9];
     char message[256];
     unsigned int poster_id;
@@ -26,6 +26,7 @@ int set_line_text(const char *msg, unsigned int line,const char *align);
 int scroll_message(int line);
 void get_line_msg(int line, char*out_msg);
 void clear_line(int line);
+int message_callback(void *data, int argc, char **argv, char **azColName);  // for sql cb
 
 #endif //MESSAGES_H
 
