@@ -24,12 +24,10 @@ Message currentMessage;   // message on display
 
 int save_message(Message *msg)
 {
-    log_sys_message("[DATABASE] Creating new message...");
-
     char sql[1024];
     int res;
 
-    if (msg->id == 0)
+    if (msg->id < 1)
     {
         snprintf(sql, sizeof(sql), "INSERT INTO messages (date, time, message, poster_id, status) VALUES (?, ?, ?, ?, ?)");
         log_sys_message("[%s] New message, inserting into db...", MSG_INTERFACE);
@@ -56,7 +54,7 @@ int new_message(char *msg, User *user)
     get_time(cur_time);
 
     snprintf(top_line_msg, sizeof(top_line_msg), "%s %s %s:", weekday_str,cur_time, user->username);
-    Message *new_msg = (Message *)malloc(sizeof(Message)); // bruker calloc for å forsikre om at alle variabler er nullstilt
+    Message *new_msg = (Message *)calloc(1,sizeof(Message)); // bruker calloc for å forsikre om at alle variabler er nullstilt
 
     get_date(new_msg->date);
     get_time(new_msg->time);
@@ -153,4 +151,37 @@ int set_line_text(const char *msg, unsigned int line,const char *align)
     }
 
     return MESSAGE_SET;
+}
+
+
+
+int message_callback(void *data, int argc, char **argv, char **azColName)
+{
+    Message *message = (User *)data;
+    for (int i = 0; i < argc; i++) 
+    {
+        if (strcmp(azColName[i], "id") == 0) 
+        {
+            message->id = atoi(argv[i]);
+        }
+        else if (strcmp(azColName[i], "date") == 0)
+        {
+            strncpy(message->date, argv[i], sizeof(message->date) - 1);
+            message->date[sizeof(message->date) - 1] = '\0';  // Ensure null-termination
+        }
+        else if (strcmp(azColName[i], "access_level") == 0)
+        {
+            user->access_level = atoi(argv[i]);
+        }
+        else if (strcmp(azColName[i], "enabled") == 0)
+        {
+            user->enabled = atoi(argv[i]);
+        }
+        else if (strcmp(azColName[i], "password") == 0)
+        {
+            strncpy(user->password, argv[i], sizeof(user->password) - 1);
+            user->password[sizeof(user->password) - 1] = '\0';  // Ensure null-termination
+        }
+    }
+    return 0;
 }

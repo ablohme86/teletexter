@@ -101,6 +101,36 @@ void strip_newline(char *str)
     }
 }
 
+void print_date(int unixtime, char *output_variable) 
+{
+    // Konverter Unix-tiden til strukturen 'tm'
+    time_t t = (time_t)unixtime;
+    struct tm *tm_info = localtime(&t);
+
+    // Formater datoen som "YYYY-MM-DD"
+    strftime(output_variable, 20, "%Y-%m-%d", tm_info);
+}
+
+void print_time(int unixtime, char *output_variable) 
+{
+    // Konverter Unix-tiden til strukturen 'tm'
+    time_t t = (time_t)unixtime;
+    struct tm *tm_info = localtime(&t);
+
+    // Formater tiden som "HH:MM:SS"
+    strftime(output_variable, 20, "%H:%M:%S", tm_info);
+}
+
+long get_unixtime()
+{
+
+    time_t current_time;
+    
+    // Få gjeldende tid
+    return time(&current_time);
+
+}
+
 
 void get_date(char *date_str) 
 {
