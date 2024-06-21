@@ -61,17 +61,27 @@ int check_user_login(const char *username, const char *pwd, User *user)
 int user_callback(void *data, int argc, char **argv, char **azColName)
 {
     User *user = (User *)data;
-    for (int i = 0; i < argc; i++) {
-        if (strcmp(azColName[i], "id") == 0) {
+    for (int i = 0; i < argc; i++) 
+    {
+        if (strcmp(azColName[i], "id") == 0) 
+        {
             user->id = atoi(argv[i]);
-        } else if (strcmp(azColName[i], "username") == 0) {
+        }
+        else if (strcmp(azColName[i], "username") == 0)
+        {
             strncpy(user->username, argv[i], sizeof(user->username) - 1);
             user->username[sizeof(user->username) - 1] = '\0';  // Ensure null-termination
-        } else if (strcmp(azColName[i], "access_level") == 0) {
+        }
+        else if (strcmp(azColName[i], "access_level") == 0)
+        {
             user->access_level = atoi(argv[i]);
-        } else if (strcmp(azColName[i], "enabled") == 0) {
+        }
+        else if (strcmp(azColName[i], "enabled") == 0)
+        {
             user->enabled = atoi(argv[i]);
-        } else if (strcmp(azColName[i], "password") == 0) {
+        }
+        else if (strcmp(azColName[i], "password") == 0)
+        {
             strncpy(user->password, argv[i], sizeof(user->password) - 1);
             user->password[sizeof(user->password) - 1] = '\0';  // Ensure null-termination
         }
