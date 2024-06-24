@@ -11,6 +11,7 @@
 #define MSG_INTERFACE "MESSAGE"
 
 
+
 typedef struct {
     unsigned int id;
     long datetime;
@@ -33,6 +34,11 @@ void print_prev_msg();
 int get_message_by_id(int id, Message *message);
 int get_latest_message_object(Message *message);
 void print_message_object(Message *message);
+int get_next_message_object(Message *message);
+int print_next_msg_object();
+
+int get_prev_message_object(Message *message);
+int print_prev_msg_object();
 
 
 #endif //MESSAGES_H

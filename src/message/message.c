@@ -20,7 +20,7 @@ typedef struct {
 
 } MessageLine;
 MessageLine *messageLines[128]; // stores all lines string data thats on display
-Message currentMessage;   // message on display
+Message *currentMessage;   // message on display
 
 int save_message(Message *msg)
 {
@@ -32,6 +32,7 @@ int save_message(Message *msg)
         snprintf(sql, sizeof(sql), "INSERT INTO messages (datetime, message, poster_id, status) VALUES (?, ?, ?, ?)");
         log_sys_message("[%s] New message, inserting into db...", MSG_INTERFACE);
         res = execute_sql(sql, "isii", 4, msg->datetime, msg->message, msg->poster_id, msg->status);
+        msg->id = sqlite3_last_insert_rowid(db);
     }
     else
     {
@@ -45,6 +46,11 @@ int save_message(Message *msg)
 
 void print_message_object(Message *msg)           // Prints a "Message" object to screen
 {
+   if (msg->id == 0)
+   {
+      log_err_message("[%s] message object id was 0! Cannot set message!", MSG_INTERFACE);
+      return;
+   }
     // get the username of msg poster_id:
     User *user = (User *)calloc(sizeof(User), 1);
     get_user_by_id(msg->poster_id,user);
@@ -54,7 +60,7 @@ void print_message_object(Message *msg)           // Prints a "Message" object t
     char datetime_short[15];
     print_datetime_short(msg->datetime,datetime_short);
     snprintf(top_line_msg, sizeof(top_line_msg), "%s %s:",datetime_short, user->username);
-    currentMessage = *msg;  // store the current message into memory
+    currentMessage = msg;  // store the current message into memory
 
 
 #ifndef DISABLE_LCD
@@ -144,7 +150,6 @@ int set_line_text(const char *msg, unsigned int line,const char *align)
 #ifndef DISABLE_LCD
             scroll_message(line);
 #endif
-
         }
     }
 
@@ -165,14 +170,86 @@ int get_message_by_id(int id, Message *message)    // get a "Message" object by 
     return select_from_db(sql, message_callback, message);
 }
 
+int get_next_message_object(Message *message)
+{
+   if (currentMessage == NULL)
+   {
+      printf("currentMessage is NULL!\n");
+      return -1;
+   }
+   else
+   {
+      printf("Last message ID was: %d, with msg: %s\n",currentMessage->id,currentMessage->message);
+      char sql[256];
+      snprintf(sql,sizeof(sql),"SELECT * FROM messages WHERE id > %d ORDER BY id DESC LIMIT 1",currentMessage->id);
+      return select_from_db(sql,message_callback,message);
+   }
+}
 
+int print_next_msg_object()
+{
+    Message *msg = (Message *)calloc(sizeof(Message),1);
+    if (get_next_message_object(msg) != -1)
+    {
+      if (msg == NULL)
+      {
+         printf("There is no more messages after this one!\n");
+         return -1;
+      }
+      print_message_object(msg);
+    
+      return 0;
+    }
+    return -1;
+    
+    
+}
+
+int get_prev_message_object(Message *message)
+{
+   if (currentMessage == NULL)
+   {
+      printf("currentMessage is NULL!\n");
+      return -1;
+   }
+   else
+   {
+      
+      printf("Last message ID was: %d, with msg: %s\n",currentMessage->id,currentMessage->message);
+      char sql[256];
+      snprintf(sql,sizeof(sql),"SELECT * FROM messages WHERE id < %d ORDER BY id DESC LIMIT 1",currentMessage->id);
+      return select_from_db(sql,message_callback,message);
+   }
+}
+int print_prev_msg_object()
+{
+    
+    Message *msg = (Message *)calloc(sizeof(Message),1);
+    int next_msg_reply = get_prev_message_object(msg);
+    if (next_msg_reply != -1)
+    {
+      print_message_object(msg);
+      if (msg == NULL)
+      {
+         printf("There is no more messages before this one!\n");
+         return -1;
+      }
+      
+      return 0;
+    }
+    printf("cannot print_prev_msg, currentMessage was NOT null\n");
+    return -1;
+    
+    
+}
 
 int get_latest_message_object(Message *message)      // gets the latest "Message" object in db!
 {
     char sql[256];
-    snprintf(sql, sizeof(sql), "SELECT * FROM messages ORDER BY id ASC");
+    snprintf(sql, sizeof(sql), "SELECT * FROM messages ORDER BY id DESC LIMIT 1");
     return select_from_db(sql, message_callback, message);
 }
+
 
 
 int message_callback(void *data, int argc, char **argv, char **azColName)        // callback for "Message"-object
