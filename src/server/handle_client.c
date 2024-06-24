@@ -34,6 +34,8 @@ void add_client(client_t *cli)
 }
 void handle_list_cmd(client_t *cli,  int argc,  char **argv)
 {
+(void)argc;
+(void)argv;
     char help_msg[BUFFER_SIZE];
     snprintf(help_msg,sizeof(help_msg),"Available commands:\n"
                                        "MSG [message] - Creates a new message to show on LCD Display\n"

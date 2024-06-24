@@ -60,10 +60,12 @@ void handle_clear_display(client_t *cli, int argc, char **argv)
     if (cli->identified)
     {
 #ifndef DISABLE_LCD
-        lcd_clear();
-        for (int i=1; i < config.lcdConfig.lcdHeight; i++)
+        printf("lcdHeight: %d\n",config.lcdConfig.lcdHeight);
+        
+        for (int i=1; i <= (int)config.lcdConfig.lcdHeight; i++)
         {
-            set_line_text("",i,LEFT);
+            printf("Clearing line %d...\n",i);
+            clear_line(i);
         }
 #endif
         log_sys_message("[%s] %s %s cleared display",SCK_INTERFACE,cli->ipv4addr, cli->user->username);
@@ -90,7 +92,9 @@ void handle_clear_line(client_t *cli, int argc, char **argv)
             return;
         }
         clear_line(p_line);
-        ok_status(cli,LINE_CLEARED,"Line %d was successfully cleared!", p_line);
+        char replybuff[100];
+        snprintf(replybuff,sizeof(replybuff),"Line %d was successfully cleared!", p_line);
+        ok_status(cli,LINE_CLEARED,replybuff);
     }
     else
     {
@@ -121,11 +125,13 @@ void handle_next_msg(client_t *cli, int argc, char **argv) // handle NEXT_MSG fr
 }
 void handle_set_msg_no(client_t *cli, int argc, char **argv)
 {
+    (void)cli;
     (void)argc;
     (void)argv;
 }
 void handle_prev_msg(client_t *cli, int argc, char **argv)
 {
+    (void)cli;
     (void)argc;
     (void)argv;
 }

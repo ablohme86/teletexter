@@ -52,7 +52,7 @@ void print_message_object(Message *msg)           // Prints a "Message" object t
     char top_line_msg[config.lcdConfig.lcdWidth+1]; // For å unngå scrolling
 
     char datetime_short[15];
-    print_datetime_short(get_unixtime(),datetime_short);
+    print_datetime_short(msg->datetime,datetime_short);
     snprintf(top_line_msg, sizeof(top_line_msg), "%s %s:",datetime_short, user->username);
     currentMessage = *msg;  // store the current message into memory
 
@@ -94,7 +94,7 @@ int scroll_message(int sel_line)    // Scrolls the selected line
 
 void clear_line(int line)
 {
-    set_line_text("",line,LEFT);
+    set_line_text(" ",line,"LEFT");
 }
 
 int set_line_text(const char *msg, unsigned int line,const char *align)
@@ -132,15 +132,10 @@ int set_line_text(const char *msg, unsigned int line,const char *align)
     }
 
 
-    strcpy(messageLines[line]->buff, msg);
-
+        strncpy(messageLines[line]->buff,msg, sizeof(messageLines[line]->buff));
   
 #ifndef DISABLE_LCD
     lcd_text(msg,line,r_align);
-    #ifdef DEBUG
-        fprintf(stdout,"DONE!\n");
-    #endif
-
 #endif
     if (strlen(msg) > config.lcdConfig.lcdWidth)
     {
