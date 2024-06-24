@@ -108,9 +108,6 @@ void remove_client(client_t *cli)
         
         return; // Sjekk om cli er gyldig
     }
-
-    // Frigjør cli
-    //free(cli);
 }
 
 int check_access_lvl(client_t *cli, int access_required)
@@ -122,6 +119,7 @@ int check_access_lvl(client_t *cli, int access_required)
     }
     return 1;
 }
+
 int is_identified(client_t *cli)
 {
     if (cli->identified == 0)

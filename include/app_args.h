@@ -62,8 +62,6 @@ int manage_startup_args(int argc, char **argv)
 
     if (config_file == NULL)
     {
-        printf("No config file specified... Setting /etc/teletexter/teletexter.cfg !\n");
-        //print_usage(argv[0]);
         config_file = "/etc/teletexter/teletexter.cfg";
         configPath = config_file;
         return 0;

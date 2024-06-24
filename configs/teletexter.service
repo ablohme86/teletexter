@@ -8,6 +8,9 @@ WorkingDirectory=/usr/local/sbin
 Restart=always
 User=nobody
 Group=nogroup
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=teletexter
 
 [Install]
 WantedBy=multi-user.target
