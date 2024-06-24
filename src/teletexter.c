@@ -91,13 +91,13 @@ int main(const int argc, char **argv)
     i2c_init(config.lcdConfig.lcdDeviceFile, config.lcdConfig.lcdAddress); // aktiver / start opp lcd biblioteket med dev fil og addr fra config
 
     // sett velkomstmelding på skjermen
+    char hostscr[1024];
+    sprintf(hostscr,"Host: %s", config.serverConfig.serverHost);
     char welcomeTxt_line1[config.lcdConfig.lcdWidth];
-    char welcometxt_line2[30];
     snprintf(welcomeTxt_line1, sizeof(welcomeTxt_line1), "TeleTexter v%d.%d", MAJOR, MINOR);
-    snprintf(welcomeTxt_line2,sizeof(welcomeTxt_line2), "Host: %s", config.serverConfig.serverHost);
-
     set_line_text(welcomeTxt_line1, 1, "LEFT");
-    set_line_text(welcomeTxt_line2, 2, "CENTER");
+    set_line_text(hostscr, 2, "CENTER");
+
 #endif
 
     return start_server();
