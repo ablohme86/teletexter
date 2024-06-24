@@ -43,29 +43,38 @@ int save_message(Message *msg)
     return res;
 }
 
-
-int new_message(char *msg, User *user)
+void print_message_object(Message *msg)           // Prints a "Message" object to screen
 {
+    // get the username of msg poster_id:
+    User *user = (User *)calloc(sizeof(User), 1);
+    get_user_by_id(msg->poster_id,user);
 
     char top_line_msg[config.lcdConfig.lcdWidth+1]; // For å unngå scrolling
 
     char datetime_short[15];
     print_datetime_short(get_unixtime(),datetime_short);
     snprintf(top_line_msg, sizeof(top_line_msg), "%s %s:",datetime_short, user->username);
-    Message *new_msg = (Message *)calloc(1,sizeof(Message)); // bruker calloc for å forsikre om at alle variabler er nullstilt
+    currentMessage = *msg;  // store the current message into memory
+
+
+#ifndef DISABLE_LCD
+    lcd_clear();
+    set_line_text(top_line_msg, 1, "LEFT");
+    set_line_text(msg->message,2,"LEFT");
+#endif
+
+}
+
+int new_message(char *msg, User *user)    // Creates and stores a new message to database and prints it
+{
+
+   Message *new_msg = (Message *)calloc(1,sizeof(Message)); // bruker calloc for å forsikre om at alle variabler er nullstilt
 
     new_msg->datetime = get_unixtime();
     strcpy(new_msg->message, msg);
     new_msg->poster_id = user->id;
     save_message(new_msg);
-
-    currentMessage = *new_msg;
-    //free(new_msg);
-#ifndef DISABLE_LCD
-    lcd_clear();
-    set_line_text(top_line_msg, 1, "LEFT");   
-    set_line_text(msg,2,"LEFT");
-#endif
+    print_message_object(new_msg);
     return MESSAGE_SET;
 }
 
@@ -80,6 +89,8 @@ int scroll_message(int sel_line)    // Scrolls the selected line
 #endif
     return 0;
 }
+
+
 
 void clear_line(int line)
 {
@@ -119,17 +130,12 @@ int set_line_text(const char *msg, unsigned int line,const char *align)
     {
       return INVALID_ALIGN;
     }
-    
 
 
     strcpy(messageLines[line]->buff, msg);
 
   
 #ifndef DISABLE_LCD
-#ifdef DEBUG
-    fprintf(stdout,"Running lcd_text!... ");
-#endif
-
     lcd_text(msg,line,r_align);
     #ifdef DEBUG
         fprintf(stdout,"DONE!\n");
@@ -150,9 +156,31 @@ int set_line_text(const char *msg, unsigned int line,const char *align)
     return MESSAGE_SET;
 }
 
+void print_latest_msg()           // prints the latest message object in db!
+{
+    Message *msg = (Message *)calloc(sizeof(Message),1);
+    get_latest_message_object(msg);
+    print_message_object(msg);
+}
+
+int get_message_by_id(int id, Message *message)    // get a "Message" object by id
+{
+    char sql[256];
+    snprintf(sql, sizeof(sql), "SELECT * FROM messages WHERE id = %d", id);
+    return select_from_db(sql, message_callback, message);
+}
 
 
-int message_callback(void *data, int argc, char **argv, char **azColName)
+
+int get_latest_message_object(Message *message)      // gets the latest "Message" object in db!
+{
+    char sql[256];
+    snprintf(sql, sizeof(sql), "SELECT * FROM messages ORDER BY id ASC");
+    return select_from_db(sql, message_callback, message);
+}
+
+
+int message_callback(void *data, int argc, char **argv, char **azColName)        // callback for "Message"-object
 {
     Message *message = (Message *)data;
     for (int i = 0; i < argc; i++) 

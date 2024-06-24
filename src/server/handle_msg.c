@@ -7,6 +7,7 @@
 #include "../../include/log.h"
 #include "../../include/server/server.h"
 #include "../../include/utils.h"
+#include "../../include/config/config.h"
 #include "../../include/server/handle_client.h"
 #include "../../include/status.h"
 #include "../../include/message/message.h"
@@ -60,6 +61,10 @@ void handle_clear_display(client_t *cli, int argc, char **argv)
     {
 #ifndef DISABLE_LCD
         lcd_clear();
+        for (int i=1; i < config.lcdConfig.lcdHeight; i++)
+        {
+            set_line_text("",i,LEFT);
+        }
 #endif
         log_sys_message("[%s] %s %s cleared display",SCK_INTERFACE,cli->ipv4addr, cli->user->username);
         ok_status(cli,CLEAR_DISPLAY,"LCD is clean as a whistle!");
@@ -72,6 +77,8 @@ void handle_clear_display(client_t *cli, int argc, char **argv)
 }
 void handle_clear_line(client_t *cli, int argc, char **argv)
 {
+    (void)argc;
+    
     char *inc_line = argv[0];
     int p_line;
     if (cli->identified)
@@ -91,18 +98,36 @@ void handle_clear_line(client_t *cli, int argc, char **argv)
     }
 }
 
-void handle_latest_msg(client_t *cli)   // handle LATEST_MSG call from client
+void handle_latest_msg(client_t *cli, int argc, char **argv)   // handle LATEST_MSG call from client
 {
+    (void)argc;
+    (void)argv;
+    if (cli->identified == 0)
+    {
+        bad_status(cli,ACCESS_DENIED,"You must IDENT first!");
+    }
+    else
+    {
+        print_latest_msg();
+        ok_status(cli,MESSAGE_SET,"Message set!");
+    }
 
 }
-void handle_next_msg(client_t *cli) // handle NEXT_MSG from client
+void handle_next_msg(client_t *cli, int argc, char **argv) // handle NEXT_MSG from client
 {
+    (void)argc;
+    (void)argv; // suppress compiler warnings, this is a 0 argument command
+    ok_status(cli,MESSAGE_SET,"MSG_SET");
 }
-void handle_set_msg_no(client_t *cli, int msg_no)
+void handle_set_msg_no(client_t *cli, int argc, char **argv)
 {
+    (void)argc;
+    (void)argv;
 }
-void handle_prev_msg(client_t cli)
+void handle_prev_msg(client_t *cli, int argc, char **argv)
 {
+    (void)argc;
+    (void)argv;
 }
 
 void handle_msg(client_t *cli, int argc, char **argv)

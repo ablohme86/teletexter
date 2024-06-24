@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <arpa/inet.h>
+#include <ctype.h>
 
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 client_t *clients[100]; // total max capacity
@@ -31,8 +32,27 @@ void add_client(client_t *cli)
     log_sys_message("[%s] %s Connected ", SCK_INTERFACE, cli->ipv4addr);
     pthread_mutex_unlock(&clients_mutex);
 }
+void handle_list_cmd(client_t *cli,  int argc,  char **argv)
+{
+    char help_msg[BUFFER_SIZE];
+    snprintf(help_msg,sizeof(help_msg),"Available commands:\n"
+                                       "MSG [message] - Creates a new message to show on LCD Display\n"
+                                       "MSG_PREV - Displays previous message\n"
+                                       "MSG_NEXT - Displays next message\n"
+                                       "MSG_DEL - Deletes the shown message\n"
+                                       "Custom LCD display commands:\n"
+                                       "MSG_CUSTOM [align: LEFT/RIGHT/CENTER] [line: 1-4] [message] - Shows a custom text that will not be stored in database\n"
+                                       "CLEAR_DISPLAY - Clears every line on the display\n"
+                                       "CLEAR_LINE [line: 1-4] - Clears the specified line\n"
+                                       "Other commands:\n"
+                                       "IDENT [username] [password] - Logs you into the TeleTexter\n"
+                                       "BYE - Disconnect from the TeleTexter server");
+    ok_status(cli,250,help_msg);
 
-void handle_disconnect_client(client_t *cli,int argc, char **argv)
+
+}
+
+void handle_disconnect_client(client_t *cli, int argc,  char **argv)
 {
 
 
@@ -143,6 +163,10 @@ void handle_client(client_t *cli)
         {
             // Split command and arguments from buffer
             char *cmd = strtok(buffer, " ");
+            if (cmd != NULL)
+            {
+                strtoupper(cmd);
+            }
 
             char *args = strtok(NULL, "\n"); // Capture rest of string including spaces
 

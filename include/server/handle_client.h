@@ -16,7 +16,8 @@ typedef struct {
 void add_client(client_t *cli);
 void remove_client(client_t *cli);
 void handle_client(client_t *cli);
-void handle_disconnect_client(client_t *cli, int argc, char **argv);
+void handle_list_cmd(client_t *cli,  int argc,  char **argv);
+void handle_disconnect_client(client_t *cli,  int argc, char **argv);
 void *client_handler(void *arg);
 int is_identified(client_t *cli);
 int check_access_lvl(client_t *cli, int a_l);

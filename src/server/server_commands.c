@@ -12,9 +12,13 @@ command_t commands[] = {
     {"IDENT", handle_ident, 2},
     {"MSG", handle_msg, 1},
     {"MSG_CUSTOM",handle_msg_custom,3},
-    {"MSG_CLEAR", handle_clear_display, 0},
+    {"CLEAR_DISPLAY", handle_clear_display, 0},
     {"BYE", handle_disconnect_client,0},
     {"CLEAR_LINE", handle_clear_line,1},
+    {"MSG_NEXT", handle_next_msg,0},
+    {"MSG_PREV", handle_prev_msg, 0},
+    {"MSG_LATEST", handle_latest_msg,0},
+    {"LIST",handle_list_cmd,0},
     {"", NULL, 0}
 };
 

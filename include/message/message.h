@@ -27,6 +27,13 @@ int scroll_message(int line);
 void get_line_msg(int line, char*out_msg);
 void clear_line(int line);
 int message_callback(void *data, int argc, char **argv, char **azColName);  // for sql cb
+void print_latest_msg();
+void print_next_msg();
+void print_prev_msg();
+int get_message_by_id(int id, Message *message);
+int get_latest_message_object(Message *message);
+void print_message_object(Message *message);
+
 
 #endif //MESSAGES_H
 

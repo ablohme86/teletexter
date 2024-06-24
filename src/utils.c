@@ -10,17 +10,21 @@ int is_numerical_cpy(const char *str, int *number)
     long val = strtol(str, &endptr, 10);
 
     // Sjekk for feil
-    if (errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) {
+    if (errno == ERANGE && (val == LONG_MAX || val == LONG_MIN))
+    {
         return 0; // Underflow eller overflow funnet
     }
 
-    if (endptr == str) {
+    if (endptr == str)
+    {
         return 0; // Ingen tegn ble konvertert
     }
 
     // Sjekk for ytterligere tegn etter nummeret
-    while (*endptr != '\0') {
-        if (!isspace((unsigned char)*endptr)) {
+    while (*endptr != '\0')
+    {
+        if (!isspace((unsigned char)*endptr))
+        {
             return 0; // Det finnes ikke-numeriske tegn
         }
         endptr++;
@@ -30,8 +34,10 @@ int is_numerical_cpy(const char *str, int *number)
     return 1; // Gyldig nummer funnet og konvertert
 }
 
-int is_numerical(const char *str) {
-    if (str == NULL || *str == '\0') {
+int is_numerical(const char *str)
+{
+    if (str == NULL || *str == '\0')
+    {
         return 0;
     }
 
@@ -39,16 +45,19 @@ int is_numerical(const char *str) {
     errno = 0;
     long val = strtol(str, &endptr, 10);
 
-    if (errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) {
+    if (errno == ERANGE && (val == LONG_MAX || val == LONG_MIN))
+    {
         return 0;
     }
 
-    if (endptr == str) {
+    if (endptr == str)
+    {
         return 0;
     }
 
     while (*endptr != '\0') {
-        if (!isspace((unsigned char)*endptr)) {
+        if (!isspace((unsigned char)*endptr))
+        {
             return 0;
         }
         endptr++;
@@ -86,6 +95,14 @@ char *strip_newline_return(char *str)
 {
     strip_newline(str);
     return str;
+}
+void strtoupper(char *str)
+{
+    while (*str)
+    {
+        *str = toupper((unsigned char)*str);
+        str++;
+    }
 }
 void strip_newline(char *str)
 {

@@ -5,7 +5,7 @@
 #include "../../include/log.h"
 #include "../../include/server/server.h"
 
-void handle_ident(client_t *cli, int argc, char **argv)
+void handle_ident(client_t *cli,  int argc, char **argv)
 {
     (void)argc;
     // Hent argumenter fra argv

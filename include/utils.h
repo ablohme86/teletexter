@@ -14,6 +14,7 @@ int is_numerical(const char *str);
 void get_time(char *time_str); // Eks: 13:28
 void get_current_time(char current_time[15]);
 void print_datetime_short(int unixtime, char *output_variable);
+void strtoupper(char *str);
 void get_date(char *date_str); // Eks: 18.12.86
 void get_short_weekday(char *weekday_str); // Eks: Fri (for fredag)
 void strip_newline(char *str);
