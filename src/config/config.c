@@ -1,5 +1,6 @@
 // Written by S.L Blohme
 #include "../include/config/config.h"
+#include "../include/log.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -31,11 +32,8 @@ const char *valid_keywords[] = {
     "MaxMessageLength",
     "LayoutFile", 
     "MaxNicknameLength",
-    "EnablePassword",
-    "UserFiles",
     "ScrollLongMessages",
     "ScrollSpeed",
-    "MessageLogPath",
     "DatabaseFile",
     "SystemLogPath",
     "LCDCols",
@@ -75,6 +73,7 @@ void loadConfig(const char *filename)
     FILE *file = fopen(filename, "r");
     if (file == NULL)
     {
+        log_err_message("Cannot open configuration file %s!", filename);
         perror("Error opening configuration file");
         exit(EXIT_FAILURE);
     }
@@ -101,13 +100,13 @@ void loadConfig(const char *filename)
         // Do some silly-simple syntax-error check!
         if (key == NULL || value == NULL)
         {
-            fprintf(stderr, "Configuration syntax: line %d: %s\n", line_number,line);
+            log_err_message("Configuration syntax: line %d: %s", line_number,line);
             exit(EXIT_FAILURE);
         }
 
         if (!is_valid_keyword(key))
         {
-            fprintf(stderr, "Invalid keyword '%s' in configuration file at line %d\n", key, line_number);
+            log_err_message( "Invalid keyword '%s' in configuration file at line %d", key, line_number);
             exit(EXIT_FAILURE);
         }
         
@@ -152,14 +151,6 @@ void loadConfig(const char *filename)
         {
             config.userConfig.maxNicknameLength = atoi(value);
         }
-        else if (strcmp(key, "EnablePassword") == 0)
-        {
-            config.userConfig.enablePassword = atoi(value);
-        }
-        else if (strcmp(key, "UserFiles") == 0)
-        {
-            strncpy(config.userConfig.userFilePath, value, MAX_PATH_LENGTH);
-        }
         else if (strcmp(key, "BanList") == 0)
         {
             strncpy(config.serverConfig.banList, value, MAX_FILENAME_LENGTH);
@@ -167,10 +158,6 @@ void loadConfig(const char *filename)
         else if (strcmp(key, "WhiteList") == 0)
         {
             strncpy(config.serverConfig.whiteList, value, MAX_FILENAME_LENGTH);
-        }
-        else if (strcmp(key, "MessageLogPath") == 0)
-        {
-            strncpy(config.loggingConfig.messageLogPath, value, MAX_PATH_LENGTH);
         }
         else if (strcmp(key, "SystemLogPath") == 0)
         {

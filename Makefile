@@ -41,7 +41,7 @@ teletexter: $(OBJS)
 
 clean:
 	rm -f $(OBJS) $(TARGET)
-
+	rm -f bin/*.db
 post_build_clean:
 	rm -f $(OBJS)
 

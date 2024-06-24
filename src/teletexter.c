@@ -11,6 +11,7 @@
 #include "../include/version.h"
 #include "../include/db/db_handler.h"
 #include "../include/app_args.h"
+#include "../include/log.h"
 
 volatile sig_atomic_t sigint_received = 0;
 
@@ -45,7 +46,7 @@ int main(const int argc, char **argv)
     printf("Copyright (c) 2024 Alexander Blohme\n-----------------------------------\n\n");
     if (manage_startup_args(argc, argv) == 0)
     {
-        printf("Loading configuration file %s...\n",configPath);
+        log_sys_message("Loading configuration file %s...",configPath);
         loadConfig(configPath);
         if (arg_srv_port != 0)
         {
@@ -54,13 +55,13 @@ int main(const int argc, char **argv)
     }
     else
     {
-        printf("Exiting...\n");
+        log_sys_message("Exiting...");
         exit(1);
     }
     init_db(config.serverConfig.dbFile);
 
 #ifndef DISABLE_LCD
-    printf("Initializing LCD display...\n");
+    log_sys_message("Initializing LCD display...");
     setuplcd();  // sleng inn nødvendige variabler fra konfig til lcd'en
     i2c_init(config.lcdConfig.lcdDeviceFile, config.lcdConfig.lcdAddress); // aktiver / start opp lcd biblioteket med dev fil og addr fra config
 

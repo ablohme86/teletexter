@@ -4,9 +4,9 @@ After=network.target
 
 [Service]
 ExecStart=/usr/local/sbin/teletexter
-WorkingDirectory=/usr/local/sbin
+WorkingDirectory=/home/alexander/
 Restart=always
-User=nobody
+User=root
 Group=nogroup
 StandardOutput=syslog
 StandardError=syslog
