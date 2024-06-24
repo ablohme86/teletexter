@@ -11,8 +11,8 @@
 struct ServerConfig {
     int port;
     int maxClients;
-    char banList[MAX_FILENAME_LENGTH];
-    char whiteList[MAX_FILENAME_LENGTH];
+    char whiteListFile[MAX_FILENAME_LENGTH];
+    char blackListFile[MAX_FILENAME_LENGTH];
     char dbFile[MAX_FILENAME_LENGTH];
     char serverIdentifier[MAX_IDENTIFIER_LENGTH];
     char serverHost[MAX_IDENTIFIER_LENGTH];

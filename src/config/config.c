@@ -36,6 +36,8 @@ const char *valid_keywords[] = {
     "ScrollSpeed",
     "DatabaseFile",
     "SystemLogPath",
+    "WhiteList",
+    "BlackList",
     "LCDCols",
     "LCDRows",
     "LCDAddress",
@@ -73,7 +75,7 @@ void loadConfig(const char *filename)
     FILE *file = fopen(filename, "r");
     if (file == NULL)
     {
-        log_err_message("Cannot open configuration file %s!", filename);
+        fprintf(stderr,"Cannot open configuration file %s!\n", filename);
         perror("Error opening configuration file");
         exit(EXIT_FAILURE);
     }
@@ -100,13 +102,13 @@ void loadConfig(const char *filename)
         // Do some silly-simple syntax-error check!
         if (key == NULL || value == NULL)
         {
-            log_err_message("Configuration syntax: line %d: %s", line_number,line);
+            fprintf(stderr,"Configuration syntax error: line %d: %s\n", line_number,line);
             exit(EXIT_FAILURE);
         }
 
         if (!is_valid_keyword(key))
         {
-            log_err_message( "Invalid keyword '%s' in configuration file at line %d", key, line_number);
+            fprintf(stderr, "Invalid keyword '%s' in configuration file at line %d\n", key, line_number);
             exit(EXIT_FAILURE);
         }
         
@@ -151,14 +153,6 @@ void loadConfig(const char *filename)
         {
             config.userConfig.maxNicknameLength = atoi(value);
         }
-        else if (strcmp(key, "BanList") == 0)
-        {
-            strncpy(config.serverConfig.banList, value, MAX_FILENAME_LENGTH);
-        }
-        else if (strcmp(key, "WhiteList") == 0)
-        {
-            strncpy(config.serverConfig.whiteList, value, MAX_FILENAME_LENGTH);
-        }
         else if (strcmp(key, "SystemLogPath") == 0)
         {
             strncpy(config.loggingConfig.systemLogPath, value, MAX_PATH_LENGTH);
@@ -170,7 +164,6 @@ void loadConfig(const char *filename)
         }
         else if (strcmp(key, "LCDRows") == 0)   // Antall linjer bortover på linja
         {
-     
             config.lcdConfig.lcdWidth = atoi(value);
         } 
         else if (strcmp(key, "LCDAddress") == 0)
@@ -188,6 +181,15 @@ void loadConfig(const char *filename)
         else if (strcmp(key, "LCDLine2") == 0)
         {
             config.lcdConfig.lcdLine2Addr = (uint8_t)strtol(value, NULL, 16);  
+        }  
+        
+        else if (strcmp(key, "BlackList") == 0)
+        {
+            strncpy(config.serverConfig.blackListFile, value, MAX_PATH_LENGTH);
+        }  
+        else if (strcmp(key, "WhiteList") == 0)
+        {
+            strncpy(config.serverConfig.whiteListFile, value, MAX_PATH_LENGTH);
         }  
         else if (strcmp(key, "LCDLine3") == 0)
         {
