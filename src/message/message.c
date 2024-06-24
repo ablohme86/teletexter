@@ -46,18 +46,15 @@ int save_message(Message *msg)
 
 int new_message(char *msg, User *user)
 {
-    char weekday_str[5];
-    char cur_time[8];
-    char top_line_msg[config.lcdConfig.lcdWidth+1]; // For å unngå scrolling
-    
-    get_short_weekday(weekday_str);
-    get_time(cur_time);
 
-    snprintf(top_line_msg, sizeof(top_line_msg), "%s %s %s:", weekday_str,cur_time, user->username);
+    char top_line_msg[config.lcdConfig.lcdWidth+1]; // For å unngå scrolling
+
+    char datetime_short[15];
+    print_datetime_short(get_unixtime(),datetime_short);
+    snprintf(top_line_msg, sizeof(top_line_msg), "%s %s:",datetime_short, user->username);
     Message *new_msg = (Message *)calloc(1,sizeof(Message)); // bruker calloc for å forsikre om at alle variabler er nullstilt
 
     new_msg->datetime = get_unixtime();
-    printf("Current time is: %d", new_msg->datetime);
     strcpy(new_msg->message, msg);
     new_msg->poster_id = user->id;
     save_message(new_msg);

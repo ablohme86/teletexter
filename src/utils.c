@@ -111,14 +111,14 @@ void print_date(int unixtime, char *output_variable)
     strftime(output_variable, 20, "%Y-%m-%d", tm_info);
 }
 
-void print_time(int unixtime, char *output_variable) 
+void print_datetime_short(int unixtime, char *output_variable)
 {
     // Konverter Unix-tiden til strukturen 'tm'
     time_t t = (time_t)unixtime;
     struct tm *tm_info = localtime(&t);
 
     // Formater tiden som "HH:MM:SS"
-    strftime(output_variable, 20, "%H:%M:%S", tm_info);
+    strftime(output_variable, 20, "%a %H:%M", tm_info);
 }
 
 long get_unixtime() {

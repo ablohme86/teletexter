@@ -120,9 +120,9 @@ void log_err_message(const char *fmt, ...)
     vsnprintf(log_msg, log_msg_size, fmt, args);
     va_end(args);
 
-    int final_log_msg_size = snprintf(NULL, 0, "%s-%s %s\n", date, time_str, log_msg) + 1;
+    int final_log_msg_size = snprintf(NULL, 0, "%s %s %s\n", date, time_str, log_msg) + 1;
     char *final_log_msg = malloc(final_log_msg_size);
-    snprintf(final_log_msg, final_log_msg_size, "%s-%s %s\n", date, time_str, log_msg);
+    snprintf(final_log_msg, final_log_msg_size, "%s %s %s\n", date, time_str, log_msg);
 
     // Open log file for appending
     FILE *file = fopen(log_filename, "a");
@@ -133,7 +133,7 @@ void log_err_message(const char *fmt, ...)
     }
     else
     {
-        fprintf(stderr, "Failed to open log file for appending.\n");
+        fprintf(stderr, "Failed to open log file %s for appending.\n", log_filename);
         exit(1);
     }
 
