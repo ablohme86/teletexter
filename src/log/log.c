@@ -46,7 +46,7 @@ void log_sys_message(const char *fmt, ...)
     }
     else
     {
-        fprintf(stderr, "Failed to open log file for appending.\n");
+        fprintf(stderr, "Failed to open log file '%s' for appending.\n", log_filename);
         exit(1);
     }
 

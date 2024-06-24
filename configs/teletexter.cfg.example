@@ -1,0 +1,94 @@
+#  -------------------------------------------------- 
+# |        SERVER CONFIGURATION SETTINGS             |
+#  --------------------------------------------------
+# Select a port to listen for clients on
+ServerPort 5554
+# Set which IP / host you want to bind to
+ServerBindAddress 0.0.0.0
+# The name of the server which will be displayed on the disp on connect
+ServerIdentifier "pump-TAG-244821"
+# How many clients can be connected at the same time
+MaxClients 10
+SystemLogPath .
+
+#  --------------------------------------------------
+# | Use WhiteList or BlackList (Only 1 of them)      |
+# |                                                  |
+# | If WhiteList is enabled:                         |
+# |   - Only allows listed IP addresses to connect   |
+# |                                                  |
+# |  If BlackList is enabled:                        |
+# |   - Bans all listed IP addresses from connecting |
+#  --------------------------------------------------
+# Whitelist /etc/teletexter/whitelist.cfg
+# BlackList /etc/teletexter/blacklist.cfg
+
+#  -------------------------------------------------- 
+# |       MESSAGE CONFIGURATION SETTINGS             |
+#  -------------------------------------------------- 
+MaxMessageLength 120
+# Scroll messages that exceeds LCDRows parameter
+ScrollLongMessages 1
+# How fast the message should scroll (Move 1 character per X ms)
+ScrollSpeed 50
+# Location where messages should be stored
+DatabaseFile teletexter_db.db
+
+# Enable this if you want to use your own layout style
+# LayoutFile layout.tel
+
+#  -------------------------------------------------- 
+# |          USER CONFIGURATION SETTINGS             |
+#  -------------------------------------------------- 
+# Max length of nickname/username
+MaxNicknameLength 7
+# All clients connecting must send IDENT followed by a nickname before sending MSG
+# if MSG is sent without IDENT, nickname parameter will show as empty
+# If enabled all users who connect must also identify with a password (IDENT userName password)
+
+
+#  -------------------------------------------------- 
+# |              LCD PANEL SETTINGS                  |
+#  -------------------------------------------------- 
+# The total of lines your display have
+LCDCols 2
+# The total of characters 1 line can hold
+LCDRows 16
+# The address of your I2C LCD display
+LCDAddress 0x27
+# LCD Device file
+LCDDeviceFile /dev/i2c-1
+
+
+
+#  -------------------------------------------------- 
+# |             GPIO CONFIGURATIONS                  |
+#  -------------------------------------------------- 
+# PrevMessage 16 
+# NextMessagePIN 17
+# DeleteMessagePIN 18
+# 
+
+
+#  -------------------------------------------------- 
+# |        LCD ADDRESS CONFIGURATIONS                |
+# |              !!!! NOTE !!!!                      |    
+# | Do NOT EDIT these variables UNLESS unless        |
+# | You know WHAT THE F*** YOU ARE DOING!            |
+#  --------------------------------------------------
+# Backlight on command bit
+LCDBacklight 0x08
+# Turn off backlight
+LCDNoBacklight 0x00
+# Address of line 1
+LCDLine1 0x80
+# Address of line 2
+LCDLine2 0xC0
+# Address of line 3
+LCDLine3 0x94
+# Address of line 4
+LCDLine4 0xD4
+# Clear display address
+LCDClrDisp 0x01
+# Enable bit
+LCDEnableBit 0b00000100

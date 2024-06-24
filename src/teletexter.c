@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
+#include "../include/signal.h"
 #include <string.h>
 #include <stdlib.h>
 #include "../include/server/server.h"
@@ -15,56 +16,17 @@
 #include "../include/log.h"
 
 
-void handle_signal(int signal) 
-{
-    char past_or_present_tense[20];
-    char action[50];
-    switch (signal)
-    {
-        case SIGTERM:
-            snprintf(past_or_present_tense,sizeof(past_or_present_tense), "TeleTexter was");
-            snprintf(action,sizeof(action), "terminated x(");
-            log_sys_message("[SYSTEM] Service is stopping due to SIGTERM signal");
-        break;
-        
-        case SIGHUP:
-            snprintf(past_or_present_tense,sizeof(past_or_present_tense), "TeleTexter is");
-            snprintf(action,sizeof(action), "restarting...");
-            log_sys_message("[SYSTEM] Service is restarting due to SIGHUP signal");
-        break;
-        
-        case SIGINT:
-            snprintf(past_or_present_tense,sizeof(past_or_present_tense), "TeleTexter was");
-            snprintf(action,sizeof(action), "terminated x(");
-            log_sys_message("[SYSTEM] Service is stopping due to SIGINT signal");
-        break;
-        
-        default:
-            snprintf(past_or_present_tense,sizeof(past_or_present_tense), "TeleTexter recvd");
-            snprintf(action,sizeof(action), "unknown signal!");
-            log_sys_message("[SYSTEM] Service is stopping due to some strange unknown signal in the ether...");
-            
-        break;
-    };
-    lcd_text(past_or_present_tense,1,CENTER);
-    lcd_text(action,2,CENTER);    
-    close_server();
-    exit(0);
-}
+
 
 
 int main(const int argc, char **argv)
 {
-    signal(SIGTERM, handle_signal);
-    signal(SIGHUP, handle_signal);
-    signal(SIGINT, handle_signal);
 
-
+    set_signals();
     printf("\n\n        TeleTexter v%d.%d\n", MAJOR, MINOR);
     printf("Copyright (c) 2024 Alexander Blohme\n-----------------------------------\n\n");
     if (manage_startup_args(argc, argv) == 0)
     {
-        log_sys_message("Loading configuration file %s...",configPath);
         loadConfig(configPath);
         if (arg_srv_port != 0)
         {
@@ -72,7 +34,7 @@ int main(const int argc, char **argv)
         }
         if (strlen(config.serverConfig.blackListFile) > 0 && strlen(config.serverConfig.whiteListFile) > 0)
         {
-            log_err_message("Both BlackList and WhiteList has been set in %s! Please remove one of them!", configPath);
+            fprintf(stderr,"Both BlackList and WhiteList has been set in %s! Please remove one of them!", configPath);
             exit(1);
         }
         
@@ -94,10 +56,10 @@ int main(const int argc, char **argv)
     char welcomeTxt_line1[config.lcdConfig.lcdWidth];
     char welcometxt_line2[30];
     snprintf(welcomeTxt_line1, sizeof(welcomeTxt_line1), "TeleTexter v%d.%d", MAJOR, MINOR);
-    snprintf(welcomeTxt_line2,sizeof(welcomeTxt_line2), "Host: %s", config.serverConfig.serverHost);
+    snprintf(welcometxt_line2,sizeof(welcometxt_line2), "Host: %s", config.serverConfig.serverHost);
 
     set_line_text(welcomeTxt_line1, 1, "LEFT");
-    set_line_text(welcomeTxt_line2, 2, "CENTER");
+    set_line_text(welcometxt_line2, 2, "CENTER");
 #endif
 
     return start_server();

@@ -175,7 +175,12 @@ int init_db(char *db_name)
             "value INTEGER"
             ");"
             "COMMIT;";
+
+        const char *sql_default_values =
+            "INSERT INTO users (username,password,access_level) VALUES ('admin','admin',3)";
+
         rc = create_db(sql_commands);
+        execute_sql(sql_default_values,"",0);
         if (rc != SQLITE_OK)
         {
             log_err_message( "[%s] Failed to initialize database schema on file %s",DB_INTERFACE, db_name);

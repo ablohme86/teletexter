@@ -12,7 +12,6 @@ void handle_ident(client_t *cli,  int argc, char **argv)
     char *nickname = argv[0];
     char *password = argv[1];
     
-
     strip_newline(password);
     strip_newline(nickname);
 
@@ -29,7 +28,6 @@ void handle_ident(client_t *cli,  int argc, char **argv)
         log_sys_message("[%s] %s Invalid credentials for user %s",SCK_INTERFACE,cli->ipv4addr, nickname);
         bad_status(cli,LOGIN_FAILED,"Invalid credentials!");
     }
-
 }
 
 

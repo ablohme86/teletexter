@@ -72,11 +72,11 @@ int is_valid_keyword(const char *key)
 
 void loadConfig(const char *filename) 
 {
+    fprintf(stdout,"Loading configuration file %s\n",filename);
     FILE *file = fopen(filename, "r");
     if (file == NULL)
     {
         fprintf(stderr,"Cannot open configuration file %s!\n", filename);
-        perror("Error opening configuration file");
         exit(EXIT_FAILURE);
     }
 

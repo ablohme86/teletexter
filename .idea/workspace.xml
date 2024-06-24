@@ -17,19 +17,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3f182fc3-817b-46b3-925b-28cbdd0684fb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/bin/teletexter_db.db" beforeDir="false" afterPath="$PROJECT_DIR$/bin/teletexter_db.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/message/message.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/message/message.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/server/handle_client.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/server/handle_client.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/server/handle_ident.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/server/handle_ident.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/server/handle_msg.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/server/handle_msg.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/utils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/message/message.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/message/message.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/handle_client.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/handle_client.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/25.06.24-error-teletexter-system.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/25.06.24-teletexter-system.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/teletexter_db.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/teletexter.cfg.example" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/signal.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/signal.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/config.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/db/db_handler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/db_handler.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gpio/gpio_handler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/gpio/gpio_handler.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/log/log.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/log/log.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/handle_ident.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/handle_ident.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/handle_msg.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/handle_msg.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/server_commands.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/server_commands.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/user/user.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/user/user.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/teletexter.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/teletexter.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +100,7 @@
     &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;experimental&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/alexander/Projects/teletexter&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -173,6 +174,8 @@
       <workItem from="1718979130296" duration="2282000" />
       <workItem from="1718987475576" duration="1125000" />
       <workItem from="1719218861263" duration="5643000" />
+      <workItem from="1719269768917" duration="186000" />
+      <workItem from="1719270434869" duration="1244000" />
     </task>
     <servers />
   </component>
