@@ -52,6 +52,20 @@ void handle_msg_custom(client_t *cli,int argc, char **argv)
     }
 }
 
+void handle_msg_del(client_t *cli, int argc, char **argv)
+{
+   (void)argc;
+   (void)argv;
+    int res = delete_message();
+    if (res == -1)
+    {
+        bad_status(cli,NO_MESSAGE_SHOWN,"Cannot delete, no message is currently on display!");
+        return;
+    }
+    ok_status(cli,MESSAGE_DELETED,"Message deleted!");
+}
+
+
 void handle_clear_display(client_t *cli, int argc, char **argv)
 {
     (void) argc;
@@ -147,7 +161,7 @@ void handle_prev_msg(client_t *cli, int argc, char **argv)
     get_prev_message_object(msg);
     if (msg->id == 0)
     {
-        bad_status(cli,330,"No more messages!");
+        bad_status(cli,NO_MORE_MESSAGES,"No more messages!");
     }
     else
     {

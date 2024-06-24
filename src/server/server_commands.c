@@ -18,6 +18,7 @@ command_t commands[] = {
     {"MSG_NEXT", handle_next_msg,0},
     {"MSG_PREV", handle_prev_msg, 0},
     {"MSG_LATEST", handle_latest_msg,0},
+    {"MSG_DEL",handle_msg_del,0},
     {"LIST",handle_list_cmd,0},
     {"", NULL, 0}
 };

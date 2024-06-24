@@ -36,6 +36,7 @@ int get_latest_message_object(Message *message);
 void print_message_object(Message *message);
 int get_next_message_object(Message *message);
 int get_prev_message_object(Message *message);
+int delete_message();   // deletes the currentMessage object from db
 
 
 #endif //MESSAGES_H

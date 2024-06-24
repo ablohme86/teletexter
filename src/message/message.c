@@ -43,6 +43,28 @@ int save_message(Message *msg)
 
     return res;
 }
+int delete_message() // Deletes the current message
+{
+   if (currentMessage == NULL)
+   {
+      return -1;
+   }
+
+   if (currentMessage->id < 1)
+   {
+      return -1;
+   }
+   char sql[1024];
+   snprintf(sql,sizeof(sql),"DELETE FROM messages WHERE id = ?");
+   int res = execute_sql(sql,"i",1,currentMessage->id);
+   if (res == SQLITE_OK)
+   {
+      currentMessage = NULL;  // reset currentMessage pointer
+      print_latest_msg();  // re-draw the new latest message in db
+   }
+   
+   return res;
+}
 
 void print_message_object(Message *msg)           // Prints a "Message" object to screen
 {
