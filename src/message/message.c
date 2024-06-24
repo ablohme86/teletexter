@@ -174,74 +174,32 @@ int get_next_message_object(Message *message)
 {
    if (currentMessage == NULL)
    {
-      printf("currentMessage is NULL!\n");
       return -1;
    }
    else
    {
-      printf("Last message ID was: %d, with msg: %s\n",currentMessage->id,currentMessage->message);
       char sql[256];
-      snprintf(sql,sizeof(sql),"SELECT * FROM messages WHERE id > %d ORDER BY id DESC LIMIT 1",currentMessage->id);
+      snprintf(sql,sizeof(sql),"SELECT * FROM messages WHERE id > %d ORDER BY id ASC LIMIT 1",currentMessage->id);
       return select_from_db(sql,message_callback,message);
    }
 }
 
-int print_next_msg_object()
-{
-    Message *msg = (Message *)calloc(sizeof(Message),1);
-    if (get_next_message_object(msg) != -1)
-    {
-      if (msg == NULL)
-      {
-         printf("There is no more messages after this one!\n");
-         return -1;
-      }
-      print_message_object(msg);
-    
-      return 0;
-    }
-    return -1;
-    
-    
-}
 
 int get_prev_message_object(Message *message)
 {
    if (currentMessage == NULL)
    {
-      printf("currentMessage is NULL!\n");
       return -1;
    }
    else
    {
       
-      printf("Last message ID was: %d, with msg: %s\n",currentMessage->id,currentMessage->message);
       char sql[256];
       snprintf(sql,sizeof(sql),"SELECT * FROM messages WHERE id < %d ORDER BY id DESC LIMIT 1",currentMessage->id);
       return select_from_db(sql,message_callback,message);
    }
 }
-int print_prev_msg_object()
-{
-    
-    Message *msg = (Message *)calloc(sizeof(Message),1);
-    int next_msg_reply = get_prev_message_object(msg);
-    if (next_msg_reply != -1)
-    {
-      print_message_object(msg);
-      if (msg == NULL)
-      {
-         printf("There is no more messages before this one!\n");
-         return -1;
-      }
-      
-      return 0;
-    }
-    printf("cannot print_prev_msg, currentMessage was NOT null\n");
-    return -1;
-    
-    
-}
+
 
 int get_latest_message_object(Message *message)      // gets the latest "Message" object in db!
 {

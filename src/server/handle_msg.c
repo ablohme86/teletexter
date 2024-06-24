@@ -121,14 +121,17 @@ void handle_next_msg(client_t *cli, int argc, char **argv) // handle NEXT_MSG fr
 {
     (void)argc;
     (void)argv; // suppress compiler warnings, this is a 0 argument command
-    if (print_next_msg_object() != -1)
+    Message *msg = (Message *)calloc(sizeof(Message),1);
+    get_next_message_object(msg);
+    if (msg->id == 0)
     {
-        ok_status(cli,MESSAGE_SET,"MSG_SET");
-        return;
+        bad_status(cli,330,"No more messages!");
     }
-    bad_status(cli,NO_MESSAGE_SET,"There is no previous message set!");
-    
-    
+    else
+    {
+        print_message_object(msg);
+        ok_status(cli,MESSAGE_SET,"Next message set!");
+    }
 }
 void handle_set_msg_no(client_t *cli, int argc, char **argv)
 {
@@ -140,13 +143,17 @@ void handle_prev_msg(client_t *cli, int argc, char **argv)
 {
     (void)argc;
     (void)argv;
-    if (print_prev_msg_object() != -1)
+    Message *msg = (Message *)calloc(sizeof(Message),1);
+    get_prev_message_object(msg);
+    if (msg->id == 0)
     {
-        ok_status(cli,MESSAGE_SET,"MSG_SET");
-        return;
+        bad_status(cli,330,"No more messages!");
     }
-    bad_status(cli,NO_MESSAGE_SET,"There is no previous message set!");
-    
+    else
+    {
+        print_message_object(msg);
+        ok_status(cli,MESSAGE_SET,"Previous message set!");
+    }
 }
 
 void handle_msg(client_t *cli, int argc, char **argv)
