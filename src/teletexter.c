@@ -20,6 +20,11 @@ void sigint_handler(int sig)
 
     printf("sigint %d received! Now, HANDLE I-T!\n", sig);
     sigint_received = 1;
+    #ifndef DISABLE_LCD
+    lcd_text("TeleTexter is",1,CENTER);
+    lcd_text("shutting down...",2,CENTER);
+    
+    #endif
     
     close_server();    // properly close the server...
     // TODO:  close all remainign clients...

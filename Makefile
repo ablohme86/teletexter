@@ -10,6 +10,14 @@ SRCS = src/user/user.c src/teletexter.c src/db/db_handler.c src/message/message.
 OBJS = $(SRCS:.c=.o)
 TARGET = bin/teletexter
 
+# Directories
+BINDIR = /usr/local/sbin
+CONFDIR = /etc/teletexter
+CONFIG_FILES = configs/teletexter.cfg
+SYSTEMDDIR = /etc/systemd/system
+SERVICE_FILE = configs/teletexter.service
+
+
 # Sjekk for --DISABLE_LCD flagg
 ifdef DISABLE_LCD
     SRCS := $(filter-out src/lcd/lcd_disp.c, $(SRCS))
@@ -37,4 +45,22 @@ clean:
 post_build_clean:
 	rm -f $(OBJS)
 
-.PHONY: all clean post_build_clean
+# Install target
+install: $(TARGET)
+	install -d $(BINDIR)
+	install -m 755 $(TARGET) $(BINDIR)
+	install -d $(CONFDIR)
+	install -m 644 $(CONFIG_FILES) $(CONFDIR)
+	install -m 644 $(SERVICE_FILE) $(SYSTEMDDIR)
+	systemctl enable teletexter.service
+	systemctl start teletexter.service
+
+# Uninstall target
+uninstall:
+	rm -f $(BINDIR)/$(TARGET)
+	rm -rf $(CONFDIR)
+	systemctl stop teletexter.service
+	systemctl disable teletexter.service
+	rm -f $(SYSTEMDDIR)/teletexter.service
+
+.PHONY: all clean install uninstall

@@ -1,0 +1,13 @@
+[Unit]
+Description=Teletexter Service
+After=network.target
+
+[Service]
+ExecStart=/usr/local/sbin/teletexter
+WorkingDirectory=/usr/local/sbin
+Restart=always
+User=nobody
+Group=nogroup
+
+[Install]
+WantedBy=multi-user.target
