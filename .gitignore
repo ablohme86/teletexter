@@ -17,7 +17,7 @@ bin/logs
 # Precompiled Headers
 *.gch
 *.pch
-
+bin/logs/
 # Libraries
 *.lib
 *.a
