@@ -115,30 +115,34 @@ int start_server()
 
     if (listen(server_socket, 3) < 0)
     {
+        log_err_message("[SERVER] Listen failed!");
         perror("Listen failed");
         close(server_socket);
         return EXIT_FAILURE;
     }
 
-    printf("Server listening on %s @ port %d\n", config.serverConfig.serverHost , config.serverConfig.port);
+    log_sys_message("[SERVER] Server listening on %s @ port %d", config.serverConfig.serverHost , config.serverConfig.port);
 
     while (1)
     {
         client_socket = accept(server_socket, (struct sockaddr *)&client_addr, &client_len);
         if (client_socket < 0)
         {
+            log_err_message("[SERVER] Could not accept client!");
             perror("Accept failed");
             continue;
         }
 
         client_t *cli = (client_t *)malloc(sizeof(client_t));
         cli->socket = client_socket;
-        cli->user = (User *)malloc(sizeof(User)); // allocate memory for the new User object
+        cli->user = (User *)calloc(sizeof(User),1); // allocate memory for the new User object, use calloc so all variables will be 0
         cli->ipv4addr = get_ip(cli);
         cli->identified = 0;
+
         pthread_t tid;
         if (pthread_create(&tid, NULL, client_handler, (void *)cli) != 0)
         {
+            log_err_message("[SERVER] Could not create thread for the clients!");
             perror("Could not create thread");
             
             free(cli->user);

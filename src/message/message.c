@@ -15,10 +15,13 @@
 
 
 typedef struct {
-    int line;
+    unsigned int line;
+    char align[10];
     char buff[MAX_LINE_MSG_LENGTH];
 
 } MessageLine;
+
+
 MessageLine *messageLines[128]; // stores all lines string data thats on display
 Message *currentMessage;   // message on display
 
@@ -26,19 +29,19 @@ int save_message(Message *msg)
 {
     char sql[1024];
     int res;
-
+    
     if (msg->id < 1)
     {
         snprintf(sql, sizeof(sql), "INSERT INTO messages (datetime, message, poster_id, status) VALUES (?, ?, ?, ?)");
         log_sys_message("[%s] New message, inserting into db...", MSG_INTERFACE);
-        res = execute_sql(sql, "isii", 4, msg->datetime, msg->message, msg->poster_id, msg->status);
+        res = execute_sql(sql,NULL, "isii", 4, msg->datetime, msg->message, msg->poster_id, msg->status);
         msg->id = sqlite3_last_insert_rowid(db);
     }
     else
     {
         snprintf(sql, sizeof(sql), "UPDATE messages SET datetime = ?, message = ?, poster_id = ?, status = ? WHERE id = ?");
         log_sys_message("[%s] Updating message id %d",MSG_INTERFACE, msg->id);
-        res = execute_sql(sql, "isiii", 5, msg->datetime, msg->message, msg->poster_id, msg->status, msg->id);
+        res = execute_sql(sql,NULL, "isiii", 5, msg->datetime, msg->message, msg->poster_id, msg->status, msg->id);
     }
 
     return res;
@@ -56,7 +59,7 @@ int delete_message() // Deletes the current message
    }
    char sql[1024];
    snprintf(sql,sizeof(sql),"DELETE FROM messages WHERE id = ?");
-   int res = execute_sql(sql,"i",1,currentMessage->id);
+   int res = execute_sql(sql,NULL,"i",1,currentMessage->id);
    if (res == SQLITE_OK)
    {
       currentMessage = NULL;  // reset currentMessage pointer
@@ -106,7 +109,7 @@ int new_message(char *msg, User *user)    // Creates and stores a new message to
     return MESSAGE_SET;
 }
 
-int scroll_message(int sel_line)    // Scrolls the selected line
+int scroll_message(unsigned int sel_line)    // Scrolls the selected line
 {
     if (messageLines[sel_line] == NULL)
     {
@@ -120,10 +123,18 @@ int scroll_message(int sel_line)    // Scrolls the selected line
 
 
 
-void clear_line(int line)           // clears the specified line
+void clear_line(unsigned int line)           // clears the specified line
 {
     set_line_text(" ",line,"LEFT");
 }
+void clear_lines()
+{
+   for (unsigned int i = 1; i <= config.lcdConfig.lcdHeight; i++)
+   {
+      clear_line(i);
+   }
+}
+
 
 int set_line_text(const char *msg, unsigned int line,const char *align)
 {
@@ -137,7 +148,7 @@ int set_line_text(const char *msg, unsigned int line,const char *align)
         messageLines[line] = (MessageLine *)malloc(sizeof(MessageLine));
         messageLines[line]->line = line;
     }
-
+    
 
     int r_align = 0;
 
@@ -159,11 +170,13 @@ int set_line_text(const char *msg, unsigned int line,const char *align)
       return INVALID_ALIGN;
     }
     strncpy(messageLines[line]->buff,msg, sizeof(messageLines[line]->buff));
-#ifndef DISABLE_LCD
-    lcd_text(msg,line,r_align);
-#endif
-    if (strlen(msg) > config.lcdConfig.lcdWidth)
+    strncpy(messageLines[line]->align,align, sizeof(messageLines[line]->align));
+        
+    if (strlen(msg) > config.lcdConfig.lcdWidth && config.messageConfig.scrollLongMessages == 1)
     {
+         // Automatically set align to LEFT since it will bug the hell out of the display if we are trying to scroll
+         // a centered message that cant be centered anyways!
+         lcd_text(msg,line,LEFT);
         if (config.messageConfig.scrollLongMessages == 1)
         {
 #ifndef DISABLE_LCD
@@ -171,6 +184,14 @@ int set_line_text(const char *msg, unsigned int line,const char *align)
 #endif
         }
     }
+    else // Una problema, vi kan skrive ut som vi vil
+    {
+    #ifndef DISABLE_LCD
+         lcd_text(msg,line,r_align);
+     #endif
+    }
+
+
 
     return MESSAGE_SET;
 }
@@ -182,7 +203,7 @@ void print_latest_msg()           // prints the latest message object in db!
     print_message_object(msg);
 }
 
-int get_message_by_id(int id, Message *message)    // get a "Message" object by id
+int get_message_by_id(unsigned int id, Message *message)    // get a "Message" object by id
 {
     char sql[256];
     snprintf(sql, sizeof(sql), "SELECT * FROM messages WHERE id = %d", id);

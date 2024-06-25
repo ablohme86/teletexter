@@ -11,6 +11,31 @@
 #include <string.h>
 
 
+int add_user(User *user)
+{
+    char sql[256];
+    char *errmsg;
+    snprintf(sql,sizeof(sql), "SELECT username FROM users WHERE username = ?");
+    int res = execute_sql(sql,&errmsg, "s", 1, user->username);
+    if (res == 0)
+    {
+        // User does not exist, go create
+        snprintf(sql,sizeof(sql),"INSERT INTO users (username,password,access_level) VALUES (?,?,?)");
+        int aures = execute_sql(sql,&errmsg,"ssi",3,user->username,user->password,user->access_level);
+        if (aures == SQLITE_OK)
+        {
+            return 0;
+        }
+        log_err_message("[DATABASE] Could not query %s: %s",sql,errmsg);
+        return -1;
+    }
+    if (res == SQLITE_ERROR)
+    {
+        log_err_message("[DATABASE] Could not query %s: %s",sql,errmsg);
+    }
+    return -1;
+}
+
 int get_user_by_id(int id, User *user)
 {
     char sql[256];
@@ -23,7 +48,8 @@ int check_user_login(const char *username, const char *pwd, User *user)
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
 
-    if (rc != SQLITE_OK) {
+    if (rc != SQLITE_OK) 
+    {
         log_err_message("[DATABASE] Failed to prepare statement: %s", sqlite3_errmsg(db));
         return rc;
     }
@@ -33,12 +59,14 @@ int check_user_login(const char *username, const char *pwd, User *user)
 
     rc = sqlite3_step(stmt);
 
-    if (rc == SQLITE_ROW) {
+    if (rc == SQLITE_ROW) 
+    {
         int column_count = sqlite3_column_count(stmt);
         char *values[column_count];
         char *columns[column_count];
 
-        for (int i = 0; i < column_count; i++) {
+        for (int i = 0; i < column_count; i++) 
+        {
             values[i] = (char *)sqlite3_column_text(stmt, i);
             columns[i] = (char *)sqlite3_column_name(stmt, i);
         }
@@ -46,8 +74,11 @@ int check_user_login(const char *username, const char *pwd, User *user)
         user_callback(user, column_count, values, columns);
         sqlite3_finalize(stmt);
         return 1;  // User found
-    } else {
-        if (rc != SQLITE_DONE) {
+    } 
+    else 
+    {
+        if (rc != SQLITE_DONE) 
+        {
             log_err_message("[DATABASE] Failed to execute query: %s", sqlite3_errmsg(db));
         }
         sqlite3_finalize(stmt);

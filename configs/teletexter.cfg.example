@@ -4,9 +4,9 @@
 # Select a port to listen for clients on
 ServerPort 5554
 # Set which IP / host you want to bind to
-ServerBindAddress 0.0.0.0
+ServerBindAddress teletexter.local
 # The name of the server which will be displayed on the disp on connect
-ServerIdentifier "pump-TAG-244821"
+ServerIdentifier TeleTexter
 # How many clients can be connected at the same time
 MaxClients 10
 SystemLogPath .
@@ -30,7 +30,7 @@ MaxMessageLength 120
 # Scroll messages that exceeds LCDRows parameter
 ScrollLongMessages 1
 # How fast the message should scroll (Move 1 character per X ms)
-ScrollSpeed 50
+ScrollSpeed 10
 # Location where messages should be stored
 DatabaseFile teletexter_db.db
 

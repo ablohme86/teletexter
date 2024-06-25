@@ -51,6 +51,19 @@ void handle_msg_custom(client_t *cli,int argc, char **argv)
 
     }
 }
+void handle_scroll_cmd(client_t *cli, int argc, char **argv)
+{
+   (void)argc;
+   unsigned int p_line;
+   
+   if (!is_numerical_cpy(argv[0], (int*)&p_line) || p_line < 1 || p_line > config.lcdConfig.lcdHeight)
+   {
+      bad_status(cli,INVALID_LINE,"Invalid line number!");
+      return;
+   }
+   ok_status(cli,MESSAGE_SET,"Scrolling line");
+   return;
+}
 
 void handle_msg_del(client_t *cli, int argc, char **argv)
 {

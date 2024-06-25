@@ -11,7 +11,7 @@
 
 typedef int (*select_callback)(void*, int, char**, char**);
 int init_db(char *db_name);
-int execute_sql(const char *sql, const char *param_types, int param_count, ...);
+int execute_sql(const char *sql,char **errmsg, const char *param_types,int param_count, ...);
 int create_db(const char *sql_commands);
 int query_sql(const char *sql);
 int select_from_db(const char *sql, select_callback callback, void *data);

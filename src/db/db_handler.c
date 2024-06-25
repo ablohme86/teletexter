@@ -8,31 +8,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-
+#include <string.h>
 
 sqlite3 *db;
 char *err_msg;
-
-
 
 int select_from_db(const char *sql, select_callback callback, void *data)
 {
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
 
-    if (rc != SQLITE_OK) {
+    if (rc != SQLITE_OK) 
+    {
         log_err_message("[DATABASE] Failed to prepare statement: %s", sqlite3_errmsg(db));
         return rc;
     }
 
     int found = 0;
-    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) 
+    {
         int column_count = sqlite3_column_count(stmt);
         char *values[column_count];
         char *columns[column_count];
 
-        for (int i = 0; i < column_count; i++) {
+        for (int i = 0; i < column_count; i++) 
+        {
             values[i] = (char *)sqlite3_column_text(stmt, i);
             columns[i] = (char *)sqlite3_column_name(stmt, i);
         }
@@ -65,13 +65,21 @@ int create_db(const char *sql_commands)
     return SQLITE_OK;
 }
 
-int execute_sql(const char *sql, const char *param_types, int param_count, ...)
+int execute_sql(const char *sql, char **errmsg,const char *param_types,int param_count, ...)
 {
+
     sqlite3_stmt *stmt;
+    //*errmsg = (char *)malloc(512); // +1 for null-terminering
+
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     if (rc != SQLITE_OK)
     {
         log_err_message("[%s] Failed to prepare statement: %s",DB_INTERFACE, sqlite3_errmsg(db));
+        if (errmsg != NULL)
+        {
+            strcpy(*errmsg,sqlite3_errmsg(db));
+            
+        }
         return rc;
     }
 
@@ -105,6 +113,10 @@ int execute_sql(const char *sql, const char *param_types, int param_count, ...)
         else
         {
             log_err_message("[%s] Unknown parameter type: %c",DB_INTERFACE, *p);
+            if (errmsg != NULL)
+            {
+                sprintf(*errmsg, "Unknown parameter type: %c", *p);
+            }
             va_end(args);
             sqlite3_finalize(stmt);
             return SQLITE_ERROR;
@@ -119,6 +131,11 @@ int execute_sql(const char *sql, const char *param_types, int param_count, ...)
     if (rc != SQLITE_DONE)
     {
         log_err_message("[%s] Cannot perform SQL operation, SQL error: %s", DB_INTERFACE,sqlite3_errmsg(db));
+        if (errmsg != NULL)
+        {
+            strcpy(*errmsg,sqlite3_errmsg(db));
+        }
+        
         sqlite3_finalize(stmt);
         return rc;
     }
@@ -130,6 +147,7 @@ int execute_sql(const char *sql, const char *param_types, int param_count, ...)
 
 int init_db(char *db_name)
 {
+    char *errmsg;
     int is_new_db = access(db_name, F_OK) == -1;
 
     int rc = sqlite3_open(db_name, &db);
@@ -180,7 +198,8 @@ int init_db(char *db_name)
             "INSERT INTO users (username,password,access_level) VALUES ('admin','admin',3)";
 
         rc = create_db(sql_commands);
-        execute_sql(sql_default_values,"",0);
+        execute_sql(sql_default_values,&errmsg,"",0);
+        log_err_message("Sql error: %s", errmsg);
         if (rc != SQLITE_OK)
         {
             log_err_message( "[%s] Failed to initialize database schema on file %s",DB_INTERFACE, db_name);

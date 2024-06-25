@@ -6,21 +6,42 @@
 
 #include "../../include/server/handle_ident.h"
 #include "../../include/server/handle_msg.h"
+#include "../../include/server/handle_admin.h"
 #include "../../include/server/handle_client.h"
+#include "../../include/user/user.h"
 
 command_t commands[] = {
-    {"IDENT", handle_ident, 2},
-    {"MSG", handle_msg, 1},
-    {"MSG_CUSTOM",handle_msg_custom,3},
-    {"CLEAR_DISPLAY", handle_clear_display, 0},
-    {"BYE", handle_disconnect_client,0},
-    {"CLEAR_LINE", handle_clear_line,1},
-    {"MSG_NEXT", handle_next_msg,0},
-    {"MSG_PREV", handle_prev_msg, 0},
-    {"MSG_LATEST", handle_latest_msg,0},
-    {"MSG_DEL",handle_msg_del,0},
-    {"LIST",handle_list_cmd,0},
-    {"", NULL, 0}
+// command, function, required arguments, access level required.
+// i framtia vil jeg legge til at man skal kunne endre disse i en fil kanskje? 
+    
+    // handle_ident.h
+    {"IDENT", handle_ident, 2,ALL_USERS},
+    
+    // handle_msg.h
+    {"MSG", handle_msg, 1,NORMAL_USER},
+    {"MSG_CUSTOM",handle_msg_custom,3,ADMIN_USER},
+    {"CLEAR_DISPLAY", handle_clear_display, 0,MODERATOR_USER},
+    {"CLEAR_LINE", handle_clear_line,1,MODERATOR_USER},
+    {"MSG_NEXT", handle_next_msg,0,NORMAL_USER},
+    {"MSG_PREV", handle_prev_msg, 0,NORMAL_USER},
+    {"MSG_LATEST", handle_latest_msg,0,NORMAL_USER},
+    {"MSG_SCROLL",handle_scroll_cmd,1,NORMAL_USER},
+    {"MSG_DEL",handle_msg_del,0,MODERATOR_USER},
+     
+    // handle_client.h
+    {"BYE", handle_disconnect_client,0,ALL_USERS},
+    {"LIST",handle_list_cmd,0,ALL_USERS},
+    
+    
+    // Admin Commands:
+    
+    {"CREATE_USER",handle_admin_create_user,3,ADMIN_USER},
+    {"DELETE_USER",handle_admin_delete_user,1,ADMIN_USER},
+    
+    // Nullator
+    {"", NULL, 0,0}
+
+    
 };
 
 
