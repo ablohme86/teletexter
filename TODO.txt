@@ -1,0 +1,16 @@
+26/06/2024:
+
+ - Splitt opp "message":
+    - Funksjoner som scroll_message, og set_text, osv skal inn i en ny fil som heter
+      text.c / text.h
+      scroll_message må endre navn til 	scroll_line (linje nummer)
+      set_text skal endres til: 	set_line_text(msg,linje, align)
+      
+	denne nye text.c skal også ha en ny socket handler: handle_text.c
+	da dette er mer "custom" design av hva du vil skal vises på skjermen
+
+	I utgangspunktet var teletexter kun for å vise "chats" eller "short messages"
+	mellom en klient og mottager som har lcd skjermen
+	Men nå har dette gått så over styr med "custom functions" at vi må nesten dele dette opp i flere biter...
+
+	Dette er for å skille mellom "messaging" delen
