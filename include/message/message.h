@@ -24,18 +24,19 @@ typedef struct {
 int save_message( Message *msg);
 int new_message(char *msg, User *user);
 int set_line_text(const char *msg, unsigned int line,const char *align);
-int scroll_message(int line);
-void get_line_msg(int line, char*out_msg);
-void clear_line(int line);
+int scroll_message(unsigned int line);
+void get_line_msg(unsigned int line, char*out_msg);
+void clear_line(unsigned int line);
 int message_callback(void *data, int argc, char **argv, char **azColName);  // for sql cb
 void print_latest_msg();
 void print_next_msg();
 void print_prev_msg();
-int get_message_by_id(int id, Message *message);
+int get_message_by_id(unsigned int id, Message *message);
 int get_latest_message_object(Message *message);
 void print_message_object(Message *message);
 int get_next_message_object(Message *message);
 int get_prev_message_object(Message *message);
+void clear_lines();
 int delete_message();   // deletes the currentMessage object from db
 
 

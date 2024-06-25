@@ -1,22 +1,20 @@
 //
 // Created by Alexander Blohme on 25/06/2024.
 //
-#include "../include/signal.h"
-#include <signal.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+#include <string.h>
 #include <stdlib.h>
+
+#include "../include/signals.h"
 #include "../include/log.h"
 #include "../include/message/message.h"
 #include "../include/server/server.h"
 
-void init_sigs()
-{
-    signal(SIGTERM, handle_sigs);
-    signal(SIGHUP, handle_sigs);
-    signal(SIGINT, handle_sigs);
-
-}
-
+#define SIGTERM 15
+#define SIGINT 2
+#define SIGHUP 1
 
 void handle_sigs(int signal)
 {
@@ -25,8 +23,8 @@ void handle_sigs(int signal)
     switch (signal)
     {
         case SIGTERM:
-            snprintf(past_or_present_tense,sizeof(past_or_present_tense), "TeleTexter was");
-        snprintf(action,sizeof(action), "terminated x(");
+            snprintf(past_or_present_tense,sizeof(past_or_present_tense), "TeleTexter is");
+        snprintf(action,sizeof(action), "not running");
         log_sys_message("[SYSTEM] Service is stopping due to SIGTERM signal");
         break;
 
@@ -37,8 +35,8 @@ void handle_sigs(int signal)
         break;
 
         case SIGINT:
-            snprintf(past_or_present_tense,sizeof(past_or_present_tense), "TeleTexter was");
-        snprintf(action,sizeof(action), "terminated x(");
+            snprintf(past_or_present_tense,sizeof(past_or_present_tense), "TeleTexter is");
+        snprintf(action,sizeof(action), "not running");
         log_sys_message("[SYSTEM] Service is stopping due to SIGINT signal");
         break;
 

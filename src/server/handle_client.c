@@ -170,12 +170,20 @@ void handle_client(client_t *cli)
 
             char *args = strtok(NULL, "\n"); // Capture rest of string including spaces
 
-
+            
             for (int i = 0; commands[i].command[0] != '\0'; ++i)
             {
-                if (strcmp(commands[i].command, cmd) == 0) {
+                if (strcmp(commands[i].command, cmd) == 0) 
+                {
                     cmd_found = 1;
-
+                    if (cli->user->access_level < commands[i].access_level)
+                    {
+                        char access_denied_msg[100];
+                        snprintf(access_denied_msg,sizeof(access_denied_msg),"Your access level is too low for %s", cmd);
+                        bad_status(cli,ACCESS_DENIED,access_denied_msg);
+                        //free(argv);
+                        break;
+                    }    
                     if (commands[i].requires_args)
                     {
                         if (args == NULL || strcmp(args, "") == 0)

@@ -5,6 +5,10 @@
 #ifndef USER_H
 #define USER_H
 #define USR_INTERFACE "USER"
+#define ALL_USERS 0
+#define NORMAL_USER 1
+#define MODERATOR_USER 2
+#define ADMIN_USER 3
 
 // Strukturer som representerer tabellene.
 typedef struct {

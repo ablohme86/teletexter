@@ -3,6 +3,23 @@
 #include <limits.h>
 #include <errno.h>
 
+
+void strip_spaces(char *str) 
+{
+    char *read = str;
+    char *write = str;
+
+    while (*read != '\0') 
+    {
+        if (*read != ' ') 
+        {
+            *write = *read;
+            write++;
+        }
+        read++;
+    }
+    *write = '\0';
+}
 int is_numerical_cpy(const char *str, int *number)
 {
     char *endptr;

@@ -8,6 +8,7 @@ typedef struct {
     char command[50];
     void (*function)(client_t *, int argc, char **argv);
     int requires_args;
+    unsigned int access_level;
 } command_t;
 
 char **split_args(char *args, int *argc);

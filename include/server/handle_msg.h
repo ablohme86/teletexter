@@ -12,6 +12,7 @@ void handle_next_msg(client_t *cli, int argc, char **argv);
 void handle_set_msg_no(client_t *cli, int argc, char **argv);
 void handle_prev_msg(client_t *cli, int argc, char **argv);
 void handle_clear_line(client_t *cli, int argc, char **argv);
+void handle_scroll_cmd(client_t *cli, int argc, char **argv);
 void handle_msg_del(client_t *cli, int argc, char **argv);
 void handle_clear_all_msg(client_t *cli, int argc, char **argv);
 #endif /* MESSAGING_H */

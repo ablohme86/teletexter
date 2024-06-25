@@ -6,6 +6,5 @@
 #define SIGNAL_H
 
 void handle_sigs(int signals);
-void init_sigs();
 
 #endif //SIGNAL_H

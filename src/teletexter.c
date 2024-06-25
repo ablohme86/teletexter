@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
-#include "../include/signal.h"
+#include "../include/signals.h"
 #include <string.h>
 #include <stdlib.h>
 #include "../include/server/server.h"
@@ -17,7 +17,10 @@
 
 int main(const int argc, char **argv)
 {
-    init_sigs();
+    signal(SIGTERM, handle_sigs);
+    signal(SIGHUP, handle_sigs);
+    signal(SIGINT, handle_sigs);
+
     printf("\n\n        TeleTexter v%d.%d\n", MAJOR, MINOR);
     printf("Copyright (c) 2024 Alexander Blohme\n-----------------------------------\n\n");
     if (manage_startup_args(argc, argv) == 0)
@@ -43,16 +46,25 @@ int main(const int argc, char **argv)
 #ifndef DISABLE_LCD
     log_sys_message("Initializing LCD display...");
     setuplcd();  // sleng inn nødvendige variabler fra konfig til lcd'en
+
     i2c_init(config.lcdConfig.lcdDeviceFile, config.lcdConfig.lcdAddress); // aktiver / start opp lcd biblioteket med dev fil og addr fra config
+    char welcomeTxt_line1[config.lcdConfig.lcdWidth+1];
+    char welcometxt_line2[config.lcdConfig.lcdWidth+1];
+    char tt_title[config.lcdConfig.lcdWidth+1];
+        
+    clear_lines();
+    
+    snprintf(welcomeTxt_line1, sizeof(welcomeTxt_line1), "%s Ready",config.serverConfig.serverIdentifier);
+    snprintf(welcometxt_line2,sizeof(welcometxt_line2), "%s:%d", config.serverConfig.serverHost,config.serverConfig.port);
+    snprintf(tt_title,sizeof(tt_title),"TeleTexter v%d.%d",MAJOR,MINOR);
 
-    char *hostname = config.serverConfig.serverHost;
-    // sett velkomstmelding på skjermen
-    char welcomeTxt_line1[config.lcdConfig.lcdWidth];
-    char welcometxt_line2[30];
-    snprintf(welcomeTxt_line1, sizeof(welcomeTxt_line1), "TeleTexter v%d.%d", MAJOR, MINOR);
-    snprintf(welcometxt_line2,sizeof(welcometxt_line2), "Host: %s", hostname);
-
-    set_line_text(welcomeTxt_line1, 1, "LEFT");
+    set_line_text("Welcome to",1,"CENTER");
+    set_line_text(tt_title, 2, "CENTER");
+    sleep(1.5);
+    set_line_text("(c) 2024 by",1,"CENTER");
+    set_line_text("Alexander Blohme",2,"CENTER");
+    sleep(2.3);
+    set_line_text(welcomeTxt_line1,1,"CENTER");
     set_line_text(welcometxt_line2, 2, "CENTER");
 #endif
 
