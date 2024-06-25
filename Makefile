@@ -15,7 +15,7 @@ BINDIR = /usr/local/sbin
 CONFDIR = /etc/teletexter
 CONFIG_FILES = configs/teletexter.cfg
 SYSTEMDDIR = /etc/systemd/system
-SERVICE_FILE = configs/teletexter.service
+SERVICE_FILE = service/teletexter.service
 
 
 # Sjekk for --DISABLE_LCD flagg

@@ -120,7 +120,7 @@ int scroll_message(int sel_line)    // Scrolls the selected line
 
 
 
-void clear_line(int line)
+void clear_line(int line)           // clears the specified line
 {
     set_line_text(" ",line,"LEFT");
 }
@@ -158,10 +158,7 @@ int set_line_text(const char *msg, unsigned int line,const char *align)
     {
       return INVALID_ALIGN;
     }
-
-
-        strncpy(messageLines[line]->buff,msg, sizeof(messageLines[line]->buff));
-  
+    strncpy(messageLines[line]->buff,msg, sizeof(messageLines[line]->buff));
 #ifndef DISABLE_LCD
     lcd_text(msg,line,r_align);
 #endif
@@ -206,7 +203,6 @@ int get_next_message_object(Message *message)
    }
 }
 
-
 int get_prev_message_object(Message *message)
 {
    if (currentMessage == NULL)
@@ -222,7 +218,6 @@ int get_prev_message_object(Message *message)
    }
 }
 
-
 int get_latest_message_object(Message *message)      // gets the latest "Message" object in db!
 {
     char sql[256];
@@ -230,9 +225,7 @@ int get_latest_message_object(Message *message)      // gets the latest "Message
     return select_from_db(sql, message_callback, message);
 }
 
-
-
-int message_callback(void *data, int argc, char **argv, char **azColName)        // callback for "Message"-object
+int message_callback(void *data, int argc, char **argv, char **azColName)        // callback to store data into the provided "Message"-object from sqlite
 {
     Message *message = (Message *)data;
     for (int i = 0; i < argc; i++) 

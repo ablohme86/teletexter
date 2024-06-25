@@ -15,14 +15,9 @@
 #include "../include/app_args.h"
 #include "../include/log.h"
 
-
-
-
-
 int main(const int argc, char **argv)
 {
-
-    set_signals();
+    init_sigs();
     printf("\n\n        TeleTexter v%d.%d\n", MAJOR, MINOR);
     printf("Copyright (c) 2024 Alexander Blohme\n-----------------------------------\n\n");
     if (manage_startup_args(argc, argv) == 0)
@@ -37,9 +32,7 @@ int main(const int argc, char **argv)
             fprintf(stderr,"Both BlackList and WhiteList has been set in %s! Please remove one of them!", configPath);
             exit(1);
         }
-        
     }
-    
     else
     {
         log_sys_message("Exiting...");
@@ -52,11 +45,12 @@ int main(const int argc, char **argv)
     setuplcd();  // sleng inn nødvendige variabler fra konfig til lcd'en
     i2c_init(config.lcdConfig.lcdDeviceFile, config.lcdConfig.lcdAddress); // aktiver / start opp lcd biblioteket med dev fil og addr fra config
 
+    char *hostname = config.serverConfig.serverHost;
     // sett velkomstmelding på skjermen
     char welcomeTxt_line1[config.lcdConfig.lcdWidth];
     char welcometxt_line2[30];
     snprintf(welcomeTxt_line1, sizeof(welcomeTxt_line1), "TeleTexter v%d.%d", MAJOR, MINOR);
-    snprintf(welcometxt_line2,sizeof(welcometxt_line2), "Host: %s", config.serverConfig.serverHost);
+    snprintf(welcometxt_line2,sizeof(welcometxt_line2), "Host: %s", hostname);
 
     set_line_text(welcomeTxt_line1, 1, "LEFT");
     set_line_text(welcometxt_line2, 2, "CENTER");

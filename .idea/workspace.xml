@@ -17,19 +17,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3f182fc3-817b-46b3-925b-28cbdd0684fb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/bin/25.06.24-error-teletexter-system.log" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/25.06.24-teletexter-system.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/teletexter_db.db" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/teletexter.cfg.example" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/signal.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/signal.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/teletexter_db.db" beforeDir="false" afterPath="$PROJECT_DIR$/bin/teletexter_db.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/app_args.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/app_args.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/signal.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/signal.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config/config.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db/db_handler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/db_handler.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gpio/gpio_handler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/gpio/gpio_handler.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/log/log.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/log/log.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/handle_ident.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/handle_ident.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/message/message.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/message/message.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/signal.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/signal.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/teletexter.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/teletexter.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -175,7 +170,8 @@
       <workItem from="1718987475576" duration="1125000" />
       <workItem from="1719218861263" duration="5643000" />
       <workItem from="1719269768917" duration="186000" />
-      <workItem from="1719270434869" duration="1244000" />
+      <workItem from="1719270434869" duration="1569000" />
+      <workItem from="1719298765337" duration="5315000" />
     </task>
     <servers />
   </component>

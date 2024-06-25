@@ -52,11 +52,7 @@ const char *valid_keywords[] = {
     "LCDClrDisp",
     "LCDEnableBit",
     "ServerIdentifier"
-    
-    
 };
-
-
 
 int is_valid_keyword(const char *key)
 {

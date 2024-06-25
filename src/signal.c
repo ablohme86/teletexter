@@ -5,21 +5,20 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "../include/log.h"
 #include "../include/message/message.h"
 #include "../include/server/server.h"
 
-void set_signals()
+void init_sigs()
 {
-    signal(SIGTERM, handle_signal);
-    signal(SIGHUP, handle_signal);
-    signal(SIGINT, handle_signal);
+    signal(SIGTERM, handle_sigs);
+    signal(SIGHUP, handle_sigs);
+    signal(SIGINT, handle_sigs);
 
 }
 
 
-void handle_signal(int signal)
+void handle_sigs(int signal)
 {
     char past_or_present_tense[20];
     char action[50];

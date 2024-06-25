@@ -13,13 +13,10 @@ int arg_srv_port = 0;
 char *arg_bind_ip = NULL;
 char *arg_usr_path = NULL;
 
-
-
 void print_usage(const char *program_name)
 {
     printf("Usage: %s --config <config_file> [--port <port>] [--bind <ip/host>] [--users <users_path>]\n", program_name);
 }
-
 
 int manage_startup_args(int argc, char **argv)
 {
