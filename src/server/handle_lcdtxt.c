@@ -65,6 +65,8 @@ void handle_lcd_line_scroll(client_t *cli, int argc, char **argv)
         bad_status(cli,INVALID_LINE,"Invalid line number!");
         return;
     }
+
+    scroll_lcd_line(p_line);
     ok_status(cli,MESSAGE_SET,"Scrolling line");
     return;
 }

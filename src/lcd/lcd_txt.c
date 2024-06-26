@@ -32,6 +32,23 @@ void clear_lcd_lines()
     }
 }
 
+int scroll_lcd_line(unsigned int sel_line)    // Scrolls the selected line
+{
+    if (lcdLines[sel_line] == NULL)
+    {
+        return 0;
+    }
+    if (lcd_scroll_enabled != 1)
+    {
+        return -1;      // scrolling is not enabled
+    }
+#ifndef DISABLE_LCD
+    lcd_scroll(lcdLines[sel_line]->buff,sel_line,lcd_scroll_speed);
+#endif
+    return 0;
+}
+
+
 int set_lcd_line_text(const char *msg, unsigned int line,const char *align)
 {
     if (line > lcd_height)
