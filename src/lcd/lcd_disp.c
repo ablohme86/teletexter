@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-#include <linux/i2c-dev.h>
+#include "../include/lcd/i2c.h"
 #include "../include/lcd/lcd_disp.h"
 
 int i2c_bus;
@@ -55,7 +55,7 @@ void delay(int milliseconds)
      usleep(milliseconds * 1000);
  }
  
- void i2c_init(const char *device,uint8_t i2caddr, char **errmsg)
+ void i2c_init(const char *device,uint8_t i2caddr)
  {
     if (lcd_height == 0)
     {
