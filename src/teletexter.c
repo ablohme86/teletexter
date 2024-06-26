@@ -52,7 +52,7 @@ int main(const int argc, char **argv)
     char welcometxt_line2[config.lcdConfig.lcdWidth+1];
     char tt_title[config.lcdConfig.lcdWidth+1];
         
-    clear_lines();
+    clear_lcd_lines();
     
     snprintf(welcomeTxt_line1, sizeof(welcomeTxt_line1), "%s Ready",config.serverConfig.serverIdentifier);
     snprintf(welcometxt_line2,sizeof(welcometxt_line2), "%s:%d", config.serverConfig.serverHost,config.serverConfig.port);
