@@ -29,16 +29,8 @@ void handle_latest_msg(client_t *cli, int argc, char **argv)   // handle LATEST_
 {
     (void)argc;
     (void)argv;
-    if (cli->identified == 0)
-    {
-        bad_status(cli,ACCESS_DENIED,"You must IDENT first!");
-    }
-    else
-    {
-        print_latest_msg();
-        ok_status(cli,MESSAGE_SET,"Message set!");
-    }
-
+    print_latest_msg();
+    ok_status(cli,MESSAGE_SET,"Message set!");
 }
 void handle_next_msg(client_t *cli, int argc, char **argv) // handle NEXT_MSG from client
 {

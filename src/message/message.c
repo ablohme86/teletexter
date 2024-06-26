@@ -62,6 +62,9 @@ void print_message_object(Message *msg)           // Prints a "Message" object t
 {
    if (msg->id == 0)
    {
+       set_lcd_line_text("There's whole 0",1,"CENTER");
+       set_lcd_line_text("messages to show",1,"CENTER");
+
       log_err_message("[%s] message object id was 0! Cannot set message!", MSG_INTERFACE);
       return;
    }
