@@ -17,7 +17,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3f182fc3-817b-46b3-925b-28cbdd0684fb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/teletexter.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/teletexter.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lcd/lcd_txt.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/lcd/lcd_txt.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,7 +164,7 @@
       <workItem from="1719269768917" duration="186000" />
       <workItem from="1719270434869" duration="1569000" />
       <workItem from="1719298765337" duration="5917000" />
-      <workItem from="1719381634742" duration="7161000" />
+      <workItem from="1719381634742" duration="7275000" />
     </task>
     <servers />
   </component>

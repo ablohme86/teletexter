@@ -11,13 +11,6 @@
 #include <string.h>
 #include <stdio.h>
 
-unsigned int lcd_height;
-unsigned int lcd_width;
-unsigned int lcd_msg_maxlen;
-unsigned int lcd_scroll_enabled;
-unsigned int lcd_scroll_speed;
-
-
 typedef struct {
     unsigned int line;
     char align[10];
