@@ -7,6 +7,7 @@
 #include "../../include/server/handle_ident.h"
 #include "../../include/server/handle_msg.h"
 #include "../../include/server/handle_admin.h"
+#include "../../include/server/handle_lcdtxt.h"
 #include "../../include/server/handle_client.h"
 #include "../../include/user/user.h"
 
@@ -19,13 +20,13 @@ command_t commands[] = {
     
     // handle_msg.h
     {"MSG", handle_msg, 1,NORMAL_USER},
-    {"MSG_CUSTOM",handle_msg_custom,3,ADMIN_USER},
-    {"CLEAR_DISPLAY", handle_clear_display, 0,MODERATOR_USER},
-    {"CLEAR_LINE", handle_clear_line,1,MODERATOR_USER},
+    {"MSG_CUSTOM",handle_lcd_set_text,3,ADMIN_USER},
+    {"CLEAR_DISPLAY", handle_clear_lcd_display, 0,MODERATOR_USER},
+    {"CLEAR_LINE", handle_clear_lcd_line,1,MODERATOR_USER},
     {"MSG_NEXT", handle_next_msg,0,NORMAL_USER},
     {"MSG_PREV", handle_prev_msg, 0,NORMAL_USER},
     {"MSG_LATEST", handle_latest_msg,0,NORMAL_USER},
-    {"MSG_SCROLL",handle_scroll_cmd,1,NORMAL_USER},
+    {"MSG_SCROLL",handle_lcd_line_scroll,1,NORMAL_USER},
     {"MSG_DEL",handle_msg_del,0,MODERATOR_USER},
      
     // handle_client.h

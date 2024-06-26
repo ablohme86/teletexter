@@ -33,7 +33,6 @@
 #include <linux/i2c-dev.h>
 #include "../include/lcd/lcd_disp.h"
 
-
 int i2c_bus;
 
 uint8_t bglight_bit = LCD_BACKLIGHT;    // Sett disse til #DEFINE parameterene i lcd_disp.h hvis ingenting er definert i konfigurasjonsfilene
@@ -45,9 +44,12 @@ uint8_t line3_addr = LINE_3;
 uint8_t line4_addr = LINE_4;
 uint8_t enable_bit = ENABLE_BIT;
 
- unsigned int lcd_height;
- unsigned int lcd_width;
- unsigned int lcd_msg_maxlen;
+unsigned int lcd_height;
+unsigned int lcd_width;
+unsigned int lcd_msg_maxlen;
+unsigned int lcd_scroll_enabled;
+unsigned int lcd_scroll_speed;
+
 void delay(int milliseconds) 
  {
      usleep(milliseconds * 1000);

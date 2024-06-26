@@ -79,6 +79,8 @@ void setuplcd()
     bglight_bit = config.lcdConfig.lcdBacklight;
     lcd_width = config.lcdConfig.lcdWidth;
     lcd_height = config.lcdConfig.lcdHeight;
+    lcd_scroll_enabled = config.messageConfig.scrollLongMessages;
+    lcd_scroll_speed = config.messageConfig.scrollSpeed;
     no_bglight_bit = config.lcdConfig.lcdNoBacklight;
     line1_addr = config.lcdConfig.lcdLine1Addr;
     line2_addr = config.lcdConfig.lcdLine2Addr;

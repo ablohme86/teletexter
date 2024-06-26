@@ -7,22 +7,12 @@
 #include <stdio.h>
 #include "../../include/config/config.h"
 #include "../../include/message/message.h"
-#include "../../include/lcd/lcd_disp.h"
 #include "../../include/db/db_handler.h"
 #include "../../include/utils.h" 
 #include "../../include/log.h"
 #include "../../include/status.h"
+#include "../../include/lcd/lcd_txt.h"
 
-
-typedef struct {
-    unsigned int line;
-    char align[10];
-    char buff[MAX_LINE_MSG_LENGTH];
-
-} MessageLine;
-
-
-MessageLine *messageLines[128]; // stores all lines string data thats on display
 Message *currentMessage;   // message on display
 
 int save_message(Message *msg)
@@ -65,7 +55,6 @@ int delete_message() // Deletes the current message
       currentMessage = NULL;  // reset currentMessage pointer
       print_latest_msg();  // re-draw the new latest message in db
    }
-   
    return res;
 }
 
@@ -79,21 +68,15 @@ void print_message_object(Message *msg)           // Prints a "Message" object t
     // get the username of msg poster_id:
     User *user = (User *)calloc(sizeof(User), 1);
     get_user_by_id(msg->poster_id,user);
-
     char top_line_msg[config.lcdConfig.lcdWidth+1]; // For å unngå scrolling
-
     char datetime_short[15];
     print_datetime_short(msg->datetime,datetime_short);
     snprintf(top_line_msg, sizeof(top_line_msg), "%s %s:",datetime_short, user->username);
     currentMessage = msg;  // store the current message into memory
 
-
-#ifndef DISABLE_LCD
-    lcd_clear();
-    set_line_text(top_line_msg, 1, "LEFT");
-    set_line_text(msg->message,2,"LEFT");
-#endif
-
+    clear_lcd_lines();
+    set_lcd_line_text(top_line_msg, 1, "LEFT");
+    set_lcd_line_text(msg->message,2,"LEFT");
 }
 
 int new_message(char *msg, User *user)    // Creates and stores a new message to database and prints it
@@ -109,92 +92,6 @@ int new_message(char *msg, User *user)    // Creates and stores a new message to
     return MESSAGE_SET;
 }
 
-int scroll_message(unsigned int sel_line)    // Scrolls the selected line
-{
-    if (messageLines[sel_line] == NULL)
-    {
-        return 0;
-    }
-#ifndef DISABLE_LCD
-    lcd_scroll(messageLines[sel_line]->buff,sel_line,config.messageConfig.scrollSpeed);
-#endif
-    return 0;
-}
-
-
-
-void clear_line(unsigned int line)           // clears the specified line
-{
-    set_line_text(" ",line,"LEFT");
-}
-void clear_lines()
-{
-   for (unsigned int i = 1; i <= config.lcdConfig.lcdHeight; i++)
-   {
-      clear_line(i);
-   }
-}
-
-
-int set_line_text(const char *msg, unsigned int line,const char *align)
-{
-    if (line > config.lcdConfig.lcdWidth)
-    {
-        return INVALID_LINE;    // The set line is higher than available lines
-    }
-    if (messageLines[line] == NULL)
-    {
-        // allokér minne til linjens peker
-        messageLines[line] = (MessageLine *)malloc(sizeof(MessageLine));
-        messageLines[line]->line = line;
-    }
-    
-
-    int r_align = 0;
-
-    if (strcmp(align,"LEFT") == 0)
-    {
-
-        r_align = LEFT;
-    }    
-    else if (strcmp(align,"RIGHT") == 0)
-    {
-        r_align = RIGHT;
-    }
-    else if (strcmp(align,"CENTER") == 0)
-    {
-       r_align = CENTER;
-    }    
-    else
-    {
-      return INVALID_ALIGN;
-    }
-    strncpy(messageLines[line]->buff,msg, sizeof(messageLines[line]->buff));
-    strncpy(messageLines[line]->align,align, sizeof(messageLines[line]->align));
-        
-    if (strlen(msg) > config.lcdConfig.lcdWidth && config.messageConfig.scrollLongMessages == 1)
-    {
-         // Automatically set align to LEFT since it will bug the hell out of the display if we are trying to scroll
-         // a centered message that cant be centered anyways!
-         lcd_text(msg,line,LEFT);
-        if (config.messageConfig.scrollLongMessages == 1)
-        {
-#ifndef DISABLE_LCD
-            scroll_message(line);
-#endif
-        }
-    }
-    else // Una problema, vi kan skrive ut som vi vil
-    {
-    #ifndef DISABLE_LCD
-         lcd_text(msg,line,r_align);
-     #endif
-    }
-
-
-
-    return MESSAGE_SET;
-}
 
 void print_latest_msg()           // prints the latest message object in db!
 {

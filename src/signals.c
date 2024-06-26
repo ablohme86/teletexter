@@ -11,6 +11,7 @@
 #include "../include/log.h"
 #include "../include/message/message.h"
 #include "../include/server/server.h"
+#include "../include/lcd/lcd_txt.h"
 
 #define SIGTERM 15
 #define SIGINT 2
@@ -47,8 +48,8 @@ void handle_sigs(int signal)
 
         break;
     };
-    set_line_text(past_or_present_tense,1,"CENTER");
-    set_line_text(action,2,"CENTER");
+    set_lcd_line_text(past_or_present_tense,1,"CENTER");
+    set_lcd_line_text(action,2,"CENTER");
     close_server();
     exit(0);
 }

@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+
+// Standard addresses
 #define LCD_ADDRESS 0x27
 #define LCD_COLS 16
 #define LCD_ROWS 2
@@ -32,6 +34,7 @@ void lcd_backlight(uint8_t turn_on);
 void lcd_clear();
 void lcd_scroll(const char *full_message, int line, unsigned int scrollspeed_ms);
 
+// Vital address parameters that must be set before use of any commands above
 extern  uint8_t bglight_bit;
 extern  uint8_t no_bglight_bit;
 extern  uint8_t cleardisp_bit;
@@ -41,6 +44,9 @@ extern  uint8_t line3_addr;
 extern  uint8_t line4_addr;
 extern  uint8_t enable_bit;
 
+// These parameters MUST be set before using the display / handle_lcdtxt functions
 extern unsigned int lcd_width;
 extern  unsigned int lcd_height;
 extern unsigned int lcd_msg_maxlen;
+extern unsigned int lcd_scroll_speed;
+extern unsigned int lcd_scroll_enabled;
