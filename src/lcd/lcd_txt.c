@@ -27,8 +27,6 @@ typedef struct {
 LCD_Line *lcdLines[128]; // stores all lines string data thats on display
 
 
-
-
 void clear_lcd_line(unsigned int line)           // clears the specified line
 {
     set_lcd_line_text(" ",line,"LEFT");
@@ -57,7 +55,6 @@ int set_lcd_line_text(const char *msg, unsigned int line,const char *align)
 
     if (strcmp(align,"LEFT") == 0)
     {
-
         r_align = LEFT;
     }
     else if (strcmp(align,"RIGHT") == 0)

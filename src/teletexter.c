@@ -1,5 +1,6 @@
 #ifndef DISABLE_LCD
 #include "../include/lcd/lcd_disp.h"
+#include "../include/lcd/lcd_txt.h"
 #endif
 #include <stdio.h>
 #include <unistd.h>
@@ -8,7 +9,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "../include/server/server.h"
-#include "../include/message/message.h"
 #include "../include/config/config.h"
 #include "../include/version.h"
 #include "../include/db/db_handler.h"
@@ -58,14 +58,14 @@ int main(const int argc, char **argv)
     snprintf(welcometxt_line2,sizeof(welcometxt_line2), "%s:%d", config.serverConfig.serverHost,config.serverConfig.port);
     snprintf(tt_title,sizeof(tt_title),"TeleTexter v%d.%d",MAJOR,MINOR);
 
-    set_line_text("Welcome to",1,"CENTER");
-    set_line_text(tt_title, 2, "CENTER");
+    set_lcd_line_text("Welcome to",1,"CENTER");
+    set_lcd_line_text(tt_title, 2, "CENTER");
     sleep(1.5);
-    set_line_text("(c) 2024 by",1,"CENTER");
-    set_line_text("Alexander Blohme",2,"CENTER");
+    set_lcd_line_text("(c) 2024 by",1,"CENTER");
+    set_lcd_line_text("Alexander Blohme",2,"CENTER");
     sleep(2.3);
-    set_line_text(welcomeTxt_line1,1,"CENTER");
-    set_line_text(welcometxt_line2, 2, "CENTER");
+    set_lcd_line_text(welcomeTxt_line1,1,"CENTER");
+    set_lcd_line_text(welcometxt_line2, 2, "CENTER");
 #endif
 
     return start_server();

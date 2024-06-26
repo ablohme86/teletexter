@@ -18,11 +18,8 @@ command_t commands[] = {
     // handle_ident.h
     {"IDENT", handle_ident, 2,ALL_USERS},
     
-    // handle_msg.h
-    {"MSG", handle_msg, 1,NORMAL_USER},
-    {"MSG_CUSTOM",handle_lcd_set_text,3,ADMIN_USER},
-    {"CLEAR_DISPLAY", handle_clear_lcd_display, 0,MODERATOR_USER},
-    {"CLEAR_LINE", handle_clear_lcd_line,1,MODERATOR_USER},
+    // handle_msg.h - for creating messages, going through stored messages, delete em, etc..
+    {"MSG_CREATE", handle_msg, 1,NORMAL_USER},
     {"MSG_NEXT", handle_next_msg,0,NORMAL_USER},
     {"MSG_PREV", handle_prev_msg, 0,NORMAL_USER},
     {"MSG_LATEST", handle_latest_msg,0,NORMAL_USER},
@@ -33,7 +30,11 @@ command_t commands[] = {
     {"BYE", handle_disconnect_client,0,ALL_USERS},
     {"LIST",handle_list_cmd,0,ALL_USERS},
     
-    
+    // handle_lcdtxt.h:  to control the lcd display "customly"
+    {"SET_TEXT",handle_lcd_set_text,3,ADMIN_USER},
+    {"CLEAR_DISPLAY", handle_clear_lcd_display, 0,MODERATOR_USER},
+    {"CLEAR_LINE", handle_clear_lcd_line,1,MODERATOR_USER},
+
     // Admin Commands:
     
     {"CREATE_USER",handle_admin_create_user,3,ADMIN_USER},

@@ -3,7 +3,6 @@
 //
 #include "../../include/server/handle_lcdtxt.h"
 #include "../../include/lcd/lcd_txt.h"
-
 #include "../../include/lcd/lcd_disp.h"
 #include "../../include/server/handle_msg.h"
 #include "../../include/log.h"
@@ -75,26 +74,10 @@ void handle_clear_lcd_display(client_t *cli, int argc, char **argv)
 {
     (void) argc;
     (void) argv;
+    clear_lcd_lines();
+    log_sys_message("[%s] %s %s cleared display",SCK_INTERFACE,cli->ipv4addr, cli->user->username);
+    ok_status(cli,CLEAR_DISPLAY,"LCD is clean as a whistle!");
 
-    if (cli->identified)
-    {
-#ifndef DISABLE_LCD
-        printf("lcdHeight: %d\n",config.lcdConfig.lcdHeight);
-
-        for (int i=1; i <= (int)config.lcdConfig.lcdHeight; i++)
-        {
-            printf("Clearing line %d...\n",i);
-            clear_line(i);
-        }
-#endif
-        log_sys_message("[%s] %s %s cleared display",SCK_INTERFACE,cli->ipv4addr, cli->user->username);
-        ok_status(cli,CLEAR_DISPLAY,"LCD is clean as a whistle!");
-    }
-    else
-    {
-        log_sys_message("[%s] %s tried to clear display without proper access",SCK_INTERFACE, get_ip(cli));
-        bad_status(cli,ACCESS_DENIED,NULL);
-    }
 }
 void handle_clear_lcd_line(client_t *cli, int argc, char **argv)
 {
@@ -102,21 +85,16 @@ void handle_clear_lcd_line(client_t *cli, int argc, char **argv)
 
     char *inc_line = argv[0];
     int p_line;
-    if (cli->identified)
+
+    if (is_numerical_cpy(inc_line,&p_line) != 1)
     {
-        if (is_numerical_cpy(inc_line,&p_line) != 1)
-        {
-            bad_status(cli,INVALID_LINE,"Cannot clear line, invalid line number!");
-            log_sys_message("[%s] %s %s provided invalid line for clearing",SCK_INTERFACE, get_ip(cli), cli->user->username);
-            return;
-        }
-        clear_lcd_line(p_line);
-        char replybuff[100];
-        snprintf(replybuff,sizeof(replybuff),"Line %d was successfully cleared!", p_line);
-        ok_status(cli,LINE_CLEARED,replybuff);
+        bad_status(cli,INVALID_LINE,"Cannot clear line, invalid line number!");
+        log_sys_message("[%s] %s %s provided invalid line for clearing",SCK_INTERFACE, get_ip(cli), cli->user->username);
+        return;
     }
-    else
-    {
-        bad_status(cli,ACCESS_DENIED,"You must IDENT first!");
-    }
+    clear_lcd_line(p_line);
+    char replybuff[100];
+    snprintf(replybuff,sizeof(replybuff),"Line %d was successfully cleared!", p_line);
+    ok_status(cli,LINE_CLEARED,replybuff);
+
 }
