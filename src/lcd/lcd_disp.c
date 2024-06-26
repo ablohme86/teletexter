@@ -55,7 +55,7 @@ void delay(int milliseconds)
      usleep(milliseconds * 1000);
  }
  
- void i2c_init(const char *device,uint8_t i2caddr) 
+ void i2c_init(const char *device,uint8_t i2caddr, char **errmsg)
  {
     if (lcd_height == 0)
     {
