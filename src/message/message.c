@@ -79,7 +79,17 @@ void print_message_object(Message *msg)           // Prints a "Message" object t
 
     clear_lcd_lines();
     set_lcd_line_text(top_line_msg, 1, "LEFT");
+    int n=1;
+    for (int i=2; i <= config.lcdConfig.lcdHeight)
+    {
+
+        set_lcd_line_text(msg->message[16*n], i, "LEFT");
+        n++;
+    }
+
     set_lcd_line_text(msg->message,2,"LEFT");
+
+
 }
 
 int new_message(char *msg, User *user)    // Creates and stores a new message to database and prints it
