@@ -17,7 +17,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3f182fc3-817b-46b3-925b-28cbdd0684fb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/message/message.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/message/message.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/teletexter.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/teletexter.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

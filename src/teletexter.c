@@ -54,7 +54,7 @@ int main(const int argc, char **argv)
         
     clear_lcd_lines();
     
-    snprintf(welcomeTxt_line1, sizeof(welcomeTxt_line1), "%s Ready",config.serverConfig.serverIdentifier);
+    snprintf(welcomeTxt_line1, sizeof(welcomeTxt_line1), "%s",config.serverConfig.serverIdentifier);
     snprintf(welcometxt_line2,sizeof(welcometxt_line2), "%s:%d", config.serverConfig.serverHost,config.serverConfig.port);
     snprintf(tt_title,sizeof(tt_title),"TeleTexter v%d.%d",MAJOR,MINOR);
 
