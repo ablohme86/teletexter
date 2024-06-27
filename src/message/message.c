@@ -83,11 +83,11 @@ void print_message_object(Message *msg)           // Prints a "Message" object t
     int msg_len = strlen(msg->message);
     for (int i = 2; i <= config.lcdConfig.lcdHeight; ++i)
     {
-        if (n * 16 >= msg_len)
+        if (n * config.lcdConfig.lcdWidth >= msg_len)
             break;
 
-        char buffer[17] = {0};  // Buffer for 16 characters + null terminator
-        strncpy(buffer, msg->message + (n * 16), 16);
+        char buffer[config.lcdConfig.lcdWidth+1] = {0};  // Buffer for 16 characters + null terminator
+        strncpy(buffer, msg->message + (n * config.lcdConfig.lcdWidth), config.lcdConfig.lcdWidth);
         set_lcd_line_text(buffer, i, "LEFT");
         n++;
     }
