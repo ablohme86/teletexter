@@ -60,37 +60,45 @@ int delete_message() // Deletes the current message
 
 void print_message_object(Message *msg)           // Prints a "Message" object to screen
 {
-   if (msg->id == 0)
-   {
-       set_lcd_line_text("There's whole 0",1,"CENTER");
-       set_lcd_line_text("messages to show",1,"CENTER");
+    if (msg->id == 0)
+    {
+        set_lcd_line_text("There's whole 0", 1, "CENTER");
+        set_lcd_line_text("messages to show", 2, "CENTER");
 
-      log_err_message("[%s] message object id was 0! Cannot set message!", MSG_INTERFACE);
-      return;
-   }
-    // get the username of msg poster_id:
-    User *user = (User *)calloc(sizeof(User), 1);
-    get_user_by_id(msg->poster_id,user);
-    char top_line_msg[config.lcdConfig.lcdWidth+1]; // For å unngå scrolling
+        log_err_message("[%s] message object id was 0! Cannot set message!", MSG_INTERFACE);
+        return;
+    }
+
+    // Get the username of msg poster_id:
+    User *user = (User *)calloc(1, sizeof(User));
+    get_user_by_id(msg->poster_id, user);
+
+    char top_line_msg[config.lcdConfig.lcdWidth + 1]; // For å unngå scrolling
     char datetime_short[15];
-    print_datetime_short(msg->datetime,datetime_short);
-    snprintf(top_line_msg, sizeof(top_line_msg), "%s %s:",datetime_short, user->username);
-    currentMessage = msg;  // store the current message into memory
+    print_datetime_short(msg->datetime, datetime_short);
+    snprintf(top_line_msg, sizeof(top_line_msg), "%s %s:", datetime_short, user->username);
+
+    currentMessage = msg;  // Store the current message into memory
 
     clear_lcd_lines();
     set_lcd_line_text(top_line_msg, 1, "LEFT");
+
     int n = 0;
     int msg_len = strlen(msg->message);
+    int line_width = config.lcdConfig.lcdWidth;
+    char buffer[line_width + 1];  // Buffer for line_width characters + null terminator
+
     for (int i = 2; i <= config.lcdConfig.lcdHeight; ++i)
     {
-        if (n * config.lcdConfig.lcdWidth >= msg_len)
+        if (n * line_width >= msg_len)
             break;
 
-        char buffer[config.lcdConfig.lcdWidth+1] = {0};  // Buffer for 16 characters + null terminator
-        strncpy(buffer, msg->message + (n * config.lcdConfig.lcdWidth), config.lcdConfig.lcdWidth);
+        memset(buffer, 0, sizeof(buffer)); // Clear buffer
+        strncpy(buffer, msg->message + (n * line_width), line_width);
         set_lcd_line_text(buffer, i, "LEFT");
         n++;
     }
+
     free(user);
 }
 
