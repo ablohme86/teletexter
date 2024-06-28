@@ -81,7 +81,8 @@ int start_server()
 
     // Løs opp vertens IP-adresse
     int status = getaddrinfo(config.serverConfig.serverHost, NULL, &hints, &res);
-    if (status != 0) {
+    if (status != 0)
+    {
         fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(status));
         return EXIT_FAILURE;
     }
@@ -95,7 +96,7 @@ int start_server()
         perror("Could not create socket");
         freeaddrinfo(res); // free getinfoaddr res
 #ifndef DISABLE_LCD
-    	set_lcd_line_text("getnfoadr error",2,CENTER);
+    	set_lcd_line_text("getnfoadr error",2,"CENTER");
 #endif
 
         return EXIT_FAILURE;
@@ -112,7 +113,7 @@ int start_server()
 		}
 		else
 		{
-    		set_lcd_line_text("bind error!",2,CENTER);
+    		set_lcd_line_text("bind error!",2,"CENTER");
     	}
 #endif
 
