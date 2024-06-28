@@ -43,11 +43,11 @@ void ok_status(client_t *cli, int status_no,char *cust_msg,...)
 	if (cust_msg == NULL)
 	{
 		char desc_buff[50];
-		snprintf(desc_buff,sizeof(desc_buff), "OK %d\n", status_no);
+		snprintf(desc_buff,sizeof(desc_buff), "OK %d\r\n", status_no);
 	}
 	else
 	{
-		snprintf(st_buff,sizeof(st_buff), "OK %d :%s\n",status_no,cust_msg);
+		snprintf(st_buff,sizeof(st_buff), "OK %d :%s\r\n",status_no,cust_msg);
 	}
 	send(cli->socket,st_buff,strlen(st_buff),0);
 }
@@ -58,11 +58,11 @@ void bad_status(client_t *cli, int status_no,char *cust_msg,...)
 	if (cust_msg == NULL)
 	{
 		char desc_buff[50];
-		snprintf(desc_buff,sizeof(desc_buff), "ERROR %d\n", status_no);
+		snprintf(desc_buff,sizeof(desc_buff), "ERROR %d\r\n", status_no);
 	}
 	else
 	{
-		snprintf(st_buff,sizeof(st_buff), "ERROR %d :%s\n",status_no,cust_msg);
+		snprintf(st_buff,sizeof(st_buff), "ERROR %d :%s\r\n",status_no,cust_msg);
 	}
 	send(cli->socket,st_buff,strlen(st_buff),0);
 }
@@ -167,7 +167,7 @@ void send_server_ident(client_t *cli)
 
 	char welcome_msg_line1[512];
 
-	snprintf(welcome_msg_line1,sizeof(welcome_msg_line1),"TELETEXTER v%d.%d\nSERVER_IDENT %s\nADDRESS %s\n", MAJOR,MINOR,config.serverConfig.serverIdentifier,config.serverConfig.serverHost);
+	snprintf(welcome_msg_line1,sizeof(welcome_msg_line1),"TELETEXTER v%d.%d\r\nSERVER_IDENT %s\r\nADDRESS %s\r\n", MAJOR,MINOR,config.serverConfig.serverIdentifier,config.serverConfig.serverHost);
 	send(cli->socket,welcome_msg_line1,strlen(welcome_msg_line1),0);
 
 }

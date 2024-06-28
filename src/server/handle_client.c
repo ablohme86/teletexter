@@ -136,95 +136,41 @@ void *client_handler(void *arg)
     remove_client(cli);
     return NULL;
 }
-
 void handle_client(client_t *cli)
 {
     char buffer[BUFFER_SIZE];
+    char command_buffer[BUFFER_SIZE];
+    int command_length = 0;
     int nbytes;
-    while ((nbytes = recv(cli->socket, buffer, sizeof(buffer), 0)) > 0)
+
+    while ((nbytes = recv(cli->socket, buffer, sizeof(buffer) - 1, 0)) > 0)
     {
         buffer[nbytes] = '\0';
 
-        // Trim trailing whitespace (if any)
-        int len = strlen(buffer);
-        while (len > 0 && isspace(buffer[len - 1]))
+        for (int i = 0; i < nbytes; ++i)
         {
-            buffer[len - 1] = '\0';
-            len--;
-        }
-        int cmd_found = 0;
+            char c = buffer[i];
 
-        if (strcmp(buffer,"") == 0)
-        {
-            bad_status(cli,INVALID_COMMAND,"No command given!");
-            log_sys_message("[%s] %s Invalid command: %s",get_ip(cli), SCK_INTERFACE, buffer);
-        }
-        else
-        {
-            // Split command and arguments from buffer
-            char *cmd = strtok(buffer, " ");
-            if (cmd != NULL)
+            // Append character to command buffer
+            if (c != '\r' && c != '\n')
             {
-                strtoupper(cmd);
-            }
-
-            char *args = strtok(NULL, "\n"); // Capture rest of string including spaces
-
-            
-            for (int i = 0; commands[i].command[0] != '\0'; ++i)
-            {
-                if (strcmp(commands[i].command, cmd) == 0) 
+                if (command_length < BUFFER_SIZE - 1)
                 {
-                    cmd_found = 1;
-                    if (cli->user->access_level < commands[i].access_level)
-                    {
-                        char access_denied_msg[100];
-                        snprintf(access_denied_msg,sizeof(access_denied_msg),"Your access level is too low for %s", cmd);
-                        bad_status(cli,ACCESS_DENIED,access_denied_msg);
-                        //free(argv);
-                        break;
-                    }    
-                    if (commands[i].requires_args)
-                    {
-                        if (args == NULL || strcmp(args, "") == 0)
-                        {
-                            char missing_args_msg[BUFFER_SIZE];
-                            snprintf(missing_args_msg, sizeof(missing_args_msg), "%s needs %d arguments", strip_newline_return(cmd), commands[i].requires_args);
-                            log_sys_message("[%s] %s Missing arguments on command %s, requires: %d", SCK_INTERFACE,cli->ipv4addr, cmd, commands[i].requires_args);
-                            bad_status(cli,MISSING_ARGS,missing_args_msg);
-                        }
-                        else
-                        {
-                            int argc;
-                            char **argv = split_args(args, &argc);
-
-                            if (argc < commands[i].requires_args)
-                            {
-                                char missing_args_msg[BUFFER_SIZE];
-                                snprintf(missing_args_msg, sizeof(missing_args_msg), "%s needs %d arguments, but got %d", strip_newline_return(cmd), commands[i].requires_args, argc);
-                                log_sys_message("[%s] %s Missing arguments on command %s, requires: %d, got: %d", SCK_INTERFACE,get_ip(cli), cmd, commands[i].requires_args, argc);
-                                bad_status(cli,MISSING_ARGS,missing_args_msg);
-                            }
-                            else
-                            {
-                                commands[i].function(cli, argc, argv);
-                            }
-                            free(argv);
-                        }
-                    }
-                    else
-                    {
-                        commands[i].function(cli, 0, NULL);
-                    }
-                    break;
+                    command_buffer[command_length++] = c;
                 }
             }
-            if (!cmd_found)
+
+            // If end of command (CR or LF), process the command
+            if (c == '\r' || c == '\n')
             {
-                bad_status(cli,INVALID_COMMAND,"Invalid command!");
-                log_sys_message("[%s] Invalid command: %s", SCK_INTERFACE, cmd);
+                command_buffer[command_length] = '\0'; // Null-terminate the command string
+                if (command_length > 0)
+                {
+                    // Process the command
+                    process_command(cli, command_buffer);
+                    command_length = 0; // Reset command buffer for next command
+                }
             }
         }
-
     }
 }

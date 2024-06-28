@@ -12,6 +12,7 @@ typedef struct {
 } command_t;
 
 char **split_args(char *args, int *argc);
+void process_command(client_t *cli, char *buffer);
 
 extern command_t commands[];
 
