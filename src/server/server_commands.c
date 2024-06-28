@@ -59,17 +59,17 @@ void handle_list_cmd(client_t *cli, int argc, char **argv)
     for (int i = 0; commands[i].command[0] != '\0'; ++i)
     {
         // Format each command's information
-        snprintf(command_info, sizeof(command_info), "%s %s (%d args)\n", commands[i].command,commands[i].description, commands[i].requires_args);
+        snprintf(command_info, sizeof(command_info), "%s %s (%d args)\r\n", commands[i].command,commands[i].description, commands[i].requires_args);
 
         // Ensure we don't overflow help_msg
         if (offset + strlen(command_info) < sizeof(help_msg))
         {
-            offset += snprintf(help_msg + offset, sizeof(help_msg) - offset, "%s", command_info);
+            offset += snprintf(help_msg + offset, sizeof(help_msg) - offset, "%s\r\n", command_info);
         }
         else
         {
             // If the help message is too long, truncate it and break
-            snprintf(help_msg + offset - 4, sizeof(help_msg) - offset + 4, "...\n");
+            snprintf(help_msg + offset - 4, sizeof(help_msg) - offset + 4, "...\n\n");
             break;
         }
     }
