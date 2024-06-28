@@ -45,7 +45,7 @@ command_t commands[] = {
     {"DELETE_USER",handle_admin_delete_user,1,ADMIN_USER,"[username] -- Deletes the provided username"},
     
     // Nullator
-    {"", NULL, 0,0}
+    {"", NULL, 0,0,""}
 
     
 };
