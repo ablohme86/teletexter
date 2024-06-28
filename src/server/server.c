@@ -12,7 +12,7 @@
 #include <pthread.h>
 #include "../../include/version.h"
 #ifndef DISABLE_LCD
-#include "../../include/lcd/lcd_disp.h"
+#include "../../include/lcd/lcd_txt.h"
 #endif
 #include <log.h>
 #include <stdio.h>
@@ -93,7 +93,11 @@ int start_server()
     if (server_socket == -1)
     {
         perror("Could not create socket");
-        freeaddrinfo(res); // Frigjør getaddrinfo-resultatene
+        freeaddrinfo(res); // free getinfoaddr res
+#ifndef DISABLE_LCD
+    	set_lcd_line_text("getnfoadr error",2,CENTER);
+#endif
+
         return EXIT_FAILURE;
     }
 
@@ -102,8 +106,16 @@ int start_server()
         log_sys_message("Cannot start server: Bind failed!");
         perror("Bind error");
 #ifndef DISABLE_LCD
-        lcd_text("Sockets failed!", 2, CENTER);
+		if (config.lcdConfig.lcdHeight > 2)	// give some more nfo
+		{
+
+		}
+		else
+		{
+    		set_lcd_line_text("bind error!",2,CENTER);
+    	}
 #endif
+
         close(server_socket);
         freeaddrinfo(res); // Frigjør getaddrinfo-resultatene
         return EXIT_FAILURE;
@@ -118,6 +130,10 @@ int start_server()
         log_err_message("[SERVER] Listen failed!");
         perror("Listen failed");
         close(server_socket);
+#ifndef DISABLE_LCD
+    	set_lcd_line_text("sock listen err",2,CENTER);
+#endif
+
         return EXIT_FAILURE;
     }
 
@@ -130,6 +146,7 @@ int start_server()
         {
             log_err_message("[SERVER] Could not accept client!");
             perror("Accept failed");
+
             continue;
         }
 
@@ -147,6 +164,7 @@ int start_server()
             
             free(cli->user);
             free(cli);
+            return EXIT_FAILURE;
         }
         else
         {

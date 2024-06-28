@@ -1,6 +1,7 @@
 28.06.2024:
 - App crasher når vi kjører CREATE_USER <username> som allerede eksisterer
-
+    Dette er pga vi lagrer errmsg feil, se på dette
+- Lag en set_text funksojon i lcd_txt.c som skriver videre etter angitt linje hvis det finnes flere
 
 
 * FIXED * 26/06/2024:

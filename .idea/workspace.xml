@@ -18,6 +18,8 @@
   <component name="ChangeListManager">
     <list default="true" id="3f182fc3-817b-46b3-925b-28cbdd0684fb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TODO.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TODO.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/server.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/server.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +84,7 @@
       <recent name="$PROJECT_DIR$/include/lcd" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Native Application.all">
     <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="teletexter" TARGET_NAME="all" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
@@ -144,6 +146,8 @@
       <workItem from="1719381634742" duration="9364000" />
       <workItem from="1719569251349" duration="8449000" />
       <workItem from="1719596854187" duration="2628000" />
+      <workItem from="1719607448522" duration="8000" />
+      <workItem from="1719607465779" duration="375000" />
     </task>
     <servers />
   </component>
