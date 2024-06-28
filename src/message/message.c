@@ -95,7 +95,7 @@ void print_message_object(Message *msg)           // Prints a "Message" object t
             break;
 
         memset(buffer, 0, sizeof(buffer)); // Clear buffer
-        strncpy_s(buffer,sizeof(buffer), msg->message + (n * line_width), line_width);
+        strncpy(buffer, msg->message + (n * line_width), line_width);
         set_lcd_line_text(buffer, i, "LEFT");
         n++;
     }
