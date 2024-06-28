@@ -50,7 +50,7 @@ void handle_list_cmd(client_t *cli, int argc, char **argv)
     (void)argc;
     (void)argv;
     char help_msg[BUFFER_SIZE];
-    char command_info[100]; // Buffer for each command info
+    char command_info[256]; // Buffer for each command info
     int offset = 0; // Offset to keep track of the current position in help_msg
 
     // Start with the header
