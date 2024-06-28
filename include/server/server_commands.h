@@ -9,7 +9,7 @@ typedef struct {
     void (*function)(client_t *, int argc, char **argv);
     int requires_args;
     unsigned int access_level;
-    char description[50];
+    char description[256];
 
 } command_t;
 
