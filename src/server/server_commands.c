@@ -21,28 +21,28 @@ command_t commands[] = {
 // i framtia vil jeg legge til at man skal kunne endre disse i en fil kanskje? 
     
     // handle_ident.h
-    {"IDENT", handle_ident, 2,ALL_USERS,"[username] [password] -- Logs you into the server ",
+    {"IDENT", handle_ident, 2,ALL_USERS,"[username] [password] -- Logs you into the server "},
     // handle_msg.h - for creating messages, going through stored messages, delete em, etc..
-    {"MSG_CREATE", handle_msg, 1,NORMAL_USER,"\"[message]\" -- Create & displays a new message to the LCD panel",
-    {"MSG_NEXT", handle_next_msg,0,NORMAL_USER, "-- Shows the next stored message",
-    {"MSG_PREV", handle_prev_msg, 0,NORMAL_USER, "-- Goes back 1 stored message",
-    {"MSG_LATEST", handle_latest_msg,0,NORMAL_USER,"-- Displays the latest stored message",
-    {"MSG_SCROLL",handle_lcd_line_scroll,1,NORMAL_USER,"[line number] -- Scrolls selected line",
-    {"MSG_DEL",handle_msg_del,0,MODERATOR_USER}, "-- Deletes current message",
+    {"MSG_CREATE", handle_msg, 1,NORMAL_USER,"[message] -- Create & displays a new message to the LCD panel"},
+    {"MSG_NEXT", handle_next_msg,0,NORMAL_USER, "-- Shows the next stored message"},
+    {"MSG_PREV", handle_prev_msg, 0,NORMAL_USER, "-- Goes back 1 stored message"},
+    {"MSG_LATEST", handle_latest_msg,0,NORMAL_USER,"-- Displays the latest stored message"},
+    {"MSG_SCROLL",handle_lcd_line_scroll,1,NORMAL_USER,"[line number] -- Scrolls selected line"},
+    {"MSG_DEL",handle_msg_del,0,MODERATOR_USER, "-- Deletes current message"},
      
     // handle_client.h
-    {"BYE", handle_disconnect_client,0,ALL_USERS},"",
-    {"LIST",handle_list_cmd,0,ALL_USERS},"",
+    {"BYE", handle_disconnect_client,0,ALL_USERS,""},
+    {"LIST",handle_list_cmd,0,ALL_USERS,""},
     
     // handle_lcdtxt.h:  to control the lcd display "customly"
-    {"SET_TEXT",handle_lcd_set_text,3,ADMIN_USER},"[align] [line number] [text] -- Sets a custom text on the provided line",
-    {"CLEAR_DISPLAY", handle_clear_lcd_display, 0,MODERATOR_USER},"-- Clears all lines on display",
-    {"CLEAR_LINE", handle_clear_lcd_line,1,MODERATOR_USER},"[line number] -- Clears the provided line number of text",
+    {"SET_TEXT",handle_lcd_set_text,3,ADMIN_USER,"[align] [line number] [text] -- Sets a custom text on the provided line"},
+    {"CLEAR_DISPLAY", handle_clear_lcd_display, 0,MODERATOR_USER,"-- Clears all lines on display"},
+    {"CLEAR_LINE", handle_clear_lcd_line,1,MODERATOR_USER,"[line number] -- Clears the provided line number of text"},
 
     // Admin Commands:
     
-    {"CREATE_USER",handle_admin_create_user,3,ADMIN_USER},"[username] [password] [access level] -- Creates a new user with the provided access level",
-    {"DELETE_USER",handle_admin_delete_user,1,ADMIN_USER},"[username] -- Deletes the provided username",
+    {"CREATE_USER",handle_admin_create_user,3,ADMIN_USER,"[username] [password] [access level] -- Creates a new user with the provided access level"},
+    {"DELETE_USER",handle_admin_delete_user,1,ADMIN_USER,"[username] -- Deletes the provided username"},
     
     // Nullator
     {"", NULL, 0,0}
