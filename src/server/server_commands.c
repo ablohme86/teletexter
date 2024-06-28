@@ -21,35 +21,68 @@ command_t commands[] = {
 // i framtia vil jeg legge til at man skal kunne endre disse i en fil kanskje? 
     
     // handle_ident.h
-    {"IDENT", handle_ident, 2,ALL_USERS},
-    
+    {"IDENT", handle_ident, 2,ALL_USERS,"[username] [password] -- Logs you into the server ",
     // handle_msg.h - for creating messages, going through stored messages, delete em, etc..
-    {"MSG_CREATE", handle_msg, 1,NORMAL_USER},
-    {"MSG_NEXT", handle_next_msg,0,NORMAL_USER},
-    {"MSG_PREV", handle_prev_msg, 0,NORMAL_USER},
-    {"MSG_LATEST", handle_latest_msg,0,NORMAL_USER},
-    {"MSG_SCROLL",handle_lcd_line_scroll,1,NORMAL_USER},
-    {"MSG_DEL",handle_msg_del,0,MODERATOR_USER},
+    {"MSG_CREATE", handle_msg, 1,NORMAL_USER,"\"[message]\" -- Create & displays a new message to the LCD panel",
+    {"MSG_NEXT", handle_next_msg,0,NORMAL_USER, "-- Shows the next stored message",
+    {"MSG_PREV", handle_prev_msg, 0,NORMAL_USER, "-- Goes back 1 stored message",
+    {"MSG_LATEST", handle_latest_msg,0,NORMAL_USER,"-- Displays the latest stored message",
+    {"MSG_SCROLL",handle_lcd_line_scroll,1,NORMAL_USER,"[line number] -- Scrolls selected line",
+    {"MSG_DEL",handle_msg_del,0,MODERATOR_USER}, "-- Deletes current message",
      
     // handle_client.h
-    {"BYE", handle_disconnect_client,0,ALL_USERS},
-    {"LIST",handle_list_cmd,0,ALL_USERS},
+    {"BYE", handle_disconnect_client,0,ALL_USERS},"",
+    {"LIST",handle_list_cmd,0,ALL_USERS},"",
     
     // handle_lcdtxt.h:  to control the lcd display "customly"
-    {"SET_TEXT",handle_lcd_set_text,3,ADMIN_USER},
-    {"CLEAR_DISPLAY", handle_clear_lcd_display, 0,MODERATOR_USER},
-    {"CLEAR_LINE", handle_clear_lcd_line,1,MODERATOR_USER},
+    {"SET_TEXT",handle_lcd_set_text,3,ADMIN_USER},"[align] [line number] [text] -- Sets a custom text on the provided line",
+    {"CLEAR_DISPLAY", handle_clear_lcd_display, 0,MODERATOR_USER},"-- Clears all lines on display",
+    {"CLEAR_LINE", handle_clear_lcd_line,1,MODERATOR_USER},"[line number] -- Clears the provided line number of text",
 
     // Admin Commands:
     
-    {"CREATE_USER",handle_admin_create_user,3,ADMIN_USER},
-    {"DELETE_USER",handle_admin_delete_user,1,ADMIN_USER},
+    {"CREATE_USER",handle_admin_create_user,3,ADMIN_USER},"[username] [password] [access level] -- Creates a new user with the provided access level",
+    {"DELETE_USER",handle_admin_delete_user,1,ADMIN_USER},"[username] -- Deletes the provided username",
     
     // Nullator
     {"", NULL, 0,0}
 
     
 };
+
+void handle_list_cmd(client_t *cli, int argc, char **argv)
+{
+    (void)argc;
+    (void)argv;
+    char help_msg[BUFFER_SIZE];
+    char command_info[100]; // Buffer for each command info
+    int offset = 0; // Offset to keep track of the current position in help_msg
+
+    // Start with the header
+    offset += snprintf(help_msg + offset, sizeof(help_msg) - offset, "Available commands:\n");
+
+    for (int i = 0; commands[i].command[0] != '\0'; ++i)
+    {
+        // Format each command's information
+        snprintf(command_info, sizeof(command_info), "%s %s (%d args)\n", commands[i].command,commands[i].description, commands[i].requires_args);
+
+        // Ensure we don't overflow help_msg
+        if (offset + strlen(command_info) < sizeof(help_msg))
+        {
+            offset += snprintf(help_msg + offset, sizeof(help_msg) - offset, "%s", command_info);
+        }
+        else
+        {
+            // If the help message is too long, truncate it and break
+            snprintf(help_msg + offset - 4, sizeof(help_msg) - offset + 4, "...\n");
+            break;
+        }
+    }
+
+    ok_status(cli, 250, help_msg);
+}
+
+
 void process_command(client_t *cli, char *buffer)
 {
     // Trim trailing whitespace (if any)

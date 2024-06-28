@@ -9,10 +9,13 @@ typedef struct {
     void (*function)(client_t *, int argc, char **argv);
     int requires_args;
     unsigned int access_level;
+    char description[50];
+
 } command_t;
 
 char **split_args(char *args, int *argc);
 void process_command(client_t *cli, char *buffer);
+void handle_list_cmd(client_t *cli, int argc, char **argv);
 
 extern command_t commands[];
 

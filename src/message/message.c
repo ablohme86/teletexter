@@ -89,16 +89,16 @@ void print_message_object(Message *msg)           // Prints a "Message" object t
     int line_width = config.lcdConfig.lcdWidth;
     char buffer[line_width + 1];  // Buffer for line_width characters + null terminator
 
-    for (int i = 2; i <= config.lcdConfig.lcdHeight; ++i)
+    for (int i = 2; i <= (int)config.lcdConfig.lcdHeight; ++i)
     {
         if (n * line_width >= msg_len)
         {
-            if (i <= config.lcdConfig.lcdHeight)
+            if (i <= (int)config.lcdConfig.lcdHeight)
             {
                 // print rrest of the lines with blanks
                 set_lcd_line_text(" ",i,"LEFT");
             }
-            if (i == config.lcdConfig.lcdHeight)
+            if (i == (int)config.lcdConfig.lcdHeight)
             {
                 // We were on the last line, break it!
                 break;
