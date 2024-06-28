@@ -8,13 +8,16 @@
 
 // Funksjoner for å samhandle med databasen
 
-
-typedef int (*select_callback)(void*, int, char**, char**);
+enum ParamType {
+    PARAM_INT,
+    PARAM_TEXT   ,
+    PARAM_LONG
+};
+typedef int (*result_callback)(void *data, int argc, char **argv, char **col_names);
 int init_db(char *db_name);
-int execute_sql(const char *sql,char **errmsg, const char *param_types,int param_count, ...);
+int execute_sql(const char *sql, int param_count, const void **params, const enum ParamType *param_types, result_callback callback, void *callback_data);
 int create_db(const char *sql_commands);
 int query_sql(const char *sql);
-int select_from_db(const char *sql, select_callback callback, void *data);
 
 extern sqlite3 *db;
 

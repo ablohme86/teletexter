@@ -13,43 +13,74 @@
 sqlite3 *db;
 char *err_msg;
 
-int select_from_db(const char *sql, select_callback callback, void *data)
-{
+
+
+int execute_sql(const char *sql, int param_count, const void **params, const enum ParamType *param_types, result_callback callback, void *callback_data) {
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-
-    if (rc != SQLITE_OK) 
-    {
-        log_err_message("[DATABASE] Failed to prepare statement: %s", sqlite3_errmsg(db));
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
         return rc;
     }
 
-    int found = 0;
-    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) 
-    {
+    for (int i = 0; i < param_count; i++) {
+        switch (param_types[i]) {
+            case PARAM_INT:
+                sqlite3_bind_int(stmt, i + 1, *((int *)params[i]));
+                break;
+            case PARAM_TEXT:
+                sqlite3_bind_text(stmt, i + 1, (const char *)params[i], -1, SQLITE_STATIC);
+                break;
+            case PARAM_LONG:
+                sqlite3_bind_int64(stmt, i + 1, *((long *)params[i]));
+            break;
+        }
+    }
+
+    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
         int column_count = sqlite3_column_count(stmt);
         char *values[column_count];
         char *columns[column_count];
 
-        for (int i = 0; i < column_count; i++) 
-        {
-            values[i] = (char *)sqlite3_column_text(stmt, i);
+        for (int i = 0; i < column_count; i++) {
             columns[i] = (char *)sqlite3_column_name(stmt, i);
+            switch (sqlite3_column_type(stmt, i)) {
+                case SQLITE_INTEGER: {
+                    int value = sqlite3_column_int(stmt, i);
+                    values[i] = (char *)malloc(32); // Allocate space for integer as string
+                    snprintf(values[i], 32, "%d", value);
+                    break;
+                }
+                case SQLITE_TEXT: {
+                    const unsigned char *text = sqlite3_column_text(stmt, i);
+                    values[i] = strdup((const char *)text); // Duplicate the text
+                    break;
+                }
+                default:
+                    values[i] = NULL;
+                    break;
+            }
         }
 
-        callback(data, column_count, values, columns);
+        if (callback) {
+            callback(callback_data, column_count, values, columns);
+        }
 
-        found = 1;
+        // Free the allocated memory for values
+        for (int i = 0; i < column_count; i++) {
+            if (values[i]) {
+                free(values[i]);
+            }
+        }
     }
 
     if (rc != SQLITE_DONE) {
-        log_err_message("[DATABASE] Failed to execute query: %s", sqlite3_errmsg(db));
+        fprintf(stderr, "Failed to execute query: %s\n", sqlite3_errmsg(db));
     }
 
     sqlite3_finalize(stmt);
-    return found ? 1 : 0;
+    return rc == SQLITE_DONE ? 0 : rc;
 }
-
 
 int create_db(const char *sql_commands)
 {
@@ -61,86 +92,6 @@ int create_db(const char *sql_commands)
         sqlite3_free(err_msg);
         return rc;
     }
-
-    return SQLITE_OK;
-}
-
-int execute_sql(const char *sql, char **errmsg,const char *param_types,int param_count, ...)
-{
-
-    sqlite3_stmt *stmt;
-    //*errmsg = (char *)malloc(512); // +1 for null-terminering
-
-    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-    if (rc != SQLITE_OK)
-    {
-        log_err_message("[%s] Failed to prepare statement: %s",DB_INTERFACE, sqlite3_errmsg(db));
-        if (errmsg != NULL)
-        {
-            strcpy(*errmsg,sqlite3_errmsg(db));
-            
-        }
-        return rc;
-    }
-
-    va_list args;
-    va_start(args, param_count);
-
-    int param_index = 1;
-    const char *p = param_types;
-
-    while (*p)
-    {
-        if (*p == 'i')
-        {
-            int param = va_arg(args, int);
-            sqlite3_bind_int(stmt, param_index, param);
-        }
-        else if (*p == 's')
-        {
-            const char *param = va_arg(args, const char *);
-            sqlite3_bind_text(stmt, param_index, param, -1, SQLITE_STATIC);
-        }
-        else if (*p == 'd')
-        {
-            double param = va_arg(args, double);
-            sqlite3_bind_double(stmt, param_index, param);
-        }
-        else if (*p == 'n')
-        {
-            sqlite3_bind_null(stmt, param_index);
-        }
-        else
-        {
-            log_err_message("[%s] Unknown parameter type: %c",DB_INTERFACE, *p);
-            if (errmsg != NULL)
-            {
-                sprintf(*errmsg, "Unknown parameter type: %c", *p);
-            }
-            va_end(args);
-            sqlite3_finalize(stmt);
-            return SQLITE_ERROR;
-        }
-        param_index++;
-        p++;
-    }
-
-    va_end(args);
-
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_DONE)
-    {
-        log_err_message("[%s] Cannot perform SQL operation, SQL error: %s (rc: %d)", DB_INTERFACE,sqlite3_errmsg(db),rc);
-        if (errmsg != NULL)
-        {
-            strcpy(errmsg,sqlite3_errmsg(db));
-        }
-        
-        sqlite3_finalize(stmt);
-        return rc;
-    }
-
-    sqlite3_finalize(stmt);
 
     return SQLITE_OK;
 }
@@ -198,7 +149,7 @@ int init_db(char *db_name)
             "INSERT INTO users (username,password,access_level) VALUES ('admin','admin',3)";
 
         rc = create_db(sql_commands);
-        execute_sql(sql_default_values,&errmsg,"",0);
+        execute_sql(sql_default_values,0,NULL,NULL,NULL,NULL);
         log_err_message("Sql error: %s", errmsg);
         if (rc != SQLITE_OK)
         {
