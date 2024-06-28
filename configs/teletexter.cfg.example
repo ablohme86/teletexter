@@ -51,9 +51,9 @@ MaxNicknameLength 7
 # |              LCD PANEL SETTINGS                  |
 #  -------------------------------------------------- 
 # The total of lines your display have
-LCDCols 2
+LCDCols 4
 # The total of characters 1 line can hold
-LCDRows 16
+LCDRows 20
 # The address of your I2C LCD display
 LCDAddress 0x27
 # LCD Device file
