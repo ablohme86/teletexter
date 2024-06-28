@@ -133,7 +133,7 @@ int execute_sql(const char *sql, char **errmsg,const char *param_types,int param
         log_err_message("[%s] Cannot perform SQL operation, SQL error: %s (rc: %d)", DB_INTERFACE,sqlite3_errmsg(db),rc);
         if (errmsg != NULL)
         {
-            strcpy(*errmsg,sqlite3_errmsg(db));
+            //strcpy(*errmsg,sqlite3_errmsg(db));
         }
         
         sqlite3_finalize(stmt);
