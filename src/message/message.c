@@ -80,7 +80,8 @@ void print_message_object(Message *msg)           // Prints a "Message" object t
 
     currentMessage = msg;  // Store the current message into memory
 
-    clear_lcd_lines();
+    // instead of clearing the lines we will just overwrite ALL the lines with either the new text or blanks!
+    //clear_lcd_lines();
     set_lcd_line_text(top_line_msg, 1, "LEFT");
 
     int n = 0;
@@ -94,7 +95,7 @@ void print_message_object(Message *msg)           // Prints a "Message" object t
             break;
 
         memset(buffer, 0, sizeof(buffer)); // Clear buffer
-        strncpy(buffer, msg->message + (n * line_width), line_width);
+        strncpy_s(buffer,sizeof(buffer), msg->message + (n * line_width), line_width);
         set_lcd_line_text(buffer, i, "LEFT");
         n++;
     }
