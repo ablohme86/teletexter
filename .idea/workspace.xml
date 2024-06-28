@@ -16,9 +16,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3f182fc3-817b-46b3-925b-28cbdd0684fb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/db/db_handler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/db_handler.c" afterDir="false" />
-    </list>
+    <list default="true" id="3f182fc3-817b-46b3-925b-28cbdd0684fb" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -140,7 +138,7 @@
       <workItem from="1719270434869" duration="1569000" />
       <workItem from="1719298765337" duration="5917000" />
       <workItem from="1719381634742" duration="9364000" />
-      <workItem from="1719569251349" duration="8326000" />
+      <workItem from="1719569251349" duration="8449000" />
     </task>
     <servers />
   </component>
