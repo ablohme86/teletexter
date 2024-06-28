@@ -1,4 +1,9 @@
-26/06/2024:
+28.06.2024:
+- App crasher når vi kjører CREATE_USER <username> som allerede eksisterer
+
+
+
+* FIXED * 26/06/2024:
 
  - Splitt opp "message":
     - Funksjoner som scroll_message, og set_text, osv skal inn i en ny fil som heter

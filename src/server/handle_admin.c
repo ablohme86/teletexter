@@ -41,7 +41,7 @@ void handle_admin_create_user(client_t *cli, int argc, char **argv)
 		free(user);
 		return;
 	}
-	if (useradd_res > 0)
+	else
 	{
 		log_sys_message("[%s] %s/%s: Username '%s' is already in use", ADMIN_INTERFACE,cli->ipv4addr,cli->user->username, user->username);
 		bad_status(cli,USERNAME_EXIST,"Username already exists!");
