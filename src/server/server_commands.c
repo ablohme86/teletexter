@@ -54,7 +54,7 @@ void handle_list_cmd(client_t *cli, int argc, char **argv)
     int offset = 0; // Offset to keep track of the current position in help_msg
 
     // Start with the header
-    offset += snprintf(help_msg + offset, sizeof(help_msg) - offset, "Available commands:\n");
+    offset += snprintf(help_msg + offset, sizeof(help_msg) - offset, "Available commands:\r\n");
 
     for (int i = 0; commands[i].command[0] != '\0'; ++i)
     {
@@ -64,7 +64,7 @@ void handle_list_cmd(client_t *cli, int argc, char **argv)
         // Ensure we don't overflow help_msg
         if (offset + strlen(command_info) < sizeof(help_msg))
         {
-            offset += snprintf(help_msg + offset, sizeof(help_msg) - offset, "%s\r\n", command_info);
+            offset += snprintf(help_msg + offset, sizeof(help_msg) - offset, "%s", command_info);
         }
         else
         {
