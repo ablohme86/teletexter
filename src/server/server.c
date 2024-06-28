@@ -132,7 +132,7 @@ int start_server()
         perror("Listen failed");
         close(server_socket);
 #ifndef DISABLE_LCD
-    	set_lcd_line_text("sock listen err",2,CENTER);
+    	set_lcd_line_text("sock listen err",2,"CENTER");
 #endif
 
         return EXIT_FAILURE;
