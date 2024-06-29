@@ -8,14 +8,17 @@ SRCS = src/server/handle_admin.c src/lcd/lcd_txt.c src/server/handle_lcdtxt.c sr
 OBJS = $(SRCS:.c=.o)
 TARGET = bin/teletexter
 
-# Directories
+# Default directories
 BINDIR = /usr/local/sbin
 CONFDIR = /etc/teletexter
+VARDIR = /var/lib/teletexter
+
+# Allow override from command line
 CONFIG_FILES = configs/teletexter.cfg
 SYSTEMDDIR = /etc/systemd/system
 SERVICE_FILE = service/teletexter.service
 
-# Sjekk for DISABLE_LCD flagg
+# Check for DISABLE_LCD flag
 ifdef DISABLE_LCD
     SRCS := $(filter-out src/lcd/lcd_txt.c src/lcd/lcd_disp.c, $(SRCS))
     CFLAGS += -DDISABLE_LCD
@@ -29,16 +32,18 @@ ifdef DISABLE_SQL
    SRCS := $(filter-out src/db/db_handler.c, $(SRCS))
 endif
 
-
 all: teletexter post_build_clean
 
-teletexter: $(OBJS)
-	mkdir bin
+teletexter: bin $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS) $(LDLIBS)
-	
+
+bin:
+	mkdir -p bin
+
 clean:
 	rm -f $(OBJS) $(TARGET)
 	rm -f bin/*.db
+
 post_build_clean:
 	rm -f $(OBJS)
 
@@ -46,8 +51,9 @@ post_build_clean:
 install: $(TARGET)
 	install -d $(BINDIR)
 	install -m 755 $(TARGET) $(BINDIR)
-	install -d $(CONFDIR)
-	install -m 644 $(CONFIG_FILES) $(CONFDIR)
+	install -d ${CONFIGPATH:=$(CONFDIR)}
+	install -d ${DBPATH:=$(VARDIR)}
+	install -m 644 $(CONFIG_FILES) ${CONFIGPATH}
 	install -m 644 $(SERVICE_FILE) $(SYSTEMDDIR)
 	systemctl enable teletexter.service
 	systemctl start teletexter.service
@@ -56,8 +62,9 @@ install: $(TARGET)
 uninstall:
 	rm -f $(BINDIR)/$(TARGET)
 	rm -rf $(CONFDIR)
+	rm -rf $(VARDIR)
 	systemctl stop teletexter.service
 	systemctl disable teletexter.service
 	rm -f $(SYSTEMDDIR)/teletexter.service
 
-.PHONY: all clean install uninstall
+.PHONY: all clean install uninstall bin
