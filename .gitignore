@@ -15,7 +15,7 @@ teletexter
 # Precompiled Headers
 *.gch
 *.pch
-bin/.*
+bin/*
 # Libraries
 *.lib
 *.a
