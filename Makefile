@@ -15,7 +15,6 @@ CONFIG_FILES = configs/teletexter.cfg
 SYSTEMDDIR = /etc/systemd/system
 SERVICE_FILE = service/teletexter.service
 
-
 # Sjekk for DISABLE_LCD flagg
 ifdef DISABLE_LCD
     SRCS := $(filter-out src/lcd/lcd_txt.c src/lcd/lcd_disp.c, $(SRCS))
@@ -34,8 +33,9 @@ endif
 all: teletexter post_build_clean
 
 teletexter: $(OBJS)
+	mkdir bin
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS) $(LDLIBS)
-
+	
 clean:
 	rm -f $(OBJS) $(TARGET)
 	rm -f bin/*.db
