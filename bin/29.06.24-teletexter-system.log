@@ -1,0 +1,177 @@
+29.06.24 00:02 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 00:03 [DATABASE] Database file teletexter_db.db is new. Initializing...
+29.06.24 00:03 [DATABASE] New database teletexter_db.db initialized!
+29.06.24 00:03 [SERVER] Server listening on 0.0.0.0 @ port 5554
+29.06.24 00:03 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:04 [SERVER] Server listening on 0.0.0.0 @ port 5554
+29.06.24 00:04 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:05 Cannot start server: Bind failed!
+29.06.24 00:05 [SERVER] Server listening on 0.0.0.0 @ port 1900
+29.06.24 00:05 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:07 [SERVER] Server listening on 0.0.0.0 @ port 1900
+29.06.24 00:07 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:07 Cannot start server: Bind failed!
+29.06.24 00:08 [SERVER] Server listening on 0.0.0.0 @ port 5559
+29.06.24 00:08 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:08 Cannot start server: Bind failed!
+29.06.24 00:08 [SERVER] Server listening on 0.0.0.0 @ port 5558
+29.06.24 00:08 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:09 Cannot start server: Bind failed!
+29.06.24 00:09 [SERVER] Server listening on 0.0.0.0 @ port 5552
+29.06.24 00:09 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:09 Cannot start server: Bind failed!
+29.06.24 00:09 [SERVER] Server listening on 0.0.0.0 @ port 5553
+29.06.24 00:09 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:09 [SERVER] Server listening on 0.0.0.0 @ port 5552
+29.06.24 00:09 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:09 Cannot start server: Bind failed!
+29.06.24 00:09 [SERVER] Server listening on 0.0.0.0 @ port 5551
+29.06.24 00:10 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:10 [SERVER] Server listening on 0.0.0.0 @ port 5552
+29.06.24 00:10 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:10 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 00:10 [NETWORK] 127.0.0.1 Invalid credentials for user jau
+29.06.24 00:10 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 00:11 [SERVER] Server listening on 0.0.0.0 @ port 5551
+29.06.24 00:11 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:11 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 00:11 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 00:11 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 00:13 [SERVER] Server listening on 0.0.0.0 @ port 5551
+29.06.24 00:13 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:13 [NETWORK] 127.0.0.1 Invalid credentials for user jau
+29.06.24 00:13 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 00:13 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 00:14 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 00:14 [SERVER] Server listening on 0.0.0.0 @ port 5552
+29.06.24 00:14 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:14 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:14 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:14 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:14 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 00:14 Cannot start server: Bind failed!
+29.06.24 00:14 Cannot start server: Bind failed!
+29.06.24 00:14 [SERVER] Server listening on 0.0.0.0 @ port 5553
+29.06.24 00:14 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:15 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:15 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:15 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 00:15 [SERVER] Server listening on 0.0.0.0 @ port 555
+29.06.24 00:15 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:15 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:15 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:15 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:15 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:16 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:16 [NETWORK] 127.0.0.1 Missing arguments on command IDENT, requires: 2, got: 1
+29.06.24 00:16 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:16 [NETWORK]  (127.0.0.1) disconnected!
+29.06.24 00:16 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 00:16 [DATABASE] Database file teletexter_db.db is new. Initializing...
+29.06.24 00:16 [DATABASE] New database teletexter_db.db initialized!
+29.06.24 00:16 Cannot start server: Bind failed!
+29.06.24 00:16 [SERVER] Server listening on 0.0.0.0 @ port 5551
+29.06.24 00:16 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 00:17 [DATABASE] Database file teletexter_db.db is new. Initializing...
+29.06.24 00:17 [DATABASE] New database teletexter_db.db initialized!
+29.06.24 00:17 [SERVER] Server listening on 0.0.0.0 @ port 5551
+29.06.24 00:17 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:17 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:17 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:18 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 00:18 [SERVER] Server listening on 0.0.0.0 @ port 5559
+29.06.24 00:18 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:18 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:18 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 00:20 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 00:20 [SERVER] Server listening on 0.0.0.0 @ port 5552
+29.06.24 00:20 [NETWORK] 127.0.0.1 Connected 
+29.06.24 00:20 [NETWORK] 127.0.0.1 Invalid credentials for user jau
+29.06.24 00:20 [NETWORK] 127.0.0.1 admin (1) successfully logged in with access level 3
+29.06.24 00:25 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 01:17 [DATABASE] Database file teletexter_db.db is new. Initializing...
+29.06.24 01:17 [DATABASE] New database teletexter_db.db initialized!
+29.06.24 01:18 [SERVER] Server listening on 0.0.0.0 @ port 5551
+29.06.24 01:18 [NETWORK] 127.0.0.1 Connected 
+29.06.24 01:18 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 01:18 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 01:18 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+29.06.24 01:19 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 01:19 [SERVER] Server listening on 0.0.0.0 @ port 5552
+29.06.24 01:19 [NETWORK] 127.0.0.1 Connected 
+29.06.24 01:19 [NETWORK] 127.0.0.1 Invalid credentials for user jau
+29.06.24 01:19 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 01:19 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 01:19 [NETWORK] 127.0.0.1 disconnected!
+29.06.24 01:19 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 01:19 [DATABASE] Database file teletexter_db.db is new. Initializing...
+29.06.24 01:19 [DATABASE] New database teletexter_db.db initialized!
+29.06.24 01:19 Cannot start server: Bind failed!
+29.06.24 01:19 [SERVER] Server listening on 0.0.0.0 @ port 5551
+29.06.24 01:19 [NETWORK] 127.0.0.1 Connected 
+29.06.24 01:19 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 01:19 [NETWORK] 127.0.0.1 disconnected!
+29.06.24 01:20 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 01:20 [SERVER] Server listening on 0.0.0.0 @ port 5552
+29.06.24 01:20 [NETWORK] 127.0.0.1 Connected 
+29.06.24 01:20 [NETWORK] Invalid command: I
+29.06.24 01:20 [NETWORK] 127.0.0.1 Invalid credentials for user ad
+29.06.24 01:20 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 01:20 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 01:20 [NETWORK] 127.0.0.1 Invalid credentials for user hva
+29.06.24 01:21 [NETWORK] Invalid command: ÿôÿýB
+29.06.24 01:21 [NETWORK] 127.0.0.1 disconnected!
+29.06.24 01:22 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 01:24 [SERVER] Server listening on 0.0.0.0 @ port 5554
+29.06.24 01:25 [NETWORK] 127.0.0.1 Connected 
+29.06.24 01:25 [NETWORK] 127.0.0.1 Invalid credentials for user jau
+29.06.24 01:25 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 01:25 [NETWORK] 127.0.0.1 Invalid credentials for user hmm
+29.06.24 01:26 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 01:26 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 01:26 Cannot start server: Bind failed!
+29.06.24 01:26 [SERVER] Server listening on 0.0.0.0 @ port 5552
+29.06.24 01:26 [NETWORK] 127.0.0.1 Connected 
+29.06.24 01:26 [NETWORK] 127.0.0.1 Invalid credentials for user jau
+29.06.24 01:27 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+29.06.24 01:31 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 01:31 Cannot start server: Bind failed!
+29.06.24 01:31 [SERVER] Server listening on 0.0.0.0 @ port 5559
+29.06.24 01:31 [NETWORK] 127.0.0.1 Connected 
+29.06.24 01:31 [NETWORK] 127.0.0.1 Invalid credentials for user hhh
+29.06.24 01:32 [NETWORK] 127.0.0.1 admin (1) successfully logged in with access level 3
+29.06.24 01:32 [NETWORK] 127.0.0.1 Missing arguments on command CREATE_USER, requires: 3, got: 2
+29.06.24 01:32 [ADMIN] 127.0.0.1/admin: New user 'admin' is created
+29.06.24 01:33 [NETWORK] 127.0.0.1 Missing arguments on command CREATE_USER, requires: 3, got: 2
+29.06.24 01:33 [ADMIN] 127.0.0.1/admin: New user 'kai' is created
+29.06.24 01:33 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 01:34 Cannot start server: Bind failed!
+29.06.24 01:34 [SERVER] Server listening on 0.0.0.0 @ port 5552
+29.06.24 01:34 [NETWORK] 127.0.0.1 Connected 
+29.06.24 01:34 [NETWORK] 127.0.0.1 Invalid credentials for user kai
+29.06.24 01:34 [NETWORK] 127.0.0.1 admin (2) successfully logged in with access level 3
+29.06.24 01:34 [NETWORK] 127.0.0.1 Missing arguments on command CREATE_USER, requires: 3, got: 2
+29.06.24 01:34 [ADMIN] 127.0.0.1/admin: New user 'admin' is created
+29.06.24 01:34 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 01:34 Cannot start server: Bind failed!
+29.06.24 01:35 [SERVER] Server listening on 0.0.0.0 @ port 5551
+29.06.24 01:37 [NETWORK] 127.0.0.1 Connected 
+29.06.24 01:37 [NETWORK] 127.0.0.1 Invalid credentials for user jau
+29.06.24 01:37 [NETWORK] 127.0.0.1 admin (2) successfully logged in with access level 3
+29.06.24 01:37 [NETWORK] 127.0.0.1 Missing arguments on command CREATE_USER, requires: 3, got: 2
+29.06.24 01:37 [ADMIN] 127.0.0.1/admin: New user 'fukka' is created
+29.06.24 01:37 [NETWORK] 127.0.0.1 Missing arguments on command CREATE_USER, requires: 3, got: 2
+29.06.24 01:37 [ADMIN] 127.0.0.1/admin: Username 'admin' is already in use
+29.06.24 01:37 [ADMIN] 127.0.0.1/admin: New user 'fuckme' is created
+29.06.24 02:10 [NETWORK] Invalid command: ÿôÿý
+29.06.24 02:10 [NETWORK] Invalid command: B
+29.06.24 02:10 [NETWORK] Invalid command: N
+29.06.24 02:10 [NETWORK] admin (127.0.0.1) disconnected!
+29.06.24 02:26 [SYSTEM] Service is stopping due to SIGINT signal
+29.06.24 10:46 [SERVER] Server listening on 0.0.0.0 @ port 5554
+29.06.24 10:46 [NETWORK] 127.0.0.1 Connected 
+29.06.24 10:46 [NETWORK] 127.0.0.1 Invalid credentials for user jau
+29.06.24 10:46 [NETWORK] 127.0.0.1 admin (2) successfully logged in with access level 3
+29.06.24 10:46 [ADMIN] 127.0.0.1/admin: Username 'admin' is already in use
+29.06.24 11:06 [NETWORK] admin (127.0.0.1) disconnected!
+29.06.24 11:06 [SYSTEM] Service is stopping due to SIGINT signal

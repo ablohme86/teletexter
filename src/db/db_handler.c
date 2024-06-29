@@ -39,7 +39,7 @@ int execute_sql(const char *sql, int param_count, const void **params, const enu
         }
     }
 
-    int found = 0; // Track if any row was found
+    int found = 0; // sjekk om vi fant en eller flere rader ved select spørring
     while ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
     {
         int column_count = sqlite3_column_count(stmt);
@@ -54,14 +54,14 @@ int execute_sql(const char *sql, int param_count, const void **params, const enu
                 case SQLITE_INTEGER:
                 {
                     int value = sqlite3_column_int(stmt, i);
-                    values[i] = (char *)malloc(32); // Allocate space for integer as string
+                    values[i] = (char *)malloc(32); // allokér plass for integer som en streng
                     snprintf(values[i], 32, "%d", value);
                     break;
                 }
                 case SQLITE_TEXT:
                 {
                     const unsigned char *text = sqlite3_column_text(stmt, i);
-                    values[i] = strdup((const char *)text); // Duplicate the text
+                    values[i] = strdup((const char *)text); // dupliser tekstinneholdet
                     break;
                 }
                 default:
@@ -75,7 +75,7 @@ int execute_sql(const char *sql, int param_count, const void **params, const enu
             callback(callback_data, column_count, values, columns);
         }
 
-        // Free the allocated memory for values
+        // slett minnet for verdiene
         for (int i = 0; i < column_count; i++)
         {
             if (values[i])
@@ -84,12 +84,12 @@ int execute_sql(const char *sql, int param_count, const void **params, const enu
             }
         }
 
-        found = 1; // At least one row was found
+        found = 1; // fant minst 1 rad
     }
 
     if (rc != SQLITE_DONE && rc != SQLITE_ROW)
     {
-        fprintf(stderr, "Failed to execute query: %s\n", sqlite3_errmsg(db));
+        log_err_message("[DATABASE] Failed to execute query: %s", sqlite3_errmsg(db));
     }
 
     sqlite3_finalize(stmt);
@@ -108,7 +108,7 @@ int create_db(const char *sql_commands)
 
     if (rc != SQLITE_OK)
     {
-        log_err_message("[%s] Failed to create tables of database: %s", DB_INTERFACE);
+        log_err_message("[%s] Failed to create tables of database: %s", DB_INTERFACE, sqlite3_errmsg(db));
         sqlite3_free(err_msg);
         return rc;
     }
@@ -170,7 +170,6 @@ int init_db(char *db_name)
 
         rc = create_db(sql_commands);
         execute_sql(sql_default_values,0,NULL,NULL,NULL,NULL);
-        log_err_message("Sql error: %s", errmsg);
         if (rc != SQLITE_OK)
         {
             log_err_message( "[%s] Failed to initialize database schema on file %s",DB_INTERFACE, db_name);

@@ -17,22 +17,25 @@ typedef struct {
     char buff[200];
 
 } LCD_Line;
-LCD_Line *lcdLines[128]; // stores all lines string data thats on display
+LCD_Line *lcdLines[128]; // inneholder data for alle linjer som er på "skjermen"
 
+
+// setter tekst f.o.m valgt linje og nedover
 int set_lcd_text(const char *mmsg, unsigned int line)
 {
     int n = 0;
     int msg_len = strlen(mmsg);
     int line_width = lcd_width;
-    char buffer[line_width + 1];  // Buffer for line_width characters + null terminator
+    char buffer[line_width + 1];  // Buffer for line_width tekst + null terminator
 #ifndef DISABLE_LCD
 
-    for (int i = line; i <= (int)lcd_height; ++i)     // print the message from this line
+    for (int i = line; i <= (int)lcd_height; ++i)     // skriv teksten fra denne linja
     {
-        // Calculate the starting index in the message
+        // kalkuler starting index i meldingen
         int start_index = n * line_width;
 
-        // If we've reached the end of the message, print blank lines if needed
+        // hvis vi har nådd enden av meldingen, skriv ut/fjern evnt gammel tekst på nåværende linje
+        // ved å sette mellomrom på den
         if (start_index >= msg_len)
         {
             if (i <= (int)lcd_height)
@@ -75,6 +78,7 @@ int set_lcd_text(const char *mmsg, unsigned int line)
 }
 
 
+// rensker valgt linje for tegn
 void clear_lcd_line(unsigned int line)           // clears the specified line
 {
     set_lcd_line_text(" ",line,"LEFT");
@@ -87,6 +91,7 @@ void clear_lcd_lines()
     }
 }
 
+// scroller teksten på valgt linje fra høyre til venstre
 int scroll_lcd_line(unsigned int sel_line)    // Scrolls the selected line
 {
     if (lcdLines[sel_line] == NULL)
@@ -104,6 +109,7 @@ int scroll_lcd_line(unsigned int sel_line)    // Scrolls the selected line
 }
 
 
+// setter tekst på kun valgt linje
 int set_lcd_line_text(const char *msg, unsigned int line,const char *align)
 {
     if (line > lcd_height)

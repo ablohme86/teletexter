@@ -4,8 +4,6 @@
 CC = gcc
 CFLAGS = -Wall -Wunused-variable -Wunused-but-set-variable -Wextra -Iinclude -pthread 
 LDFLAGS = -pthread -lncurses -lsqlite3
-# LDLIBS = -lwiringPi -lwiringPiDev
-
 SRCS = src/server/handle_admin.c src/lcd/lcd_txt.c src/server/handle_lcdtxt.c src/user/user.c src/signals.c src/teletexter.c src/db/db_handler.c src/message/message.c src/gpio/gpio_handler.c src/lcd/lcd_disp.c src/server/handle_client.c src/server/server_commands.c src/server/handle_msg.c src/server/handle_ident.c src/server/server.c src/config/config.c src/log/log.c src/utils.c
 OBJS = $(SRCS:.c=.o)
 TARGET = bin/teletexter
@@ -18,10 +16,9 @@ SYSTEMDDIR = /etc/systemd/system
 SERVICE_FILE = service/teletexter.service
 
 
-# Sjekk for --DISABLE_LCD flagg
+# Sjekk for DISABLE_LCD flagg
 ifdef DISABLE_LCD
     SRCS := $(filter-out src/lcd/lcd_txt.c src/lcd/lcd_disp.c, $(SRCS))
-    LDLIBS :=
     CFLAGS += -DDISABLE_LCD
 endif
 

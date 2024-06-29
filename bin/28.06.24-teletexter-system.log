@@ -1,0 +1,45 @@
+28.06.24 23:30 [DATABASE] Database file teletexter_db.db is new. Initializing...
+28.06.24 23:30 [DATABASE] New database teletexter_db.db initialized!
+28.06.24 23:30 [SERVER] Server listening on 0.0.0.0 @ port 5554
+28.06.24 23:30 [NETWORK] 127.0.0.1 Connected 
+28.06.24 23:30 [NETWORK] 127.0.0.1 admin (1) successfully logged in with access level 3
+28.06.24 23:30 [ADMIN] 127.0.0.1/admin: Username 'admin' is already in use
+28.06.24 23:34 [NETWORK] admin (127.0.0.1) disconnected!
+28.06.24 23:34 [SYSTEM] Service is stopping due to SIGINT signal
+28.06.24 23:37 [SERVER] Server listening on 0.0.0.0 @ port 5554
+28.06.24 23:37 [NETWORK] 127.0.0.1 Connected 
+28.06.24 23:38 [NETWORK] 127.0.0.1 admin (1) successfully logged in with access level 3
+28.06.24 23:38 [ADMIN] 127.0.0.1/admin: Username 'admin' is already in use
+28.06.24 23:38 [ADMIN] 127.0.0.1/admin: Username 'admin' is already in use
+28.06.24 23:38 [ADMIN] 127.0.0.1/admin: New user 'jau' is created
+28.06.24 23:38 [NETWORK] admin (127.0.0.1) disconnected!
+28.06.24 23:38 [SYSTEM] Service is stopping due to SIGINT signal
+28.06.24 23:41 [DATABASE] Database file teletexter_db.db is new. Initializing...
+28.06.24 23:41 [DATABASE] New database teletexter_db.db initialized!
+28.06.24 23:41 [SERVER] Server listening on 0.0.0.0 @ port 5554
+28.06.24 23:41 [NETWORK] 127.0.0.1 Connected 
+28.06.24 23:41 [NETWORK] 127.0.0.1 admin (1) successfully logged in with access level 3
+28.06.24 23:42 [NETWORK] 127.0.0.1 Missing arguments on command CREATE_USER, requires: 3, got: 2
+28.06.24 23:42 [ADMIN] 127.0.0.1/admin: Username 'admin' is already in use
+28.06.24 23:46 [NETWORK] admin (127.0.0.1) disconnected!
+28.06.24 23:46 [SYSTEM] Service is stopping due to SIGINT signal
+28.06.24 23:48 [DATABASE] Database file teletexter_db.db is new. Initializing...
+28.06.24 23:48 [DATABASE] New database teletexter_db.db initialized!
+28.06.24 23:48 [SERVER] Server listening on 0.0.0.0 @ port 5554
+28.06.24 23:48 [NETWORK] 127.0.0.1 Connected 
+28.06.24 23:48 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+28.06.24 23:51 [DATABASE] Database file teletexter_db.db is new. Initializing...
+28.06.24 23:51 [DATABASE] New database teletexter_db.db initialized!
+28.06.24 23:51 [SERVER] Server listening on 0.0.0.0 @ port 5554
+28.06.24 23:51 [NETWORK] 127.0.0.1 Connected 
+28.06.24 23:51 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
+28.06.24 23:52 [NETWORK] 127.0.0.1 Invalid credentials for user jau
+28.06.24 23:55 [NETWORK] 127.0.0.1 disconnected!
+28.06.24 23:55 [SYSTEM] Service is stopping due to SIGINT signal
+28.06.24 23:56 [DATABASE] Database file teletexter_db.db is new. Initializing...
+28.06.24 23:56 [DATABASE] New database teletexter_db.db initialized!
+28.06.24 23:56 [SERVER] Server listening on 0.0.0.0 @ port 5554
+28.06.24 23:56 [NETWORK] 127.0.0.1 Connected 
+28.06.24 23:56 [NETWORK] 127.0.0.1 Invalid credentials for user adminz
+28.06.24 23:56 [NETWORK] 127.0.0.1 Invalid credentials for user admin
+28.06.24 23:56 [NETWORK] 127.0.0.1  (0) successfully logged in with access level 0
