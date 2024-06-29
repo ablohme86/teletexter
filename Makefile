@@ -12,6 +12,7 @@ TARGET = bin/teletexter
 BINDIR = /usr/local/sbin
 CONFDIR = /etc/teletexter
 VARDIR = /var/lib/teletexter
+LOGDIR = /var/log/teletexter
 
 # Allow override from command line
 CONFIG_FILES = configs/teletexter.cfg
@@ -49,10 +50,11 @@ post_build_clean:
 
 # Install target
 install: $(TARGET)
-	install -d $(BINDIR)
+	install -d ${BINPATH:=$(BINDIR)}
 	install -m 755 $(TARGET) $(BINDIR)
 	install -d ${CONFIGPATH:=$(CONFDIR)}
 	install -d ${DBPATH:=$(VARDIR)}
+	install -d ${LOGPATH:=$(LOGDIR)}
 	install -m 644 $(CONFIG_FILES) ${CONFIGPATH}
 	install -m 644 $(SERVICE_FILE) $(SYSTEMDDIR)
 	systemctl enable teletexter.service
@@ -63,6 +65,7 @@ uninstall:
 	rm -f $(BINDIR)/$(TARGET)
 	rm -rf $(CONFDIR)
 	rm -rf $(VARDIR)
+	rm -rf $(LOGDIR)
 	systemctl stop teletexter.service
 	systemctl disable teletexter.service
 	rm -f $(SYSTEMDDIR)/teletexter.service
