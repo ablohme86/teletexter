@@ -11,37 +11,35 @@
 #include <string.h>
 
 
-int add_user(User *user) {
-    const void *params[1];
-    enum ParamType param_types[1];
-    params[0] = user->username;
-    param_types[0] = PARAM_TEXT;
-
+int add_user(User *user)
+{
     const char *sql = "SELECT username FROM users WHERE username = ?";
-    int res = execute_sql(sql, 1, params, param_types, NULL, NULL);
-    if (res == 0) {
-        // User does not exist, go create
-        const char *insert_sql = "INSERT INTO users (username, password, access_level) VALUES (?, ?, ?)";
-        const void *insert_params[3];
-        enum ParamType insert_param_types[3];
+    const void *params[] = {user->username};
+    const enum ParamType param_types[] = {PARAM_TEXT};
 
-        insert_params[0] = user->username;
-        insert_param_types[0] = PARAM_TEXT;
-        insert_params[1] = user->password;
-        insert_param_types[1] = PARAM_TEXT;
-        insert_params[2] = &(user->access_level);
-        insert_param_types[2] = PARAM_INT;
+    int res = execute_sql(sql, 1, params, param_types, user_callback, user);
 
-        int aures = execute_sql(insert_sql, 3, insert_params, insert_param_types, NULL, NULL);
-        if (aures == SQLITE_OK) {
+    if (res == 0) // User does not exist, go create
+    {
+        sql = "INSERT INTO users (username, password, access_level) VALUES (?, ?, ?)";
+        const void *insert_params[] = {user->username, user->password, &(user->access_level)};
+        const enum ParamType insert_param_types[] = {PARAM_TEXT, PARAM_TEXT, PARAM_INT};
+
+        int aures = execute_sql(sql, 3, insert_params, insert_param_types, NULL, NULL);
+
+        if (aures == 0)
+        {
             return 0;
-        } else {
-            log_err_message("[DATABASE] Could not insert user: %s", sqlite3_errmsg(db));
-            return -1;
         }
-    } else if (res == SQLITE_ERROR) {
-        log_err_message("[DATABASE] Could not query: %s", sqlite3_errmsg(db));
+        fprintf(stderr, "[DATABASE] Could not query %s: %s\n", sql, sqlite3_errmsg(db));
+        return -1;
     }
+
+    if (res == SQLITE_ERROR)
+    {
+        fprintf(stderr, "[DATABASE] Could not query %s: %s\n", sql, sqlite3_errmsg(db));
+    }
+
     return -1;
 }
 
@@ -54,14 +52,20 @@ int get_user_by_id(int user_id, User *user) {
     printf("Get user by id result is: %d\n", rc);
     return rc == 0;
 }
-int check_user_login(const char *username, const char *pwd, User *user) {
-    const char *sql = "SELECT * FROM users WHERE username=? AND password=? LIMIT 1";
+int check_user_login(const char *username, const char *pwd, User *user)
+{
+    const char *sql = "SELECT * FROM users WHERE username=? AND password=?";
+    printf("Checking user '%s' with pwd '%s'\n",username,pwd);
     const void *params[] = {username, pwd};
     const enum ParamType param_types[] = {PARAM_TEXT, PARAM_TEXT};
 
     int rc = execute_sql( sql, 2, params, param_types, user_callback, user);
     printf("User login result is: %d\n", rc);
-    return rc == 0;
+    if (rc == 0)
+    {
+        return 0;
+    }
+    return 1;
 }
 
 int user_callback(void *data, int argc, char **argv, char **azColName)

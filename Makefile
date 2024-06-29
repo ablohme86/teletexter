@@ -20,7 +20,7 @@ SERVICE_FILE = service/teletexter.service
 
 # Sjekk for --DISABLE_LCD flagg
 ifdef DISABLE_LCD
-    SRCS := $(filter-out src/lcd/lcd_disp.c, $(SRCS))
+    SRCS := $(filter-out src/lcd/lcd_txt.c src/lcd/lcd_disp.c, $(SRCS))
     LDLIBS :=
     CFLAGS += -DDISABLE_LCD
 endif

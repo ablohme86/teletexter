@@ -13,12 +13,12 @@
 sqlite3 *db;
 char *err_msg;
 
-
-
-int execute_sql(const char *sql, int param_count, const void **params, const enum ParamType *param_types, result_callback callback, void *callback_data) {
+int execute_sql(const char *sql, int param_count, const void **params, const enum ParamType *param_types, result_callback callback, void *callback_data)
+{
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-    if (rc != SQLITE_OK) {
+    if (rc != SQLITE_OK)
+    {
         fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
         return rc;
     }
@@ -33,25 +33,31 @@ int execute_sql(const char *sql, int param_count, const void **params, const enu
                 break;
             case PARAM_LONG:
                 sqlite3_bind_int64(stmt, i + 1, *((long *)params[i]));
-            break;
+                break;
         }
     }
 
-    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+    int found = 0; // Track if any row was found
+    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
+    {
         int column_count = sqlite3_column_count(stmt);
         char *values[column_count];
         char *columns[column_count];
 
-        for (int i = 0; i < column_count; i++) {
+        for (int i = 0; i < column_count; i++)
+        {
             columns[i] = (char *)sqlite3_column_name(stmt, i);
-            switch (sqlite3_column_type(stmt, i)) {
-                case SQLITE_INTEGER: {
+            switch (sqlite3_column_type(stmt, i))
+            {
+                case SQLITE_INTEGER:
+                {
                     int value = sqlite3_column_int(stmt, i);
                     values[i] = (char *)malloc(32); // Allocate space for integer as string
                     snprintf(values[i], 32, "%d", value);
                     break;
                 }
-                case SQLITE_TEXT: {
+                case SQLITE_TEXT:
+                {
                     const unsigned char *text = sqlite3_column_text(stmt, i);
                     values[i] = strdup((const char *)text); // Duplicate the text
                     break;
@@ -62,25 +68,37 @@ int execute_sql(const char *sql, int param_count, const void **params, const enu
             }
         }
 
-        if (callback) {
+        if (callback)
+        {
             callback(callback_data, column_count, values, columns);
         }
 
         // Free the allocated memory for values
-        for (int i = 0; i < column_count; i++) {
-            if (values[i]) {
+        for (int i = 0; i < column_count; i++)
+        {
+            if (values[i])
+            {
                 free(values[i]);
             }
         }
+
+        found = 1; // At least one row was found
     }
 
-    if (rc != SQLITE_DONE) {
+    if (rc != SQLITE_DONE && rc != SQLITE_ROW)
+    {
         fprintf(stderr, "Failed to execute query: %s\n", sqlite3_errmsg(db));
     }
 
     sqlite3_finalize(stmt);
-    return rc == SQLITE_DONE ? 0 : rc;
+
+    if (callback) {
+        return found ? 1 : 0;
+    } else {
+        return (rc == SQLITE_DONE) ? 0 : rc;
+    }
 }
+
 
 int create_db(const char *sql_commands)
 {

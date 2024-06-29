@@ -32,6 +32,7 @@ void handle_lcd_set_text(client_t *cli,int argc, char **argv)
     char *inc_msg = argv[2];
     if (is_identified(cli) == 1)
     {
+    #ifndef DISABLE_LCD
         int set_msg_status = set_lcd_line_text(inc_msg,p_line,inc_align);
         switch (set_msg_status)
         {
@@ -45,6 +46,7 @@ void handle_lcd_set_text(client_t *cli,int argc, char **argv)
                 ok_status(cli,MESSAGE_SET,"MSG_SET_OK");
             break;
         };
+        #endif
 
 
     }
@@ -65,9 +67,10 @@ void handle_lcd_line_scroll(client_t *cli, int argc, char **argv)
         bad_status(cli,INVALID_LINE,"Invalid line number!");
         return;
     }
-
+    #ifndef DISABLE_LCD
     scroll_lcd_line(p_line);
     ok_status(cli,MESSAGE_SET,"Scrolling line");
+    #endif
     return;
 }
 
@@ -76,7 +79,9 @@ void handle_clear_lcd_display(client_t *cli, int argc, char **argv)
 {
     (void) argc;
     (void) argv;
+    #ifndef DISABLE_LCD
     clear_lcd_lines();
+    #endif
     log_sys_message("[%s] %s %s cleared display",SCK_INTERFACE,cli->ipv4addr, cli->user->username);
     ok_status(cli,CLEAR_DISPLAY,"LCD is clean as a whistle!");
 
@@ -94,7 +99,9 @@ void handle_clear_lcd_line(client_t *cli, int argc, char **argv)
         log_sys_message("[%s] %s %s provided invalid line for clearing",SCK_INTERFACE, get_ip(cli), cli->user->username);
         return;
     }
+    #ifndef DISABLE_LCD
     clear_lcd_line(p_line);
+    #endif
     char replybuff[100];
     snprintf(replybuff,sizeof(replybuff),"Line %d was successfully cleared!", p_line);
     ok_status(cli,LINE_CLEARED,replybuff);

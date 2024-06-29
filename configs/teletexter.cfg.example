@@ -4,7 +4,7 @@
 # Select a port to listen for clients on
 ServerPort 5554
 # Set which IP / host you want to bind to
-ServerBindAddress teletexter.local
+ServerBindAddress 0.0.0.0
 # The name of the server which will be displayed on the disp on connect
 ServerIdentifier TeleTexter
 # How many clients can be connected at the same time

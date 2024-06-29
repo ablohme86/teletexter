@@ -48,8 +48,10 @@ void handle_sigs(int signal)
 
         break;
     };
+    #ifndef DISABLE_LCD
     set_lcd_line_text(past_or_present_tense,1,"CENTER");
     set_lcd_line_text(action,2,"CENTER");
+    #endif
     close_server();
     exit(0);
 }
