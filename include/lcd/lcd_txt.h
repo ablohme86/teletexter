@@ -6,6 +6,7 @@
 #define LCD_TXT_H
 
 int set_lcd_line_text(const char *msg, unsigned int line,const char *align);
+int set_lcd_text(const char *mmsg, unsigned int line);
 int scroll_lcd_line(unsigned int line);
 void clear_lcd_line(unsigned int line);
 void clear_lcd_lines();

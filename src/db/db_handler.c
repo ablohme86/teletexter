@@ -23,8 +23,10 @@ int execute_sql(const char *sql, int param_count, const void **params, const enu
         return rc;
     }
 
-    for (int i = 0; i < param_count; i++) {
-        switch (param_types[i]) {
+    for (int i = 0; i < param_count; i++)
+    {
+        switch (param_types[i])
+        {
             case PARAM_INT:
                 sqlite3_bind_int(stmt, i + 1, *((int *)params[i]));
                 break;

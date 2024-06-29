@@ -19,6 +19,61 @@ typedef struct {
 } LCD_Line;
 LCD_Line *lcdLines[128]; // stores all lines string data thats on display
 
+int set_lcd_text(const char *mmsg, unsigned int line)
+{
+    int n = 0;
+    int msg_len = strlen(mmsg);
+    int line_width = lcd_width;
+    char buffer[line_width + 1];  // Buffer for line_width characters + null terminator
+#ifndef DISABLE_LCD
+
+    for (int i = line; i <= (int)lcd_height; ++i)     // print the message from this line
+    {
+        // Calculate the starting index in the message
+        int start_index = n * line_width;
+
+        // If we've reached the end of the message, print blank lines if needed
+        if (start_index >= msg_len)
+        {
+            if (i <= (int)lcd_height)
+            {
+                // print rest of the lines with blanks
+                set_lcd_line_text(" ", i, "LEFT");
+            }
+            if (i == (int)lcd_height)
+            {
+                // We were on the last line, break it!
+                break;
+            }
+            continue; // Skip the rest of the loop and go to the next iteration
+        }
+
+        // Skip leading spaces for new lines
+        while (mmsg[start_index] == ' ')
+        {
+            start_index++;
+        }
+
+        memset(buffer, 0, sizeof(buffer)); // Clear buffer
+        strncpy(buffer, mmsg + start_index, line_width);
+
+        // Ensure null termination
+        buffer[line_width] = '\0';
+
+        // If the buffer starts with a space, shift the text to the left
+        if (buffer[0] == ' ')
+        {
+            memmove(buffer, buffer + 1, line_width - 1);
+            buffer[line_width - 1] = '\0'; // Null terminate the shifted string
+        }
+
+        set_lcd_line_text(buffer, i, "LEFT");
+        n++;
+    }
+#endif
+    return 0; // Return 0 to indicate success
+}
+
 
 void clear_lcd_line(unsigned int line)           // clears the specified line
 {
