@@ -1,7 +1,6 @@
 # Prerequisites
 *.d
 # Object files
-bin/*
 *.save
 *.o
 *.ko
@@ -10,15 +9,13 @@ bin/*
 teletexter
 # Linker output
 *.ilk
-bin/teletexter
-bin/logs
 *.map
 *.exp
 
 # Precompiled Headers
 *.gch
 *.pch
-bin/logs/
+bin/.*
 # Libraries
 *.lib
 *.a
