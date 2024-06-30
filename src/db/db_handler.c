@@ -19,7 +19,7 @@ int execute_sql(const char *sql, int param_count, const void **params, const enu
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     if (rc != SQLITE_OK)
     {
-        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        log_err_message("[%s] Failed to prepare statement: %s\n",DB_INTERFACE, sqlite3_errmsg(db));
         return rc;
     }
 
@@ -89,14 +89,17 @@ int execute_sql(const char *sql, int param_count, const void **params, const enu
 
     if (rc != SQLITE_DONE && rc != SQLITE_ROW)
     {
-        log_err_message("[DATABASE] Failed to execute query: %s", sqlite3_errmsg(db));
+        log_err_message("[%s] Failed to execute query: %s", DB_INTERFACE,sqlite3_errmsg(db));
     }
 
     sqlite3_finalize(stmt);
 
-    if (callback) {
+    if (callback)
+    {
         return found ? 1 : 0;
-    } else {
+    }
+    else
+    {
         return (rc == SQLITE_DONE) ? 0 : rc;
     }
 }

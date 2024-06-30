@@ -15,7 +15,7 @@ void handle_admin_create_user(client_t *cli, int argc, char **argv)
 {
 	(void)argc;
 
-	char username[config.userConfig.maxNicknameLength];
+	char username[99];
 	unsigned int access_lvl;
 	
 
@@ -24,33 +24,52 @@ void handle_admin_create_user(client_t *cli, int argc, char **argv)
 		log_err_message("[%s] %s/%s: Use use an integer for access level parameter!", ADMIN_INTERFACE,cli->ipv4addr,cli->user->username);
 		bad_status(cli,NOT_INTEGER,"Put an integer for access level parameter. CREATE_USER <username> <password> <access level>");
 		return;
-	}	
+	}
 	
 	User *user = (User*)calloc(sizeof(User),1);
 	strncpy(username,argv[0],sizeof(username));
 	strncpy(user->password,argv[1],sizeof(user->password));	
-	// copy the new username with the configured limit to the user object
 	strncpy(user->username,username,sizeof(user->username));
 	user->access_level = access_lvl;
-	int useradd_res = add_user(user);
-	
-	if (useradd_res == 0)
+	char *errmsg;
+	int useradd_res = add_user(user,&errmsg);
+	char re_msg[128];
+
+	switch (useradd_res)
 	{
-		log_sys_message("[%s] %s/%s: New user '%s' is created", ADMIN_INTERFACE,cli->ipv4addr,cli->user->username,user->username);
-		ok_status(cli,USER_CREATED,"New user created!");
-		free(user);
-		return;
-	}
-	else
+		case USER_CREATED:
+			snprintf(re_msg,sizeof(re_msg), "User '%s' was created!", user->username);
+			ok_status(cli,USER_CREATED,re_msg);
+			log_sys_message("[%s] %s",ADMIN_INTERFACE, re_msg);
+		break;
+
+		case USERNAME_TOO_LONG:
+			bad_status(cli,USERNAME_TOO_LONG,errmsg);
+			log_err_message("[%s] %s",ADMIN_INTERFACE, errmsg);
+		break;
+
+		case USERNAME_EXIST:
+			bad_status(cli,USERNAME_EXIST,errmsg);
+			log_err_message("[%s] %s",ADMIN_INTERFACE, errmsg);
+		break;
+
+		default:
+			printf("DEFAULT CONDITIOh");
+			ok_status(cli,DB_ERROR,errmsg);
+			log_sys_message("[%s] %s",ADMIN_INTERFACE, errmsg);
+		break;
+
+
+	};
+
+	if (errmsg != NULL)
 	{
-		log_sys_message("[%s] %s/%s: Username '%s' is already in use", ADMIN_INTERFACE,cli->ipv4addr,cli->user->username, user->username);
-		bad_status(cli,USERNAME_EXIST,"Username already exists!");
-		free(user);
-		return;
+		printf("Freed up errmsg\n");
+		free(errmsg);
 	}
+
+
 	free(user);
-	bad_status(cli,DB_ERROR,"Database error occured!");
-	
 	return;
 }
 

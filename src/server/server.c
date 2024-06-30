@@ -15,7 +15,6 @@
 #include "../../include/lcd/lcd_txt.h"
 #endif
 #include <log.h>
-#include <stdio.h>
 #include "../../include/config/config.h"
 
 int server_socket, client_socket;

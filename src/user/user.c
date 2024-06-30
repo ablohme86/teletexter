@@ -9,15 +9,25 @@
 #include <sqlite3.h>
 #include <stdlib.h>
 #include <string.h>
+#include <config/config.h>
+#include "../../include/status.h"
 
 
-int add_user(User *user)
+int add_user(User *user, char **errmsg)
 {
     const char *sql = "SELECT username FROM users WHERE username = ?";
     const void *params[] = {user->username};
     const enum ParamType param_types[] = {PARAM_TEXT};
+    *errmsg = (char *)malloc(256);
+    int userlength = strlen(user->username);
+    if (userlength > config.userConfig.maxNicknameLength)
+    {
+        sprintf(*errmsg, "Username %s is too long (max %d characters allowed)", user->username, config.userConfig.maxNicknameLength);
+        return USERNAME_TOO_LONG;
+    }
 
     int res = execute_sql(sql, 1, params, param_types, user_callback, user);
+
 
     if (res == 0) // User does not exist, go create
     {
@@ -29,17 +39,15 @@ int add_user(User *user)
 
         if (aures == 0)
         {
-            return 0;
+            return USER_CREATED;
         }
-        fprintf(stderr, "[DATABASE] Could not query %s: %s\n", sql, sqlite3_errmsg(db));
-        return -1;
+        
     }
-
-    if (res == SQLITE_ERROR)
+    else
     {
-        fprintf(stderr, "[DATABASE] Could not query %s: %s\n", sql, sqlite3_errmsg(db));
+        sprintf(*errmsg, "Username %s already exists!", user->username);
+        return USERNAME_EXIST;
     }
-
     return -1;
 }
 
@@ -49,23 +57,21 @@ int get_user_by_id(int user_id, User *user) {
     const enum ParamType param_types[] = {PARAM_INT};
 
     int rc = execute_sql( sql, 1, params, param_types, user_callback, user);
-    printf("Get user by id result is: %d\n", rc);
     return rc == 0;
 }
-int check_user_login(const char *username, const char *pwd, User *user)
+int check_user_login(const char *username, const char *pwd, User *user, char **errmsg)
 {
     const char *sql = "SELECT * FROM users WHERE username=? AND password=?";
-    printf("Checking user '%s' with pwd '%s'\n",username,pwd);
     const void *params[] = {username, pwd};
     const enum ParamType param_types[] = {PARAM_TEXT, PARAM_TEXT};
 
     int rc = execute_sql( sql, 2, params, param_types, user_callback, user);
-    printf("User login result is: %d\n", rc);
+
     if (rc == 0)
     {
-        return 0;
+        return LOGIN_FAILED;
     }
-    return 1;
+    return LOGIN_OK;
 }
 
 int user_callback(void *data, int argc, char **argv, char **azColName)

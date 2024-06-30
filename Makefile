@@ -2,7 +2,7 @@
 # COPYRIGHT (C) 2024 ALEXANDER BLOHME <ALEXANDER@TELETEXTER.ORG>
 
 CC = gcc
-CFLAGS = -Wall -Wunused-variable -Wunused-but-set-variable -Wextra -Iinclude -pthread 
+CFLAGS = -Wall -Wunused-variable -Wunused-but-set-variable -Wextra -Iinclude -pthread
 LDFLAGS = -pthread -lncurses -lsqlite3
 SRCS = src/server/handle_admin.c src/lcd/lcd_txt.c src/server/handle_lcdtxt.c src/user/user.c src/signals.c src/teletexter.c src/db/db_handler.c src/message/message.c src/gpio/gpio_handler.c src/lcd/lcd_disp.c src/server/handle_client.c src/server/server_commands.c src/server/handle_msg.c src/server/handle_ident.c src/server/server.c src/config/config.c src/log/log.c src/utils.c
 OBJS = $(SRCS:.c=.o)
@@ -50,15 +50,16 @@ post_build_clean:
 
 # Install target
 install: $(TARGET)
-	install -d ${BINPATH:=$(BINDIR)}
+	install -d $(BINDIR)
 	install -m 755 $(TARGET) $(BINDIR)
-	install -d ${CONFIGPATH:=$(CONFDIR)}
-	install -d ${DBPATH:=$(VARDIR)}
-	install -d ${LOGPATH:=$(LOGDIR)}
-	install -m 644 $(CONFIG_FILES) ${CONFIGPATH}
+	install -d $(CONFDIR)
+	install -d $(VARDIR)
+	install -d $(LOGDIR)
+	install -m 644 $(CONFIG_FILES) $(CONFDIR)
 	install -m 644 $(SERVICE_FILE) $(SYSTEMDDIR)
 	systemctl enable teletexter.service
 	systemctl start teletexter.service
+
 
 # Uninstall target
 uninstall:

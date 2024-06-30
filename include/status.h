@@ -25,5 +25,6 @@
 #define USER_EDITED 203
 #define USERNAME_EXIST 307
 #define DB_ERROR 308
+#define USERNAME_TOO_LONG 309
 
 #endif //STATUS_H

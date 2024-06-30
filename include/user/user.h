@@ -19,11 +19,11 @@ typedef struct {
     unsigned int enabled;
 } User;
 
-int add_user(User *user);
+int add_user(User *user, char **errmsg);
 int get_user(int id, User *user);
 int update_user(User *user);
 int delete_user(int id);
-int check_user_login(const char *username, const char *pwd, User *user);
+int check_user_login(const char *username, const char *pwd, User *user, char **errmsg);
 int get_user_by_id(int id, User *user);
 int user_callback(void *data, int argc, char **argv, char **azColName);
 

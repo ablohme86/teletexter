@@ -19,7 +19,15 @@
     <list default="true" id="3f182fc3-817b-46b3-925b-28cbdd0684fb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/teletexter.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/configs/teletexter.cfg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README" beforeDir="false" afterPath="$PROJECT_DIR$/README" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/status.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/status.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/user/user.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/user/user.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/db/db_handler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/db_handler.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/handle_admin.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/handle_admin.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/handle_ident.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/handle_ident.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/handle_msg.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/handle_msg.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/server.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/server.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/user/user.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/user/user.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +46,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file:///Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/netdb.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/config/config.c" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/server/server.c" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -151,7 +160,8 @@
       <workItem from="1719613923665" duration="5195000" />
       <workItem from="1719650766533" duration="3909000" />
       <workItem from="1719684217615" duration="667000" />
-      <workItem from="1719697036160" duration="874000" />
+      <workItem from="1719697036160" duration="3567000" />
+      <workItem from="1719765160761" duration="8508000" />
     </task>
     <servers />
   </component>
