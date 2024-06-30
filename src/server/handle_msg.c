@@ -60,10 +60,7 @@ void handle_prev_msg(client_t *cli, int argc, char **argv)
     (void)argv;
     Message *msg = (Message *)calloc(sizeof(Message),1);
     get_prev_message_object(msg);
-    if (msg != NULL)
-    {
-        free(msg);
-    }
+
     if (msg->id == 0)
     {
         bad_status(cli,NO_MORE_MESSAGES,"No more messages!");

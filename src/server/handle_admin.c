@@ -64,7 +64,7 @@ void handle_admin_create_user(client_t *cli, int argc, char **argv)
 
 	if (errmsg != NULL)
 	{
-		printf("Freed up errmsg\n");
+		printf("Freed up errmsg\n");	
 		free(errmsg);
 	}
 
