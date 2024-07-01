@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="4a4d3f3f-b0e6-48c2-b95e-70d740730d02" name="CCTV">
+        <fileTransfer rootFolder="/home/alexander/teletexter" accessType="SFTP" host="cctv.local" port="22" sshConfigId="cbcc9677-c98f-4c18-86a9-efd312c06fa7" sshConfig="alexander@cctv.local:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

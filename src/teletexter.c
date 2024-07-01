@@ -17,6 +17,7 @@
 
 int main(const int argc, char **argv)
 {
+    // Test Comment for clion remote work save
     signal(SIGTERM, handle_sigs);
     signal(SIGHUP, handle_sigs);
     signal(SIGINT, handle_sigs);
