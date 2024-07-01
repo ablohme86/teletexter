@@ -2,9 +2,9 @@
 #define VERSION_H
 
 #define MAJOR 1
-#define MINOR 00
+#define MINOR 1
 #define PATCH 0
-#define BUILD 0
+#define BUILD 1
 
 
 #endif

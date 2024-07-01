@@ -16,7 +16,7 @@ void handle_msg_del(client_t *cli, int argc, char **argv)
    (void)argc;
    (void)argv;
     int res = delete_message();
-    if (res == -1)
+    if (res != MESSAGE_DELETED)
     {
         bad_status(cli,NO_MESSAGE_SHOWN,"Cannot delete, no message is currently on display!");
         return;
@@ -29,7 +29,18 @@ void handle_latest_msg(client_t *cli, int argc, char **argv)   // handle LATEST_
 {
     (void)argc;
     (void)argv;
-    print_latest_msg();
+    Message *msg = (Message *)calloc(sizeof(Message),1);
+    int res = get_latest_message_object(msg);
+    switch (res)
+    {
+        case MESSAGE_SET:
+            print_message_object(msg);
+            ok_status(cli,MESSAGE_SET,"Next message set!");
+            break;
+        case NO_MESSAGES:
+            bad_status(cli,NO_MORE_MESSAGES,"There is no message to show!");
+            break;
+    };
     ok_status(cli,MESSAGE_SET,"Message set!");
 }
 void handle_next_msg(client_t *cli, int argc, char **argv) // handle NEXT_MSG from client
@@ -37,16 +48,21 @@ void handle_next_msg(client_t *cli, int argc, char **argv) // handle NEXT_MSG fr
     (void)argc;
     (void)argv; // suppress compiler warnings, this is a 0 argument command
     Message *msg = (Message *)calloc(sizeof(Message),1);
-    get_next_message_object(msg);
-    if (msg->id == 0)
+    int res = get_next_message_object(msg);
+    switch (res)
     {
-        bad_status(cli,330,"No more messages!");
-    }
-    else
-    {
-        print_message_object(msg);
-        ok_status(cli,MESSAGE_SET,"Next message set!");
-    }
+        case NO_MESSAGE_SET:
+            bad_status(cli,NO_MESSAGE_SET,"There is no current message on display to go from!");
+            break;
+        case MESSAGE_SET:
+            print_message_object(msg);
+            ok_status(cli,MESSAGE_SET,"Next message set!");
+            break;
+        case NO_MORE_MESSAGES:
+            bad_status(cli,NO_MORE_MESSAGES,"There are no more messages to show!");
+            break;
+    };
+
 }
 void handle_set_msg_no(client_t *cli, int argc, char **argv)
 {
@@ -59,17 +75,21 @@ void handle_prev_msg(client_t *cli, int argc, char **argv)
     (void)argc;
     (void)argv;
     Message *msg = (Message *)calloc(sizeof(Message),1);
-    get_prev_message_object(msg);
+    int res = get_prev_message_object(msg);
+    switch (res)
+    {
+        case NO_MESSAGE_SET:
+            bad_status(cli,NO_MESSAGE_SET,"There is no current message on display to go from!");
+            break;
+        case MESSAGE_SET:
+            print_message_object(msg);
+            ok_status(cli,MESSAGE_SET,"Next message set!");
+            break;
+        case NO_MORE_MESSAGES:
+            bad_status(cli,NO_MORE_MESSAGES,"You are already on the first message!");
+            break;
+    };
 
-    if (msg->id == 0)
-    {
-        bad_status(cli,NO_MORE_MESSAGES,"No more messages!");
-    }
-    else
-    {
-        print_message_object(msg);
-        ok_status(cli,MESSAGE_SET,"Previous message set!");
-    }
 }
 
 void handle_msg(client_t *cli, int argc, char **argv)

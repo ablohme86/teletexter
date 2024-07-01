@@ -61,7 +61,7 @@ int delete_message()
 {
     if (currentMessage == NULL || currentMessage->id < 1)
     {
-        return -1;
+        return NO_MESSAGE_SET;
     }
 
     const char *sql = "DELETE FROM messages WHERE id = ?";
@@ -73,7 +73,19 @@ int delete_message()
     if (res == SQLITE_OK)
     {
         currentMessage = NULL;  // reset currentMessage pointer
-        print_latest_msg();  // re-draw the new latest message in db
+        Message *msg = (Message *)calloc(sizeof(Message),1);
+        get_latest_message_object(msg);
+        if (msg->id == 0)
+        {
+            set_lcd_line_text("No more messages!",1,"CENTER");
+            free(msg);
+        }
+        else
+        {
+            print_message_object(msg);
+        }
+
+        return MESSAGE_DELETED;
     }
 
     return res;
@@ -147,7 +159,6 @@ int new_message(char *msg, User *user)    // Creates and stores a new message to
 {
 
    Message *new_msg = (Message *)calloc(1,sizeof(Message)); // bruker calloc for å forsikre om at alle variabler er nullstilt
-
     new_msg->datetime = get_unixtime();
     strcpy(new_msg->message, msg);
     new_msg->poster_id = user->id;
@@ -156,13 +167,6 @@ int new_message(char *msg, User *user)    // Creates and stores a new message to
     return MESSAGE_SET;
 }
 
-
-void print_latest_msg()           // prints the latest message object in db!
-{
-    Message *msg = (Message *)calloc(sizeof(Message),1);
-    get_latest_message_object(msg);
-    print_message_object(msg);
-}
 int get_message_by_id(unsigned int id, Message *message)
 {
     const char *sql = "SELECT * FROM messages WHERE id = ?";
@@ -175,34 +179,49 @@ int get_next_message_object(Message *message)
 {
     if (currentMessage == NULL)
     {
-        return -1;
+        return NO_CURRENT_MESSAGE_SET;
     }
     else
     {
         const char *sql = "SELECT * FROM messages WHERE id > ? ORDER BY id ASC LIMIT 1";
         const void *params[] = { &(currentMessage->id) };
         enum ParamType param_types[] = { PARAM_INT };
-        return execute_sql( sql, 1, params, param_types, message_callback, message);
+        execute_sql( sql, 1, params, param_types, message_callback, message);
+        if (message->id == 0)
+        {
+            return NO_MORE_MESSAGES;
+        }
+        return MESSAGE_SET;
     }
 }
 
 int get_prev_message_object(Message *message)
 {
     if (currentMessage == NULL) {
-        return -1;
+        return NO_CURRENT_MESSAGE_SET;
     }
     else
     {
         const char *sql = "SELECT * FROM messages WHERE id < ? ORDER BY id DESC LIMIT 1";
         const void *params[] = { &(currentMessage->id) };
         enum ParamType param_types[] = { PARAM_INT };
-        return execute_sql( sql, 1, params, param_types, message_callback, message);
+        execute_sql( sql, 1, params, param_types, message_callback, message);
+        if (message->id == 0)
+        {
+            return NO_MORE_MESSAGES;
+        }
+        return MESSAGE_SET;
     }
 }
 
 int get_latest_message_object(Message *message) {
     const char *sql = "SELECT * FROM messages ORDER BY id DESC LIMIT 1";
-    return execute_sql(sql, 0, NULL, NULL, message_callback, message);
+    execute_sql(sql, 0, NULL, NULL, message_callback, message);
+    if (message->id == 0)
+    {
+        return NO_MESSAGES;
+    }
+    return MESSAGE_SET;
 }
 int message_callback(void *data, int argc, char **argv, char **azColName)        // callback to store data into the provided "Message"-object from sqlite
 {

@@ -24,9 +24,6 @@ typedef struct {
 int save_message( Message *msg);
 int new_message(char *msg, User *user);
 int message_callback(void *data, int argc, char **argv, char **azColName);  // for sql cb
-void print_latest_msg();
-void print_next_msg();
-void print_prev_msg();
 int get_message_by_id(unsigned int id, Message *message);
 int get_latest_message_object(Message *message);
 void print_message_object(Message *message);

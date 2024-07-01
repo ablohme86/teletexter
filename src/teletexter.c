@@ -18,11 +18,12 @@
 int main(const int argc, char **argv)
 {
     // Test Comment for clion remote work save
+    
     signal(SIGTERM, handle_sigs);
     signal(SIGHUP, handle_sigs);
     signal(SIGINT, handle_sigs);
 
-    printf("\n\n        TeleTexter v%d.%d\n", MAJOR, MINOR);
+    printf("\n\n    TeleTexter v%d.%d Build: %d\n", MAJOR, MINOR, BUILD);
     printf("Copyright (c) 2024 Alexander Blohme\n-----------------------------------\n\n");
     if (manage_startup_args(argc, argv) == 0)
     {
