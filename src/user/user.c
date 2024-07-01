@@ -69,6 +69,7 @@ int check_user_login(const char *username, const char *pwd, User *user, char **e
 
     if (rc == 0)
     {
+	sprintf(*errmsg,"Invalid username and/or password!");
         return LOGIN_FAILED;
     }
     return LOGIN_OK;

@@ -121,7 +121,6 @@ int create_db(const char *sql_commands)
 
 int init_db(char *db_name)
 {
-    char *errmsg;
     int is_new_db = access(db_name, F_OK) == -1;
 
     int rc = sqlite3_open(db_name, &db);

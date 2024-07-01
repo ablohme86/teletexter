@@ -6,6 +6,7 @@
 #include "../../include/log.h"
 #include "../../include/utils.h"
 #include "../../include/status.h"
+#include "../../include/version.h"
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
