@@ -129,68 +129,75 @@ void delay(int milliseconds)
      write_command(mode | ((byte << 4) & 0xF0) | backlight_mode);
     
  }
- 
-void lcd_text(const char *text, uint8_t line, uint8_t align) 
- {
-     char limited_text[lcd_msg_maxlen + 1];  // +1 for null-terminatoren
-      strncpy(limited_text, text, lcd_msg_maxlen);
-      limited_text[lcd_msg_maxlen] = '\0';  // Sørg for at det er null-terminert
-       
-      uint8_t lcd_line;
-      switch(line) 
-      {
-          case 1:
-              lcd_line = line1_addr;
-              break;
-          case 2:
-              lcd_line = line2_addr;
-              break;
-          case 3:
-              lcd_line = line3_addr;
-              break;
-          case 4:
-              lcd_line = line4_addr;
-              break;
-          default:
-              lcd_line = line1_addr;
-              break;
-      }
-      
-      lcd_write(lcd_line, 0);
-      
-      // Oppdater tekstlinjen på LCD-skjermen
-     char **lcd_lines = malloc(lcd_height * sizeof(char *));
-     for (unsigned int i = 0; i < lcd_height; ++i)
-     {
-         lcd_lines[i] = malloc((lcd_width + 1) * sizeof(char));
-     }
-      if (align == LEFT) 
-      {
-          snprintf(lcd_lines[line - 1], lcd_width + 1, "%-.*s", lcd_width, limited_text);
-      } 
-      else if (align == RIGHT) 
-      {
-          snprintf(lcd_lines[line - 1], -lcd_width + 1, "%*.*s", lcd_width, lcd_width, limited_text);
-      } 
-      else if (align == CENTER) 
-      {
-          int padding = (lcd_width - strlen(limited_text)) / 2;
-          snprintf(lcd_lines[line - 1], lcd_width + 1, "%*.*s%s%*.*s", padding, padding, "", limited_text, lcd_width - padding - strlen(limited_text), lcd_width - padding - strlen(limited_text), "");
-      }
-      
-      // Fyll resten av linjen med mellomrom
-      int text_len = strlen(lcd_lines[line - 1]);
-      for (unsigned int i = text_len; i < lcd_width; i++) 
-      {
-          lcd_lines[line - 1][i] = ' ';
-      }
-      
-      for (unsigned int i = 0; i < lcd_width; i++) 
-      {
-          lcd_write(lcd_lines[line - 1][i], 1);
-      }
- }
- 
+
+void lcd_text(const char *text, uint8_t line, uint8_t align)
+{
+    char limited_text[lcd_msg_maxlen + 1];  // +1 for null-terminatoren
+    strncpy(limited_text, text, lcd_msg_maxlen);
+    limited_text[lcd_msg_maxlen] = '\0';  // Sørg for at det er null-terminert
+
+    uint8_t lcd_line;
+    switch(line)
+    {
+        case 1:
+            lcd_line = line1_addr;
+        break;
+        case 2:
+            lcd_line = line2_addr;
+        break;
+        case 3:
+            lcd_line = line3_addr;
+        break;
+        case 4:
+            lcd_line = line4_addr;
+        break;
+        default:
+            lcd_line = line1_addr;
+        break;
+    }
+
+    lcd_write(lcd_line, 0);
+
+    // Oppdater tekstlinjen på LCD-skjermen
+    char **lcd_lines = malloc(lcd_height * sizeof(char *));
+    for (unsigned int i = 0; i < lcd_height; ++i)
+    {
+        lcd_lines[i] = malloc((lcd_width + 1) * sizeof(char));
+    }
+
+    if (align == LEFT)
+    {
+        snprintf(lcd_lines[line - 1], lcd_width + 1, "%-.*s", lcd_width, limited_text);
+    }
+    else if (align == RIGHT)
+    {
+        snprintf(lcd_lines[line - 1], lcd_width + 1, "%*.*s", lcd_width, lcd_width, limited_text);
+    }
+    else if (align == CENTER)
+    {
+        int padding = (lcd_width - strlen(limited_text)) / 2;
+        snprintf(lcd_lines[line - 1], lcd_width + 1, "%*.*s%s%*.*s", padding, padding, "", limited_text, lcd_width - padding - strlen(limited_text), lcd_width - padding - strlen(limited_text), "");
+    }
+
+    // Fyll resten av linjen med mellomrom
+    int text_len = strlen(lcd_lines[line - 1]);
+    for (unsigned int i = text_len; i < lcd_width; i++)
+    {
+        lcd_lines[line - 1][i] = ' ';
+    }
+
+    for (unsigned int i = 0; i < lcd_width; i++)
+    {
+        lcd_write(lcd_lines[line - 1][i], 1);
+    }
+
+    // Frigjør allokert minne
+    for (unsigned int i = 0; i < lcd_height; ++i)
+    {
+        free(lcd_lines[i]);
+    }
+    free(lcd_lines);
+}
  void lcd_backlight(uint8_t turn_on) 
  {
      if (turn_on) 
