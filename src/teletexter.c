@@ -49,24 +49,14 @@ int main(const int argc, char **argv)
     setuplcd();  // sleng inn nødvendige variabler fra konfig til lcd'en
 
     i2c_init(config.lcdConfig.lcdDeviceFile, config.lcdConfig.lcdAddress); // aktiver / start opp lcd biblioteket med dev fil og addr fra config
-    char welcomeTxt_line1[config.lcdConfig.lcdWidth+1];
-    char welcometxt_line2[config.lcdConfig.lcdWidth+1];
+
+	// Add a welcome text and version number on bootup
     char tt_title[config.lcdConfig.lcdWidth+1];
-        
     clear_lcd_lines();
-    
-    snprintf(welcomeTxt_line1, sizeof(welcomeTxt_line1), "%s",config.serverConfig.serverIdentifier);
-    snprintf(welcometxt_line2,sizeof(welcometxt_line2), "%s:%d", config.serverConfig.serverHost,config.serverConfig.port);
     snprintf(tt_title,sizeof(tt_title),"TeleTexter v%d.%d",MAJOR,MINOR);
 
     set_lcd_line_text("Welcome to",1,"CENTER");
     set_lcd_line_text(tt_title, 2, "CENTER");
-    sleep(1.5);
-    set_lcd_line_text("(c) 2024 by",1,"CENTER");
-    set_lcd_line_text("Alexander Blohme",2,"CENTER");
-    sleep(2.3);
-    set_lcd_line_text(welcomeTxt_line1,1,"CENTER");
-    set_lcd_line_text(welcometxt_line2, 2, "CENTER");
 #endif
 
     return start_server();
