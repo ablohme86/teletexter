@@ -174,7 +174,7 @@ void send_server_ident(client_t *cli)
 
 	char welcome_msg_line1[512];
 
-	snprintf(welcome_msg_line1,sizeof(welcome_msg_line1),"TELETEXTER v%d.%d\r\nSERVER_IDENT %s\r\nADDRESS %s\r\n", MAJOR,MINOR,config.serverConfig.serverIdentifier,config.serverConfig.serverHost);
+	snprintf(welcome_msg_line1,sizeof(welcome_msg_line1),"TELETEXTER v%d.%d Build: %d\r\nSERVER_IDENT %s\r\nADDRESS %s\r\n", MAJOR,MINOR,BUILD,config.serverConfig.serverIdentifier,config.serverConfig.serverHost);
 	send(cli->socket,welcome_msg_line1,strlen(welcome_msg_line1),0);
 
 }

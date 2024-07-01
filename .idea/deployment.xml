@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="Remote Development" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" autoUploadExternalChanges="true">
+  <component name="PublishConfigData" autoUpload="Always" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" autoUploadExternalChanges="true">
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
       <paths name="CCTV">
@@ -10,10 +10,10 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="CCTV Server (0e349cab-6b92-43db-be7c-2c69ecb727e5)">
+      <paths name="CCTV (62ebb96e-c111-49b3-b326-cb106e6fe511)">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/tmp.SPFnqUmybC" local="$PROJECT_DIR$" />
+            <mapping deploy="/tmp/tmp.MgUhIlXxGi" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>

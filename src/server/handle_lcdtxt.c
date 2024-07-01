@@ -48,7 +48,6 @@ void handle_lcd_set_text(client_t *cli,int argc, char **argv)
         };
         #endif
 
-
     }
     else
     {
