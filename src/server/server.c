@@ -108,7 +108,7 @@ int start_server()
 
     if (p == NULL)
     {
-        log_sys_message("Cannot start server: Bind failed!");
+        log_sys_message("Cannot start server: Port %d already in use!", config.serverConfig.port);
         perror("Bind error");
         freeaddrinfo(res);
         return EXIT_FAILURE;

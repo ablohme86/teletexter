@@ -21,9 +21,9 @@
   <component name="ChangeListManager">
     <list default="true" id="3f182fc3-817b-46b3-925b-28cbdd0684fb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/other.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/handle_lcdtxt.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/handle_lcdtxt.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/server.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/server.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -42,12 +42,25 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;ablohme86&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ablohme86/teletexter.git&quot;,
+    &quot;accountId&quot;: &quot;fefa7da6-cef1-4795-939c-833d5a1ceac4&quot;
+  }
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file:///Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/netdb.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/config/config.c" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/server/server.c" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MakefileLocalSettings">
+    <option name="toolchainName" value="CCTV Server" />
     <option name="availableProjects">
       <map>
         <entry>
@@ -160,7 +173,7 @@
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="teletexter" type="CLionNativeAppRunConfigurationType" PROGRAM_PARAMS="-c /home/alexander/teletexter/configs/teletexter.cfg.example -p 5552" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://." PASS_PARENT_ENVS_2="true" PROJECT_NAME="teletexter" TARGET_NAME="teletexter" CONFIG_NAME="teletexter" version="1" RUN_PATH="bin/teletexter">
+    <configuration name="teletexter" type="CLionNativeAppRunConfigurationType" PROGRAM_PARAMS="-c /home/alexander/teletexter/configs/teletexter.cfg.example -p 5552" REDIRECT_INPUT="false" ELEVATE="true" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file:///home/alexander/teletexter/" PASS_PARENT_ENVS_2="true" PROJECT_NAME="teletexter" TARGET_NAME="teletexter" CONFIG_NAME="teletexter" version="1" RUN_PATH="bin/teletexter">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
@@ -180,14 +193,26 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
     <list>
+      <item itemvalue="Makefile Target.Makefile" />
       <item itemvalue="Native Application.all" />
       <item itemvalue="Native Application.bin" />
       <item itemvalue="Native Application.install" />
-      <item itemvalue="Native Application.uninstall" />
       <item itemvalue="Native Application.post_build_clean" />
       <item itemvalue="Native Application.teletexter" />
+      <item itemvalue="Native Application.uninstall" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Makefile Target.Makefile" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -236,6 +261,10 @@
       <workItem from="1719867993107" duration="160000" />
       <workItem from="1719868178365" duration="217000" />
       <workItem from="1719868404819" duration="1926000" />
+      <workItem from="1719871430122" duration="103000" />
+      <workItem from="1719871538879" duration="356000" />
+      <workItem from="1719875021481" duration="1000" />
+      <workItem from="1719875026416" duration="857000" />
     </task>
     <servers />
   </component>
